@@ -1,2 +1,7 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'idea'
+apply plugin: 'war'
+
 group 'com.epam.esm'
 version '1.0-SNAPSHOT'
