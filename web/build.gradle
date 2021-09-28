@@ -15,6 +15,7 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5'
 
     implementation project(':model')
+    implementation project(':persistence')
     implementation project(':service')
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
