@@ -1,8 +1,8 @@
-package com.epam.esm.repository.impl;
+package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.domain.Tag;
-import com.epam.esm.repository.RepositoryException;
-import com.epam.esm.repository.TagRepository;
+import com.epam.esm.persistence.repository.RepositoryException;
+import com.epam.esm.persistence.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;

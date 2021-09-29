@@ -1,4 +1,4 @@
-package com.epam.esm.config;
+package com.epam.esm.persistence.config;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;

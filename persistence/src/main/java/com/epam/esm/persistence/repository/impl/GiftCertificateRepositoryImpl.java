@@ -1,8 +1,8 @@
-package com.epam.esm.repository.impl;
+package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.repository.GiftCertificateRepository;
-import com.epam.esm.repository.RepositoryException;
+import com.epam.esm.persistence.repository.GiftCertificateRepository;
+import com.epam.esm.persistence.repository.RepositoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;

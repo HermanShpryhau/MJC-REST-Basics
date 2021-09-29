@@ -1,4 +1,4 @@
-package com.epam.esm.repository;
+package com.epam.esm.persistence.repository;
 
 import com.epam.esm.domain.Tag;
 

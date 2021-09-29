@@ -1,4 +1,4 @@
-package com.epam.esm.repository;
+package com.epam.esm.persistence.repository;
 
 public class RepositoryException extends Exception {
     public RepositoryException() {
