@@ -34,25 +34,25 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public Tag save(Tag entity) throws RepositoryException {
+    public Tag save(Tag entity) {
         Number id = jdbcInsert.executeAndReturnKey(buildParametersMap(entity));
         entity.setId(id.longValue());
         return entity;
     }
 
-    private Map<String, Object> buildParametersMap(Tag entity) throws RepositoryException {
+    private Map<String, Object> buildParametersMap(Tag entity) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(NAME_COLUMN, entity.getName());
         return parameters;
     }
 
     @Override
-    public List<Tag> findAll() throws RepositoryException {
+    public List<Tag> findAll() {
         return jdbcTemplate.query(SELECT_ALL_QUERY, mapper);
     }
 
     @Override
-    public Tag findById(Long id) throws RepositoryException {
+    public Tag findById(Long id) {
         return jdbcTemplate.query(SELECT_BY_ID_QUERY, mapper, id).stream().findAny().orElse(null);
     }
 
@@ -62,7 +62,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public boolean delete(Long id) throws RepositoryException {
+    public boolean delete(Long id) {
         return jdbcTemplate.update(DELETE_QUERY, id) == MIN_AFFECTED_ROWS;
     }
 }

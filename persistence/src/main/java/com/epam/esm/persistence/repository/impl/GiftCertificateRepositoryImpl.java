@@ -2,7 +2,6 @@ package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
-import com.epam.esm.persistence.repository.RepositoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,14 +42,14 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public GiftCertificate save(GiftCertificate entity) throws RepositoryException {
+    public GiftCertificate save(GiftCertificate entity) {
         Map<String, Object> parameters = buildParametersMap(entity);
         Number id = jdbcInsert.executeAndReturnKey(parameters);
         entity.setId(id.longValue());
         return entity;
     }
 
-    private Map<String, Object> buildParametersMap(GiftCertificate entity) throws RepositoryException {
+    private Map<String, Object> buildParametersMap(GiftCertificate entity) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(NAME_COLUMN, entity.getName());
         parameters.put(DESCRIPTION_COLUMN, entity.getDescription());
@@ -62,18 +61,18 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public List<GiftCertificate> findAll() throws RepositoryException {
+    public List<GiftCertificate> findAll() {
         return jdbcTemplate.query(SELECT_ALL_CERTIFICATES_QUERY, mapper);
     }
 
     @Override
-    public GiftCertificate findById(Long id) throws RepositoryException {
+    public GiftCertificate findById(Long id) {
         List<GiftCertificate> certificates = jdbcTemplate.query(SELECT_BY_ID_QUERY, mapper, id);
         return certificates.stream().findAny().orElse(null);
     }
 
     @Override
-    public GiftCertificate update(Long id, GiftCertificate entity) throws RepositoryException {
+    public GiftCertificate update(Long id, GiftCertificate entity) {
         jdbcTemplate.update(UPDATE_QUERY,
                 entity.getName(),
                 entity.getDescription(),
@@ -86,7 +85,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public boolean delete(Long id) throws RepositoryException {
+    public boolean delete(Long id) {
         return jdbcTemplate.update(DELETE_BY_ID_QUERY, id) == MIN_AFFECTED_ROWS;
     }
 }
