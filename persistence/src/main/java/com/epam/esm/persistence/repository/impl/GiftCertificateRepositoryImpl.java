@@ -1,6 +1,8 @@
 package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.domain.GiftCertificate;
+import com.epam.esm.domain.Tag;
+import com.epam.esm.persistence.repository.ColumnName;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,12 +24,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                     "name=?, description=?, price=?, duration=?, last_update_date=? " +
                     "WHERE id=?";
     public static final String DELETE_BY_ID_QUERY = "DELETE FROM Gift_certificate WHERE id=?";
-    private static final String NAME_COLUMN = "name";
-    private static final String DESCRIPTION_COLUMN = "description";
-    private static final String PRICE_COLUMN = "price";
-    private static final String DURATION_COLUMN = "duration";
-    private static final String CREATE_DATE_COLUMN = "create_date";
-    private static final String LAST_UPDATE_DATE_COLUMN = "last_update_date";
     private static final int MIN_AFFECTED_ROWS = 1;
 
     private final JdbcTemplate jdbcTemplate;
@@ -51,12 +47,12 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     private Map<String, Object> buildParametersMap(GiftCertificate entity) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(NAME_COLUMN, entity.getName());
-        parameters.put(DESCRIPTION_COLUMN, entity.getDescription());
-        parameters.put(PRICE_COLUMN, entity.getPrice());
-        parameters.put(DURATION_COLUMN, entity.getDuration());
-        parameters.put(CREATE_DATE_COLUMN, entity.getCreateDate());
-        parameters.put(LAST_UPDATE_DATE_COLUMN, entity.getLastUpdateDate());
+        parameters.put(ColumnName.NAME_COLUMN, entity.getName());
+        parameters.put(ColumnName.DESCRIPTION_COLUMN, entity.getDescription());
+        parameters.put(ColumnName.PRICE_COLUMN, entity.getPrice());
+        parameters.put(ColumnName.DURATION_COLUMN, entity.getDuration());
+        parameters.put(ColumnName.CREATE_DATE_COLUMN, entity.getCreateDate());
+        parameters.put(ColumnName.LAST_UPDATE_DATE_COLUMN, entity.getLastUpdateDate());
         return parameters;
     }
 

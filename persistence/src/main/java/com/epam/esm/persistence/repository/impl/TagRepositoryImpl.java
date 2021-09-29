@@ -1,6 +1,7 @@
 package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.domain.Tag;
+import com.epam.esm.persistence.repository.ColumnName;
 import com.epam.esm.persistence.repository.RepositoryException;
 import com.epam.esm.persistence.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ public class TagRepositoryImpl implements TagRepository {
     private static final String SELECT_ALL_QUERY = "SELECT * FROM Tag";
     private static final String SELECT_BY_ID_QUERY = "SELECT * FROM Tag WHERE id=?";
     private static final String DELETE_QUERY = "DELETE FROM Tag WHERE id=?";
-    private static final String NAME_COLUMN = "name";
     private static final int MIN_AFFECTED_ROWS = 1;
 
     private final JdbcTemplate jdbcTemplate;
@@ -42,7 +42,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     private Map<String, Object> buildParametersMap(Tag entity) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(NAME_COLUMN, entity.getName());
+        parameters.put(ColumnName.NAME_COLUMN, entity.getName());
         return parameters;
     }
 
