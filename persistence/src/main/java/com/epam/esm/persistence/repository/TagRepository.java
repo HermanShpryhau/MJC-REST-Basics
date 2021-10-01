@@ -9,4 +9,5 @@ public interface TagRepository extends CrudRepository<Tag> {
 
     List<GiftCertificate> findAssociatedGiftCertificates(Long tagId);
 
+    Tag findByName(String name);
 }

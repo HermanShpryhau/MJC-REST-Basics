@@ -20,6 +20,7 @@ import java.util.Map;
 public class TagRepositoryImpl implements TagRepository {
     private static final String SELECT_ALL_QUERY = "SELECT * FROM Tag";
     private static final String SELECT_BY_ID_QUERY = "SELECT * FROM Tag WHERE id=?";
+    private static final String SELECT_BY_NAME_QUERY = "SELECT * FROM Tag WHERE name=?";
     private static final String DELETE_QUERY = "DELETE FROM Tag WHERE id=?";
     private static final String SELECT_ASSOCIATED_CERTIFICATES =
             "SELECT * FROM Gift_certificate\n" +
@@ -63,6 +64,11 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public Tag findById(Long id) {
         return jdbcTemplate.query(SELECT_BY_ID_QUERY, tagRowMapper, id).stream().findAny().orElse(null);
+    }
+
+    @Override
+    public Tag findByName(String name) {
+        return jdbcTemplate.query(SELECT_BY_NAME_QUERY, tagRowMapper, name).stream().findAny().orElse(null);
     }
 
     @Override
