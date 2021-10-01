@@ -5,13 +5,13 @@ import com.epam.esm.domain.AbstractEntity;
 import java.util.List;
 
 public interface CrudRepository<T extends AbstractEntity>{
-    T save(T entity) throws RepositoryException;
+    T save(T entity);
 
-    List<T> findAll() throws RepositoryException;
+    List<T> findAll();
 
-    T findById(Long id) throws RepositoryException;
+    T findById(Long id);
 
-    T update(Long id, T entity) throws RepositoryException;
+    T update(Long id, T entity);
 
-    boolean delete(Long id) throws RepositoryException;
+    boolean delete(Long id);
 }
