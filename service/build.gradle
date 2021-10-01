@@ -10,6 +10,12 @@ repositories {
 }
 
 dependencies {
+    implementation project(':model')
+    implementation project(':persistence')
+
+    implementation 'org.springframework:spring-context:5.3.9'
+    implementation 'org.springframework:spring-core:5.3.9'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
