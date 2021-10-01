@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class GiftCertificateDto {
-    private long id;
+    private Long id;
     private String name;
     private String description;
-    private int price;
-    private int duration;
+    private Integer price;
+    private Integer duration;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createDate;
@@ -48,7 +48,7 @@ public class GiftCertificateDto {
         this.description = description;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
@@ -56,7 +56,7 @@ public class GiftCertificateDto {
         this.price = price;
     }
 
-    public int getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
