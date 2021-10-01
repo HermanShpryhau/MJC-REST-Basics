@@ -48,8 +48,6 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
         certificate.setDescription(dto.getDescription());
         certificate.setPrice(dto.getPrice());
         certificate.setDuration(dto.getDuration());
-        certificate.setCreateDate(Timestamp.valueOf(dto.getCreateDate()));
-        certificate.setLastUpdateDate(Timestamp.valueOf(dto.getLastUpdateDate()));
-        return null;
+        return certificate;
     }
 }

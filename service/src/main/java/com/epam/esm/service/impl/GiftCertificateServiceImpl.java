@@ -100,6 +100,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
+    public List<Tag> fetchAssociatedTags(long certificateId) {
+        return certificateRepository.findAssociatedTags(certificateId);
+    }
+
+    @Override
     public GiftCertificateDto updateCertificate(GiftCertificateDto dto) {
         GiftCertificate certificateToUpdate = Optional.of(certificateRepository.findById(dto.getId()))
                 .orElseThrow(() -> new ServiceException(ExceptionCode.CERTIFICATE_NOT_FOUND));
@@ -145,8 +150,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public void deleteCertificate(GiftCertificateDto dto) {
-        boolean isDeleted = certificateRepository.delete(dto.getId());
+    public void deleteCertificate(long id) {
+        boolean isDeleted = certificateRepository.delete(id);
         if (!isDeleted) {
             throw new ServiceException(ExceptionCode.CERTIFICATE_NOT_FOUND);
         }

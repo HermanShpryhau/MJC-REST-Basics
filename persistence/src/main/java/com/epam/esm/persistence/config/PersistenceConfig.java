@@ -53,7 +53,8 @@ public class PersistenceConfig {
     public SimpleJdbcInsert giftCertificateJdbcInsert(JdbcTemplate jdbcTemplate) {
         return new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("Gift_certificate")
-                .usingGeneratedKeyColumns("id");
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("name", "description", "price", "duration");
     }
 
     @Bean

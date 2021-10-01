@@ -63,8 +63,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     public GiftCertificate save(GiftCertificate entity) {
         Map<String, Object> parameters = buildParametersMap(entity);
         Number id = jdbcInsert.executeAndReturnKey(parameters);
-        entity.setId(id.longValue());
-        return entity;
+        return findById(id.longValue());
     }
 
     private Map<String, Object> buildParametersMap(GiftCertificate entity) {
@@ -73,8 +72,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         parameters.put(ColumnName.DESCRIPTION_COLUMN, entity.getDescription());
         parameters.put(ColumnName.PRICE_COLUMN, entity.getPrice());
         parameters.put(ColumnName.DURATION_COLUMN, entity.getDuration());
-        parameters.put(ColumnName.CREATE_DATE_COLUMN, entity.getCreateDate());
-        parameters.put(ColumnName.LAST_UPDATE_DATE_COLUMN, entity.getLastUpdateDate());
         return parameters;
     }
 
