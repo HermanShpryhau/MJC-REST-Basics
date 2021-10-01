@@ -14,7 +14,7 @@ dependencies {
 
     implementation 'org.springframework:spring-jdbc:5.3.10'
     implementation 'org.springframework:spring-context:5.3.10'
-    implementation 'commons-dbcp:commons-dbcp:20030825.184428'
+    implementation 'commons-dbcp:commons-dbcp:1.4'
     implementation 'mysql:mysql-connector-java:8.0.25'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
