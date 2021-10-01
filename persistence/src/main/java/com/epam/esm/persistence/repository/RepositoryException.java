@@ -1,6 +1,6 @@
 package com.epam.esm.persistence.repository;
 
-public class RepositoryException extends Exception {
+public class RepositoryException extends RuntimeException {
     public RepositoryException() {
         super();
     }
