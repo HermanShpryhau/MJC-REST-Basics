@@ -4,9 +4,11 @@ import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.persistence.repository.ColumnName;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
+import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -105,13 +107,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public List<GiftCertificate> findByPatternInNameOrDescription(String pattern) {
-        return jdbcTemplate.query(SELECT_BY_NAME_OR_DESCRIPTION_QUERY, certificateRowMapper, pattern, pattern);
-    }
-
-    @Override
-    public List<GiftCertificate> findByTagName(String tagName) {
-        return jdbcTemplate.query(SELECT_BY_TAG_NAME_QUERY, certificateRowMapper, tagName);
+    public List<GiftCertificate> findWithFilters(QueryFiltersConfig config) {
+        PreparedStatementCreator statementCreator = new GiftCertificatePreparedStatementCreator(config);
+        return jdbcTemplate.query(statementCreator, certificateRowMapper);
     }
 
     @Override

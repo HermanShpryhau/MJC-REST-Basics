@@ -4,17 +4,18 @@ import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GiftCertificateService {
     GiftCertificateDto addCertificate(GiftCertificateDto dto);
 
     List<GiftCertificateDto> fetchAllCertificates();
 
+    List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<String> tagName,
+                                                          Optional<List<String>> sortTypes,
+                                                          Optional<String> searchPattern);
+
     GiftCertificateDto fetchCertificateById(Long id);
-
-    List<GiftCertificateDto> searchByPatternInNameOrDescription(String pattern);
-
-    List<GiftCertificateDto> fetchCertificatesWithTag(String tagName);
 
     List<Tag> fetchAssociatedTags(long certificateId);
 

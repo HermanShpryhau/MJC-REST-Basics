@@ -7,6 +7,9 @@ import com.epam.esm.exception.ExceptionCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;
+import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
+import com.epam.esm.persistence.repository.filter.SortColumn;
+import com.epam.esm.persistence.repository.filter.SortDirection;
 import com.epam.esm.service.GiftCertificateDtoTranslator;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,24 +82,29 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
+    public List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<String> tagName, Optional<List<String>> sortTypes, Optional<String> searchPattern) {
+        QueryFiltersConfig.Builder filterConfigBuilder = QueryFiltersConfig.builder();
+        tagName.ifPresent(filterConfigBuilder::withTag);
+        if (sortTypes.isPresent()) {
+            List<String> sorts = sortTypes.get();
+            sorts.forEach((s) -> {
+                String[] elements = s.split("-");
+                SortColumn column = SortColumn.tryInferColumn(elements[0]);
+                SortDirection direction = SortDirection.valueOf(elements[1].toUpperCase());
+                filterConfigBuilder.withSort(column, direction);
+            });
+        }
+        searchPattern.ifPresent(filterConfigBuilder::withSearchPattern);
+        QueryFiltersConfig config = filterConfigBuilder.build();
+        return certificateRepository.findWithFilters(config).stream()
+                .map(dtoTranslator::giftCertificateToDto).collect(Collectors.toList());
+    }
+
+    @Override
     public GiftCertificateDto fetchCertificateById(Long id) {
         Optional<GiftCertificate> certificateOptional = Optional.of(certificateRepository.findById(id));
         return certificateOptional.map(dtoTranslator::giftCertificateToDto)
                 .orElseThrow(() -> new SecurityException(ExceptionCode.CERTIFICATE_NOT_FOUND));
-    }
-
-    @Override
-    public List<GiftCertificateDto> searchByPatternInNameOrDescription(String pattern) {
-        return null;
-    }
-
-    @Override
-    public List<GiftCertificateDto> fetchCertificatesWithTag(String tagName) {
-        Tag tag = Optional.of(tagRepository.findByName(tagName))
-                .orElseThrow(() -> new ServiceException(ExceptionCode.TAG_NOT_FOUND));
-        return tagRepository.findAssociatedGiftCertificates(tag.getId()).stream()
-                .map(dtoTranslator::giftCertificateToDto)
-                .collect(Collectors.toList());
     }
 
     @Override
