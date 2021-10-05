@@ -11,7 +11,9 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class GiftCertificatePreparedStatementCreator implements PreparedStatementCreator {
-    private static final String BASE_QUERY = "SELECT * FROM Gift_certificate";
+    private static final String BASE_QUERY = "SELECT Gift_certificate.id, Gift_certificate.name, " +
+            "Gift_certificate.description, Gift_certificate.price, Gift_certificate.duration, " +
+            "Gift_certificate.create_date, Gift_certificate.last_update_date FROM Gift_certificate";
     private static final String JOIN_TAGS = " JOIN Gift_certificate_has_Tag GchT on Gift_certificate.id = GchT.certificate JOIN Tag T on T.id = GchT.tag";
     private static final String WHERE = " WHERE ";
     private static final String TAG_NAME = "T.name LIKE  CONCAT('%', ?, '%')";
@@ -44,6 +46,7 @@ public class GiftCertificatePreparedStatementCreator implements PreparedStatemen
             statement.setObject(parameterIndex++, filtersConfig.getTag());
         }
         if (filtersConfig.hasSearchPattern()) {
+            statement.setObject(parameterIndex++, filtersConfig.getSearchPattern());
             statement.setObject(parameterIndex, filtersConfig.getSearchPattern());
         }
     }
@@ -64,6 +67,8 @@ public class GiftCertificatePreparedStatementCreator implements PreparedStatemen
         if (filtersConfig.hasSearchPattern()) {
             if (hasTagSection) {
                 queryBuilder.append(AND);
+            } else {
+                queryBuilder.append(WHERE);
             }
             queryBuilder.append(NAME_DESCRIPTION_PATTERN);
         }
