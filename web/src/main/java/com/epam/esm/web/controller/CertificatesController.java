@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/certificates")
@@ -19,8 +20,12 @@ public class CertificatesController {
     }
 
     @GetMapping
-    public List<GiftCertificateDto> getAllCertificates() {
-        return certificateService.fetchAllCertificates();
+    public List<GiftCertificateDto> getAllCertificatesWithFilters(
+            @RequestParam("tag") Optional<String> tagName,
+            @RequestParam("sort") Optional<List<String>> sortTypes,
+            @RequestParam("search") Optional<String> searchPattern
+    ) {
+        return certificateService.fetchCertificatesWithFilters(tagName, sortTypes, searchPattern);
     }
 
     @GetMapping("/{id}")
