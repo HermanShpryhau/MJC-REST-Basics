@@ -1,12 +1,12 @@
 package com.epam.esm.persistence.repository.filter;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class QueryFiltersConfig {
-    private String tag;
-    private Map<SortColumn, SortDirection> sortParameters;
-    private String searchPattern;
+    private final String tag;
+    private final Map<SortColumn, SortDirection> sortParameters;
+    private final String searchPattern;
 
     private QueryFiltersConfig(String tag, Map<SortColumn, SortDirection> sortParameters, String searchPattern) {
         this.tag = tag;
@@ -18,24 +18,12 @@ public class QueryFiltersConfig {
         return tag;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
     public Map<SortColumn, SortDirection> getSortParameters() {
         return sortParameters;
     }
 
-    public void setSortParameters(Map<SortColumn, SortDirection> sortParameters) {
-        this.sortParameters = sortParameters;
-    }
-
     public String getSearchPattern() {
         return searchPattern;
-    }
-
-    public void setSearchPattern(String searchPattern) {
-        this.searchPattern = searchPattern;
     }
 
     public boolean hasTag() {
@@ -43,16 +31,20 @@ public class QueryFiltersConfig {
     }
 
     public boolean hasSortParameters() {
-        return sortParameters != null && !sortParameters.isEmpty();
+        return !sortParameters.isEmpty();
     }
 
     public boolean hasSearchPattern() {
         return searchPattern != null;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private String tag;
-        private Map<SortColumn, SortDirection> sortParameters;
+        private final Map<SortColumn, SortDirection> sortParameters = new HashMap<>();
         private String searchPattern;
 
         public Builder withTag(String tagName) {
