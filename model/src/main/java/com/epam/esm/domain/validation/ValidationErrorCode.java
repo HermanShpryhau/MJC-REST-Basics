@@ -11,6 +11,8 @@ public class ValidationErrorCode {
     public static final String INVALID_CERTIFICATE_DURATION = "40008";
     public static final String DTO_TAG_LIST_NOT_NULL = "40009";
     public static final String INVALID_DTO_TAG = "40010";
+    public static final String TAG_NAME_NOT_NULL = "40011";
+    public static final String INVALID_TAG_NAME = "40012";
 
     private ValidationErrorCode() {
     }
