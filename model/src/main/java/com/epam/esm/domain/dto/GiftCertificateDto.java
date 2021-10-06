@@ -38,7 +38,8 @@ public class GiftCertificateDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime lastUpdateDate;
 
-    private List<Tag> tags;
+    @NotNull
+    private List<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> tags;
 
     public GiftCertificateDto() {
     }
