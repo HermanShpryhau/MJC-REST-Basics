@@ -14,6 +14,8 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5'
 
+    implementation 'org.hibernate.validator:hibernate-validator:6.0.22.Final'
+
     implementation project(':model')
     implementation project(':persistence')
     implementation project(':service')
