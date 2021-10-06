@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     @Qualifier("errorMessageSource")
-    public MessageSource messageSource(
+    public MessageSource errorMessageSource(
             @Value("${app.errorMessagesFilename}") String resourceBundleBaseName,
             @Value("${app.defaultEncoding}") String defaultEncoding) {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
