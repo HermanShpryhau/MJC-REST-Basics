@@ -1,8 +1,14 @@
 package com.epam.esm.domain;
 
+import com.epam.esm.domain.validation.ValidationErrorCode;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class Tag extends AbstractEntity implements Serializable {
+    @NotNull(message = ValidationErrorCode.TAG_NAME_NOT_NULL)
+    @Size(min = 1, max = 45, message = ValidationErrorCode.INVALID_TAG_NAME)
     private String name;
 
     public Tag() {}
