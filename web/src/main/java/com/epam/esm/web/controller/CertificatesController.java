@@ -2,8 +2,11 @@ package com.epam.esm.web.controller;
 
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.domain.validation.PatchDto;
+import com.epam.esm.domain.validation.SaveDto;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,12 +42,12 @@ public class CertificatesController {
     }
 
     @PostMapping
-    public GiftCertificateDto addCertificate(@RequestBody GiftCertificateDto certificate) {
+    public GiftCertificateDto addCertificate(@Validated(SaveDto.class) @RequestBody GiftCertificateDto certificate) {
         return certificateService.addCertificate(certificate);
     }
 
     @PatchMapping
-    public GiftCertificateDto updateCertificate(@RequestBody GiftCertificateDto certificate) {
+    public GiftCertificateDto updateCertificate(@Validated(PatchDto.class) @RequestBody GiftCertificateDto certificate) {
         return certificateService.updateCertificate(certificate);
     }
 

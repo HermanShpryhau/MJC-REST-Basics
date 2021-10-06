@@ -6,9 +6,9 @@ import com.epam.esm.domain.validation.PatchDto;
 import com.epam.esm.domain.validation.SaveDto;
 import com.epam.esm.domain.validation.ValidationErrorCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +38,7 @@ public class GiftCertificateDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime lastUpdateDate;
 
-    @NotNull
+    @NotNull(groups = {SaveDto.class}, message = ValidationErrorCode.DTO_TAG_LIST_NOT_NULL)
     private List<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> tags;
 
     public GiftCertificateDto() {
