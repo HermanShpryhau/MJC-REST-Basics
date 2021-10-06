@@ -66,7 +66,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return associatedTags;
     }
 
-
     private Tag addTagToCertificate(Long certificateId, String tagName) {
         Optional<Tag> tagToAdd = Optional.ofNullable(tagRepository.findByName(tagName));
         Tag tag = tagToAdd.orElse(tagRepository.save(new Tag(tagName)));
