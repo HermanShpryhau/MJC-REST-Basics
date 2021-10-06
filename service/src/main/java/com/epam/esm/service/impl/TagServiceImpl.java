@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
-import com.epam.esm.exception.ExceptionCode;
+import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.service.GiftCertificateDtoTranslator;
@@ -38,19 +38,19 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag fetchTagById(Long id) {
         return Optional.of(tagRepository.findById(id))
-                .orElseThrow(() -> new ServiceException(ExceptionCode.TAG_NOT_FOUND));
+                .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
     }
 
     @Override
     public Tag fetchTagByName(String name) {
         return Optional.of(tagRepository.findByName(name))
-                .orElseThrow(() -> new ServiceException(ExceptionCode.TAG_NOT_FOUND));
+                .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND));
     }
 
     @Override
     public List<GiftCertificateDto> fetchAssociatedCertificates(Long id) {
         Tag tag = Optional.of(tagRepository.findById(id))
-                .orElseThrow(() -> new ServiceException(ExceptionCode.TAG_NOT_FOUND));
+                .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
         return tagRepository.findAssociatedGiftCertificates(tag.getId()).stream()
                 .map(dtoTranslator::giftCertificateToDto)
                 .collect(Collectors.toList());
@@ -60,7 +60,7 @@ public class TagServiceImpl implements TagService {
     public void deleteTag(Long id) {
         boolean isDeleted = tagRepository.delete(id);
         if (!isDeleted) {
-            throw new ServiceException(ExceptionCode.TAG_NOT_FOUND);
+            throw new ServiceException(ErrorCode.TAG_NOT_FOUND, id);
         }
     }
 }

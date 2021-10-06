@@ -3,7 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
-import com.epam.esm.exception.ExceptionCode;
+import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;
@@ -68,7 +68,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
 
     private Tag addTagToCertificate(Long certificateId, String tagName) {
-        Optional<Tag> tagToAdd = Optional.of(tagRepository.findByName(tagName));
+        Optional<Tag> tagToAdd = Optional.ofNullable(tagRepository.findByName(tagName));
         Tag tag = tagToAdd.orElse(tagRepository.save(new Tag(tagName)));
         certificateRepository.addTagAssociation(certificateId, tag.getId());
         return tag;
@@ -102,9 +102,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public GiftCertificateDto fetchCertificateById(Long id) {
-        Optional<GiftCertificate> certificateOptional = Optional.of(certificateRepository.findById(id));
+        Optional<GiftCertificate> certificateOptional = Optional.ofNullable(certificateRepository.findById(id));
         return certificateOptional.map(dtoTranslator::giftCertificateToDto)
-                .orElseThrow(() -> new SecurityException(ExceptionCode.CERTIFICATE_NOT_FOUND));
+                .orElseThrow(() -> new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, id));
     }
 
     @Override
@@ -114,8 +114,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public GiftCertificateDto updateCertificate(GiftCertificateDto dto) {
-        GiftCertificate certificateToUpdate = Optional.of(certificateRepository.findById(dto.getId()))
-                .orElseThrow(() -> new ServiceException(ExceptionCode.CERTIFICATE_NOT_FOUND));
+        GiftCertificate certificateToUpdate = Optional.ofNullable(certificateRepository.findById(dto.getId()))
+                .orElseThrow(() -> new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, dto.getId()));
         updateSpecifiedParameters(dto, certificateToUpdate);
         GiftCertificate updatedCertificate = certificateRepository.update(certificateToUpdate.getId(), certificateToUpdate);
         return dtoTranslator.giftCertificateToDto(updatedCertificate);
@@ -161,7 +161,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public void deleteCertificate(long id) {
         boolean isDeleted = certificateRepository.delete(id);
         if (!isDeleted) {
-            throw new ServiceException(ExceptionCode.CERTIFICATE_NOT_FOUND);
+            throw new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, id);
         }
     }
 }
