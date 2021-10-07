@@ -33,11 +33,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             "SELECT * FROM Tag\n" +
                     "JOIN Gift_certificate_has_Tag GchT on Tag.id = GchT.tag\n" +
                     "WHERE GchT.certificate=?";
-    private static final String SELECT_BY_TAG_NAME_QUERY =
-            "SELECT * FROM Gift_certificate\n" +
-                    "JOIN Gift_certificate_has_Tag GchT on Gift_certificate.id = GchT.certificate\n" +
-                    "JOIN Tag T on T.id = GchT.tag\n" +
-                    "WHERE T.name='Tag 2'";
     private static final String ADD_TAG_ASSOCIATION_QUERY =
             "INSERT INTO Gift_certificate_has_Tag (certificate, tag) VALUES(?, ?)";
     private static final String REMOVE_TAG_ASSOCIATION_QUERY =
