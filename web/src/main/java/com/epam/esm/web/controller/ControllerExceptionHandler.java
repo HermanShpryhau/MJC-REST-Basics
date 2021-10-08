@@ -35,8 +35,8 @@ public class ControllerExceptionHandler {
         return new HttpErrorResponse(e.getErrorCode(),message);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public HttpErrorResponse handleValidationExceptions(
             MethodArgumentNotValidException e) {
