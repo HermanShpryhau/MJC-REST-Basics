@@ -120,4 +120,48 @@ public class GiftCertificateDto {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || o.getClass() != getClass()) return false;
+
+        GiftCertificateDto other = (GiftCertificateDto) o;
+
+        if (!id.equals(other.id)) return false;
+        if (!name.equals(other.name)) return false;
+        if (!description.equals(other.description)) return false;
+        if (!price.equals(other.price)) return false;
+        if (!duration.equals(other.duration)) return false;
+        if (!createDate.equals(other.createDate)) return false;
+        if (!lastUpdateDate.equals(other.lastUpdateDate)) return false;
+        return tags.equals(other.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + price.hashCode();
+        result = 31 * result + duration.hashCode();
+        result = 31 * result + createDate.hashCode();
+        result = 31 * result + lastUpdateDate.hashCode();
+        result = 31 * result + tags.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "GiftCertificateDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", duration=" + duration +
+                ", createDate=" + createDate +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", tags=" + tags +
+                '}';
+    }
 }
