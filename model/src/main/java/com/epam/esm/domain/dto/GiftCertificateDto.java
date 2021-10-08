@@ -46,6 +46,17 @@ public class GiftCertificateDto {
     public GiftCertificateDto() {
     }
 
+    public GiftCertificateDto(Long id, String name, String description, Integer price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> tags) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
+    }
+
     public long getId() {
         return id;
     }
