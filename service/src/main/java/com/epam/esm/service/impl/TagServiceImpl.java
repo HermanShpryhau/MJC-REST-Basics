@@ -37,19 +37,19 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag fetchTagById(Long id) {
-        return Optional.of(tagRepository.findById(id))
+        return Optional.ofNullable(tagRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
     }
 
     @Override
     public Tag fetchTagByName(String name) {
-        return Optional.of(tagRepository.findByName(name))
+        return Optional.ofNullable(tagRepository.findByName(name))
                 .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND));
     }
 
     @Override
     public List<GiftCertificateDto> fetchAssociatedCertificates(Long id) {
-        Tag tag = Optional.of(tagRepository.findById(id))
+        Tag tag = Optional.ofNullable(tagRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
         return tagRepository.findAssociatedGiftCertificates(tag.getId()).stream()
                 .map(dtoTranslator::giftCertificateToDto)
