@@ -13,6 +13,16 @@ public class GiftCertificate extends AbstractEntity implements Serializable {
 
     public GiftCertificate() {}
 
+    public GiftCertificate(Long id, String name, String description, int price, int duration, Timestamp createDate, Timestamp lastUpdateDate) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
     public String getName() {
         return name;
     }
