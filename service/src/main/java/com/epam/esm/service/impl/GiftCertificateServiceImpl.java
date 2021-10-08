@@ -14,6 +14,7 @@ import com.epam.esm.service.GiftCertificateDtoTranslator;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,6 +35,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
+    @Transactional
     public GiftCertificateDto addCertificate(GiftCertificateDto dto) {
         GiftCertificate savedCertificate = certificateRepository.save(dtoTranslator.dtoToGiftCertificate(dto));
         List<Tag> savedTags = updateTags(savedCertificate.getId(), dto.getTags());
