@@ -8,6 +8,7 @@ import com.epam.esm.service.GiftCertificateDtoTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -47,6 +48,8 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
         certificate.setDescription(dto.getDescription());
         certificate.setPrice(dto.getPrice());
         certificate.setDuration(dto.getDuration());
+        certificate.setCreateDate(Timestamp.valueOf(dto.getCreateDate()));
+        certificate.setLastUpdateDate(Timestamp.valueOf(dto.getLastUpdateDate()));
         return certificate;
     }
 }
