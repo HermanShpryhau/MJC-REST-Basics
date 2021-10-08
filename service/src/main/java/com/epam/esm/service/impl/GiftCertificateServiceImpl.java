@@ -110,6 +110,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public List<Tag> fetchAssociatedTags(long certificateId) {
+        if (certificateRepository.findById(certificateId) == null) {
+            throw new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, certificateId);
+        }
         return certificateRepository.findAssociatedTags(certificateId);
     }
 
