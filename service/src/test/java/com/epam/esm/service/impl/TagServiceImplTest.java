@@ -53,7 +53,7 @@ class TagServiceImplTest {
 
     @Autowired
     public TagServiceImplTest(TagService service, TagRepository mockTagRepository,
-                              GiftCertificateDtoTranslator translator) {
+                              @Qualifier("mockTranslator") GiftCertificateDtoTranslator translator) {
         this.service = service;
         this.mockTagRepository = mockTagRepository;
         this.translator = translator;

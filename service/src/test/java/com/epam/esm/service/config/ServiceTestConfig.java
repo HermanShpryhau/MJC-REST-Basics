@@ -26,21 +26,28 @@ public class ServiceTestConfig {
     }
 
     @Bean
-    public GiftCertificateDtoTranslator dtoTranslator() {
+    @Qualifier("mockTranslator")
+    public GiftCertificateDtoTranslator mockDtoTranslator() {
         return Mockito.mock(GiftCertificateDtoTranslator.class);
+    }
+
+    @Bean
+    @Qualifier("realTranslator")
+    public GiftCertificateDtoTranslator realDtoTranslator(GiftCertificateRepository repository) {
+        return new GiftCertificateDtoTranslatorImpl(repository);
     }
 
     @Bean
     public GiftCertificateService giftCertificateServiceTestBean(
             GiftCertificateRepository giftCertificateRepository,
             TagRepository tagRepository,
-            GiftCertificateDtoTranslator dtoTranslator) {
+            @Qualifier("mockTranslator") GiftCertificateDtoTranslator dtoTranslator) {
         return new GiftCertificateServiceImpl(giftCertificateRepository, tagRepository, dtoTranslator);
     }
 
     @Bean
     public TagService tagServiceTestBean(TagRepository tagRepository,
-                                         GiftCertificateDtoTranslator dtoTranslator) {
+                                         @Qualifier("mockTranslator") GiftCertificateDtoTranslator dtoTranslator) {
         return new TagServiceImpl(tagRepository, dtoTranslator);
     }
 }

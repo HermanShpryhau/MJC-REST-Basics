@@ -61,7 +61,7 @@ class GiftCertificateServiceImplTest {
     @Autowired
     public GiftCertificateServiceImplTest(GiftCertificateService service,
                                           GiftCertificateRepository mockCertificateRepository,
-                                          GiftCertificateDtoTranslator translator) {
+                                          @Qualifier("mockTranslator") GiftCertificateDtoTranslator translator) {
         this.service = service;
         this.mockCertificateRepository = mockCertificateRepository;
         this.translator = translator;
