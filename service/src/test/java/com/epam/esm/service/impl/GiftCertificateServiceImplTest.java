@@ -68,26 +68,6 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void fetchAllCertificatesTest() {
-        Mockito.when(mockCertificateRepository.findAssociatedTags(1L)).thenReturn(CERTIFICATE_1_TAGS);
-        Mockito.when(mockCertificateRepository.findAssociatedTags(2L)).thenReturn(CERTIFICATE_2_TAGS);
-        Mockito.when(mockCertificateRepository.findAll()).thenReturn(Arrays.asList(TEST_CERTIFICATES));
-        Mockito.when(translator.giftCertificateToDto(TEST_CERTIFICATES[0])).thenReturn(TEST_CERTIFICATE_DTOS[0]);
-        Mockito.when(translator.giftCertificateToDto(TEST_CERTIFICATES[1])).thenReturn(TEST_CERTIFICATE_DTOS[1]);
-
-        List<GiftCertificateDto> result = service.fetchAllCertificates();
-        Assertions.assertEquals(Arrays.asList(TEST_CERTIFICATE_DTOS), result);
-    }
-
-    @Test
-    void fetchEmptyListIfNoCertificatesInDBTest() {
-        Mockito.when(mockCertificateRepository.findAll()).thenReturn(Collections.emptyList());
-
-        List<GiftCertificateDto> result = service.fetchAllCertificates();
-        Assertions.assertEquals(Collections.EMPTY_LIST, result);
-    }
-
-    @Test
     void fetchCertificateByIdTest() {
         Mockito.when(mockCertificateRepository.findById(1L)).thenReturn(TEST_CERTIFICATES[0]);
         Mockito.when(translator.giftCertificateToDto(TEST_CERTIFICATES[0])).thenReturn(TEST_CERTIFICATE_DTOS[0]);

@@ -9,8 +9,6 @@ import java.util.Optional;
 public interface GiftCertificateService {
     GiftCertificateDto addCertificate(GiftCertificateDto dto);
 
-    List<GiftCertificateDto> fetchAllCertificates();
-
     List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<String> tagName,
                                                           Optional<List<String>> sortTypes,
                                                           Optional<String> searchPattern);

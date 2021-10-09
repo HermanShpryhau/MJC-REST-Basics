@@ -76,13 +76,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificateDto> fetchAllCertificates() {
-        return certificateRepository.findAll().stream()
-                .map(dtoTranslator::giftCertificateToDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<String> tagName, Optional<List<String>> sortTypes, Optional<String> searchPattern) {
         QueryFiltersConfig.Builder filterConfigBuilder = QueryFiltersConfig.builder();
         tagName.ifPresent(filterConfigBuilder::withTag);
