@@ -35,7 +35,7 @@ public interface TagService {
     Tag fetchTagByName(String name);
 
     /**
-     * Fetches tags associated with gift certificate.
+     * Fetches certificates associated with tag.
      * @param id ID of gift certificate to find tags for
      * @return List of associated tags
      */

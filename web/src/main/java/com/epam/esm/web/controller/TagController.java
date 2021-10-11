@@ -57,7 +57,7 @@ public class TagController {
     }
 
     /**
-     * Gets tags associated with gift certificate.
+     * Gets certificates associated with tag.
      * @param id ID of gift certificate to find tags for
      * @return List of associated tags
      */
