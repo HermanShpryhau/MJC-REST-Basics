@@ -21,12 +21,9 @@ import java.util.Map;
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
     private static final String SELECT_ALL_CERTIFICATES_QUERY = "SELECT * FROM Gift_certificate";
     private static final String SELECT_BY_ID_QUERY = "SELECT * FROM Gift_certificate WHERE id=?";
-    private static final String SELECT_BY_NAME_OR_DESCRIPTION_QUERY =
-            "SELECT * FROM Gift_certificate\n" +
-                    "WHERE name LIKE CONCAT('%', ?, '%') OR description LIKE CONCAT('%', ?, '%')";
     private static final String UPDATE_QUERY =
             "UPDATE Gift_certificate SET " +
-                    "name=?, description=?, price=?, duration=?, last_update_date=? " +
+                    "name=?, description=?, price=?, duration=? " +
                     "WHERE id=?";
     private static final String DELETE_BY_ID_QUERY = "DELETE FROM Gift_certificate WHERE id=?";
     private static final String SELECT_ASSOCIATED_TAGS_QUERY =
@@ -90,8 +87,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                 entity.getDescription(),
                 entity.getPrice(),
                 entity.getDuration(),
-                entity.getCreateDate(),
-                entity.getLastUpdateDate()
+                id
         );
         return entity;
     }
