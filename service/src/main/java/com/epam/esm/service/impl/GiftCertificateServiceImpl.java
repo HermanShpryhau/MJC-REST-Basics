@@ -51,12 +51,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         Set<Tag> oldTagsSet = new HashSet<>(certificateRepository.findAssociatedTags(certificateId));
 
         for (Tag tag : oldTagsSet) {
-            removeTagFromCertificate(certificateId, tag.getId());
+            certificateRepository.removeTagAssociation(certificateId, tag.getId());
         }
-    }
-
-    private void removeTagFromCertificate(Long certificateId, Long tagId) {
-        certificateRepository.removeTagAssociation(certificateId, tagId);
     }
 
     private List<Tag> relinkTags(Long certificateId, List<Tag> newTags) {
