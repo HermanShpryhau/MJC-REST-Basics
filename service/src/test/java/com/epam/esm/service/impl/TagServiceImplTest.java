@@ -4,20 +4,15 @@ import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
 import com.epam.esm.exception.ServiceException;
-import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.service.GiftCertificateDtoTranslator;
-import com.epam.esm.service.GiftCertificateService;
-import com.epam.esm.service.TagService;
-import com.epam.esm.service.config.ServiceTestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -25,10 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = ServiceTestConfig.class)
+@ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
     private static final Tag[] TEST_TAGS = {
             new Tag(1L, "Tag 1"),
@@ -38,7 +30,8 @@ class TagServiceImplTest {
 
     private static final List<Tag> CERTIFICATE_1_TAGS = Arrays.asList(TEST_TAGS[0], TEST_TAGS[1]);
 
-    private static final GiftCertificate TEST_CERTIFICATE = new GiftCertificate(1L, "Tag 1", "Description 1", 1, 1,
+    private static final GiftCertificate TEST_CERTIFICATE =
+            new GiftCertificate(1L, "Tag 1", "Description 1", 1, 1,
                     Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
 
     private static final GiftCertificateDto TEST_CERTIFICATE_DTO =
@@ -47,17 +40,14 @@ class TagServiceImplTest {
                     TEST_CERTIFICATE.getDuration(), TEST_CERTIFICATE.getCreateDate().toLocalDateTime(),
                     TEST_CERTIFICATE.getLastUpdateDate().toLocalDateTime(), CERTIFICATE_1_TAGS);
 
-    private final TagService service;
-    private final TagRepository mockTagRepository;
-    private final GiftCertificateDtoTranslator translator;
+    @Mock
+    private TagRepository mockTagRepository;
 
-    @Autowired
-    public TagServiceImplTest(TagService service, TagRepository mockTagRepository,
-                              @Qualifier("mockTranslator") GiftCertificateDtoTranslator translator) {
-        this.service = service;
-        this.mockTagRepository = mockTagRepository;
-        this.translator = translator;
-    }
+    @Mock
+    private GiftCertificateDtoTranslator translator;
+
+    @InjectMocks
+    private TagServiceImpl service;
 
     @Test
     void fetchAllTagsTest() {
@@ -124,8 +114,6 @@ class TagServiceImplTest {
 
     @Test
     void deleteNonExistingTag() {
-        Mockito.when(mockTagRepository.findById(1L)).thenReturn(null);
-
         Assertions.assertThrows(ServiceException.class, () -> service.deleteTag(1L));
     }
 }
