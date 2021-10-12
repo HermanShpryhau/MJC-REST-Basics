@@ -5,26 +5,26 @@ import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
+import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.service.GiftCertificateDtoTranslator;
-import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.config.ServiceTestConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = ServiceTestConfig.class)
 class GiftCertificateServiceImplTest {
     private static final Tag[] TEST_TAGS = {
@@ -54,18 +54,17 @@ class GiftCertificateServiceImplTest {
                     TEST_CERTIFICATES[1].getLastUpdateDate().toLocalDateTime(), CERTIFICATE_2_TAGS)
     };
 
-    private final GiftCertificateService service;
-    private final GiftCertificateRepository mockCertificateRepository;
-    private final GiftCertificateDtoTranslator translator;
+    @Mock
+    private GiftCertificateRepository mockCertificateRepository;
 
-    @Autowired
-    public GiftCertificateServiceImplTest(GiftCertificateService service,
-                                          GiftCertificateRepository mockCertificateRepository,
-                                          @Qualifier("mockTranslator") GiftCertificateDtoTranslator translator) {
-        this.service = service;
-        this.mockCertificateRepository = mockCertificateRepository;
-        this.translator = translator;
-    }
+    @Mock
+    private TagRepository mockTagRepository;
+
+    @Mock
+    private GiftCertificateDtoTranslator translator;
+
+    @InjectMocks
+    private GiftCertificateServiceImpl service;
 
     @Test
     void fetchCertificateByIdTest() {
