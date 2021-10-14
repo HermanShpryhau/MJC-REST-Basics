@@ -42,3 +42,4 @@ INSERT INTO Gift_certificate_has_Tag (certificate, tag) VALUES (1, 2);
 
 INSERT INTO Gift_certificate_has_Tag (certificate, tag) VALUES (2, 2);
 INSERT INTO Gift_certificate_has_Tag (certificate, tag) VALUES (2, 3);
+

@@ -19,7 +19,6 @@ import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestPersistenceConfig.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class GiftCertificateRepositoryImplTest {
     private static final List<Tag> IN_DB_TAGS = Arrays.asList(
             new Tag(1L, "Tag 1"),
@@ -27,7 +26,7 @@ class GiftCertificateRepositoryImplTest {
             new Tag(3L, "Tag 3")
     );
 
-    private static final List<Tag> CERTIFICATE_1_TAGS = IN_DB_TAGS.subList(0, 2);
+    private static final List<Tag> CERTIFICATE_2_TAGS = IN_DB_TAGS.subList(1, 3);
 
     private static final List<GiftCertificate> IN_DB_CERTIFICATES = Arrays.asList(
             new GiftCertificate(1L, "Certificate 1", "Description 1", 119, 25,
@@ -36,7 +35,7 @@ class GiftCertificateRepositoryImplTest {
                     Timestamp.valueOf(LocalDateTime.parse("2021-09-27T18:13:56")), Timestamp.valueOf(LocalDateTime.parse("2021-09-27T18:13:56")))
     );
 
-    private static final GiftCertificate TEST_CERTIFICATE = new GiftCertificate(1L, "test", "test", 12, 12,
+    private static final GiftCertificate TEST_CERTIFICATE = new GiftCertificate(0L, "test", "test", 12, 12,
             null, null);
     private final GiftCertificateRepository repository;
 
@@ -46,7 +45,6 @@ class GiftCertificateRepositoryImplTest {
     }
 
     @Test
-    @Order(13)
     void save() {
         GiftCertificate saved = repository.save(TEST_CERTIFICATE);
         TEST_CERTIFICATE.setId(saved.getId());
@@ -56,36 +54,31 @@ class GiftCertificateRepositoryImplTest {
     }
 
     @Test
-    @Order(1)
     void findAll() {
         List<GiftCertificate> certificates = repository.findAll();
         Assertions.assertEquals(IN_DB_CERTIFICATES, certificates);
     }
 
     @Test
-    @Order(2)
     void findById() {
-        GiftCertificate certificate = repository.findById(1L);
-        Assertions.assertEquals(IN_DB_CERTIFICATES.get(0), certificate);
+        GiftCertificate certificate = repository.findById(2L);
+        Assertions.assertEquals(IN_DB_CERTIFICATES.get(1), certificate);
     }
 
     @Test
-    @Order(3)
     void findNonExistingCertificateById() {
         GiftCertificate certificate = repository.findById(100L);
         Assertions.assertNull(certificate);
     }
 
     @Test
-    @Order(4)
     void findWithFilters() {
-        QueryFiltersConfig config = QueryFiltersConfig.builder().withSearchPattern("Certificate 1").build();
+        QueryFiltersConfig config = QueryFiltersConfig.builder().withSearchPattern("2").build();
         GiftCertificate certificate = repository.findWithFilters(config).get(0);
-        Assertions.assertEquals(IN_DB_CERTIFICATES.get(0), certificate);
+        Assertions.assertEquals(IN_DB_CERTIFICATES.get(1), certificate);
     }
 
     @Test
-    @Order(5)
     void findWithFiltersNoMatchingCertificates() {
         QueryFiltersConfig config = QueryFiltersConfig.builder().withTag("Tag 123").build();
         List<GiftCertificate> certificates = repository.findWithFilters(config);
@@ -93,49 +86,43 @@ class GiftCertificateRepositoryImplTest {
     }
 
     @Test
-    @Order(6)
     void findAssociatedTags() {
-        List<Tag> tags = repository.findAssociatedTags(1L);
-        Assertions.assertEquals(CERTIFICATE_1_TAGS, tags);
+        List<Tag> tags = repository.findAssociatedTags(2L);
+        Assertions.assertEquals(CERTIFICATE_2_TAGS, tags);
     }
 
     @Test
-    @Order(7)
     void findAssociatedTagsForNonExistingCertificate() {
         List<Tag> tags = repository.findAssociatedTags(123L);
         Assertions.assertEquals(Collections.emptyList(), tags);
     }
 
     @Test
-    @Order(8)
     void update() {
         GiftCertificate updatedCertificate = repository.update(1L, TEST_CERTIFICATE);
         Assertions.assertEquals(TEST_CERTIFICATE, updatedCertificate);
     }
 
     @Test
-    @Order(11)
     void deleteExistingCertificate() {
         Assertions.assertTrue(repository.delete(1L));
     }
 
     @Test
-    @Order(12)
     void deleteNonExistingCertificate() {
         Assertions.assertFalse(repository.delete(123L));
     }
 
     @Test
-    @Order(9)
     void addTagAssociation() {
         repository.addTagAssociation(1L, IN_DB_TAGS.get(2).getId());
         Assertions.assertEquals(IN_DB_TAGS, repository.findAssociatedTags(1L));
     }
 
     @Test
-    @Order(10)
     void removeTagAssociation() {
-        repository.removeTagAssociation(1L, IN_DB_TAGS.get(2).getId());
-        Assertions.assertEquals(CERTIFICATE_1_TAGS, repository.findAssociatedTags(1L));
+        List<GiftCertificate> certificates = repository.findAll();
+        repository.removeTagAssociation(2L, IN_DB_TAGS.get(2).getId());
+        Assertions.assertEquals(Collections.singletonList(IN_DB_TAGS.get(1)), repository.findAssociatedTags(2L));
     }
 }
