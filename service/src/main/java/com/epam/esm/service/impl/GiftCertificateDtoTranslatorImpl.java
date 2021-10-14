@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTranslator {
@@ -28,8 +29,12 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
         dto.setDescription(certificate.getDescription());
         dto.setPrice(certificate.getPrice());
         dto.setDuration(certificate.getDuration());
-        dto.setCreateDate(certificate.getCreateDate().toLocalDateTime());
-        dto.setLastUpdateDate(certificate.getLastUpdateDate().toLocalDateTime());
+        Optional.ofNullable(certificate.getCreateDate()).ifPresent(
+                (createDate) -> dto.setCreateDate(createDate.toLocalDateTime())
+        );
+        Optional.ofNullable(certificate.getLastUpdateDate()).ifPresent(
+                (lastUpdateDate) -> dto.setLastUpdateDate(lastUpdateDate.toLocalDateTime())
+        );
         dto.setTags(tags);
         return dto;
     }
@@ -48,8 +53,12 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
         certificate.setDescription(dto.getDescription());
         certificate.setPrice(dto.getPrice());
         certificate.setDuration(dto.getDuration());
-        certificate.setCreateDate(Timestamp.valueOf(dto.getCreateDate()));
-        certificate.setLastUpdateDate(Timestamp.valueOf(dto.getLastUpdateDate()));
+        Optional.ofNullable(dto.getCreateDate()).ifPresent(
+                (createDate) -> certificate.setCreateDate(Timestamp.valueOf(createDate))
+        );
+        Optional.ofNullable(dto.getLastUpdateDate()).ifPresent(
+                (lastUpdateDate) -> certificate.setLastUpdateDate(Timestamp.valueOf(lastUpdateDate))
+        );
         return certificate;
     }
 }
