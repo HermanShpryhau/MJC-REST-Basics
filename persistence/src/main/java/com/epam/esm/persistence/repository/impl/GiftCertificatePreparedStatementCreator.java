@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class GiftCertificatePreparedStatementCreator implements PreparedStatementCreator {
-    private static final String BASE_QUERY = "SELECT Gift_certificate.id, Gift_certificate.name, " +
+    private static final String BASE_QUERY = "SELECT DISTINCT Gift_certificate.id, Gift_certificate.name, " +
             "Gift_certificate.description, Gift_certificate.price, Gift_certificate.duration, " +
             "Gift_certificate.create_date, Gift_certificate.last_update_date FROM Gift_certificate";
     private static final String JOIN_TAGS = " JOIN Gift_certificate_has_Tag GchT on Gift_certificate.id = " +
