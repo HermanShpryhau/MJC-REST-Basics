@@ -49,18 +49,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private void unlinkTags(Long certificateId) {
         Set<Tag> oldTagsSet = new HashSet<>(certificateRepository.findAssociatedTags(certificateId));
-
-        for (Tag tag : oldTagsSet) {
-            certificateRepository.removeTagAssociation(certificateId, tag.getId());
-        }
+        oldTagsSet.forEach((tag) -> certificateRepository.removeTagAssociation(certificateId, tag.getId()));
     }
 
     private List<Tag> relinkTags(Long certificateId, List<Tag> newTags) {
         Set<Tag> newTagsSet = new HashSet<>(newTags);
         List<Tag> associatedTags = new ArrayList<>();
-        for (Tag tag : newTagsSet) {
-            associatedTags.add(addTagToCertificate(certificateId, tag.getName()));
-        }
+        newTagsSet.forEach((tag) -> associatedTags.add(addTagToCertificate(certificateId, tag.getName())));
         return associatedTags;
     }
 
@@ -116,39 +111,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private void updateSpecifiedParameters(GiftCertificateDto dto, GiftCertificate certificateToUpdate) {
-        updateName(dto, certificateToUpdate);
-        updateDescription(dto, certificateToUpdate);
-        updatePrice(dto, certificateToUpdate);
-        updateDuration(dto, certificateToUpdate);
+        Optional.ofNullable(dto.getName()).ifPresent(certificateToUpdate::setName);
+        Optional.ofNullable(dto.getDescription()).ifPresent(certificateToUpdate::setDescription);
+        Optional.ofNullable(dto.getPrice()).ifPresent(certificateToUpdate::setPrice);
+        Optional.ofNullable(dto.getDuration()).ifPresent(certificateToUpdate::setDuration);
         updateTags(certificateToUpdate.getId(), dto.getTags());
-    }
-
-    private void updateName(GiftCertificateDto dto, GiftCertificate certificateToUpdate) {
-        String name = dto.getName();
-        if (name != null) {
-            certificateToUpdate.setName(name);
-        }
-    }
-
-    private void updateDescription(GiftCertificateDto dto, GiftCertificate certificateToUpdate) {
-        String description = dto.getDescription();
-        if (description != null) {
-            certificateToUpdate.setDescription(description);
-        }
-    }
-
-    private void updatePrice(GiftCertificateDto dto, GiftCertificate certificateToUpdate) {
-        Integer price = dto.getPrice();
-        if (price != null) {
-            certificateToUpdate.setPrice(price);
-        }
-    }
-
-    private void updateDuration(GiftCertificateDto dto, GiftCertificate certificateToUpdate) {
-        Integer duration = dto.getDuration();
-        if (duration != null) {
-            certificateToUpdate.setDuration(duration);
-        }
     }
 
     @Override
