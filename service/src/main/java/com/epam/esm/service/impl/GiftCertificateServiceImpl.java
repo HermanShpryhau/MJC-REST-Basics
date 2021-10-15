@@ -67,9 +67,19 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<String> tagName, Optional<List<String>> sortTypes, Optional<String> searchPattern) {
+    public List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<String> tagName,
+                                                                 Optional<List<String>> sortTypes,
+                                                                 Optional<String> searchPattern) {
         QueryFiltersConfig.Builder filterConfigBuilder = QueryFiltersConfig.builder();
         tagName.ifPresent(filterConfigBuilder::withTag);
+        addSortsToConfig(sortTypes, filterConfigBuilder);
+        searchPattern.ifPresent(filterConfigBuilder::withSearchPattern);
+        QueryFiltersConfig config = filterConfigBuilder.build();
+        return certificateRepository.findWithFilters(config).stream()
+                .map(dtoTranslator::giftCertificateToDto).collect(Collectors.toList());
+    }
+
+    private void addSortsToConfig(Optional<List<String>> sortTypes, QueryFiltersConfig.Builder filterConfigBuilder) {
         if (sortTypes.isPresent()) {
             List<String> sorts = sortTypes.get();
             sorts.forEach((s) -> {
@@ -79,10 +89,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 filterConfigBuilder.withSort(column, direction);
             });
         }
-        searchPattern.ifPresent(filterConfigBuilder::withSearchPattern);
-        QueryFiltersConfig config = filterConfigBuilder.build();
-        return certificateRepository.findWithFilters(config).stream()
-                .map(dtoTranslator::giftCertificateToDto).collect(Collectors.toList());
     }
 
     @Override
