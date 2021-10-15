@@ -6,8 +6,10 @@ import com.epam.esm.domain.dto.GiftCertificateDto;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;
-import com.epam.esm.service.GiftCertificateDtoTranslator;
 
+import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
+import com.epam.esm.service.GiftCertificateService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
@@ -56,16 +58,41 @@ class GiftCertificateServiceImplTest {
     @Mock
     private TagRepository mockTagRepository;
 
-    @Mock
-    private GiftCertificateDtoTranslator translator;
-
     @InjectMocks
-    private GiftCertificateServiceImpl service;
+    private GiftCertificateDtoTranslatorImpl translator;
+
+    private GiftCertificateService service;
+
+    @BeforeEach
+    void setUp() {
+        service = new GiftCertificateServiceImpl(mockCertificateRepository, mockTagRepository, translator);
+    }
+
+    @Test
+    void addCertificateTest() {
+        Mockito.when(mockCertificateRepository.save(TEST_CERTIFICATES[0])).thenReturn(TEST_CERTIFICATES[0]);
+        Mockito.when(mockTagRepository.findByName(TEST_TAGS[0].getName())).thenReturn(TEST_TAGS[0]);
+        Mockito.when(mockTagRepository.findByName(TEST_TAGS[1].getName())).thenReturn(TEST_TAGS[1]);
+
+        GiftCertificateDto savedCertificate = service.addCertificate(TEST_CERTIFICATE_DTOS[0]);
+        savedCertificate.setTags(savedCertificate.getTags().stream().sorted(Comparator.comparing(Tag::getId)).collect(Collectors.toList()));
+        Assertions.assertEquals(TEST_CERTIFICATE_DTOS[0], savedCertificate);
+    }
+
+    @Test
+    void fetchCertificatesWithFiltersTest() {
+        Mockito.when(mockCertificateRepository.findWithFilters(Mockito.any(QueryFiltersConfig.class)))
+                .thenReturn(Collections.singletonList(TEST_CERTIFICATES[0]));
+        Mockito.when(mockCertificateRepository.findAssociatedTags(TEST_CERTIFICATES[0].getId())).thenReturn(CERTIFICATE_1_TAGS);
+
+        List<GiftCertificateDto> certificate = service.fetchCertificatesWithFilters(Optional.empty(), Optional.empty(), Optional.empty());
+        Assertions.assertEquals(Collections.singletonList(TEST_CERTIFICATE_DTOS[0]), certificate);
+    }
 
     @Test
     void fetchCertificateByIdTest() {
         Mockito.when(mockCertificateRepository.findById(1L)).thenReturn(TEST_CERTIFICATES[0]);
-        Mockito.when(translator.giftCertificateToDto(TEST_CERTIFICATES[0])).thenReturn(TEST_CERTIFICATE_DTOS[0]);
+        Mockito.when(mockCertificateRepository.findAssociatedTags(TEST_CERTIFICATES[0].getId())).thenReturn(CERTIFICATE_1_TAGS);
 
         GiftCertificateDto result = service.fetchCertificateById(1L);
         Assertions.assertEquals(TEST_CERTIFICATE_DTOS[0], result);
@@ -95,7 +122,19 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void updateNonExistingTagTest() {
+    void updateCertificateTest() {
+        Mockito.when(mockCertificateRepository.findById(1L)).thenReturn(TEST_CERTIFICATES[0]);
+        Mockito.when(mockCertificateRepository.update(1L, TEST_CERTIFICATES[0])).thenReturn(TEST_CERTIFICATES[0]);
+        Mockito.when(mockTagRepository.findByName(TEST_TAGS[0].getName())).thenReturn(TEST_TAGS[0]);
+        Mockito.when(mockTagRepository.findByName(TEST_TAGS[1].getName())).thenReturn(TEST_TAGS[1]);
+        Mockito.when(mockCertificateRepository.findAssociatedTags(1L)).thenReturn(CERTIFICATE_1_TAGS);
+
+        GiftCertificateDto updatedCertificate = service.updateCertificate(TEST_CERTIFICATE_DTOS[0]);
+        Assertions.assertEquals(TEST_CERTIFICATE_DTOS[0], updatedCertificate);
+    }
+
+    @Test
+    void updateNonExistingCertificateTest() {
         Mockito.when(mockCertificateRepository.findById(1L)).thenReturn(null);
 
         Assertions.assertThrows(ServiceException.class, () -> service.updateCertificate(TEST_CERTIFICATE_DTOS[0]));
