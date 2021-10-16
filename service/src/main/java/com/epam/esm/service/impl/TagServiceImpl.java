@@ -6,6 +6,7 @@ import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.service.GiftCertificateDtoTranslator;
+import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of {@link TagService}.
+ */
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;

@@ -12,6 +12,9 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of {@link GiftCertificateDtoTranslator} interface.
+ */
 @Service
 public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTranslator {
     private final GiftCertificateRepository certificateRepository;

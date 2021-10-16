@@ -6,6 +6,10 @@ import com.epam.esm.domain.dto.GiftCertificateDto;
 
 import java.util.List;
 
+/**
+ * {@code GiftCertificateDtoTranslator} interface to provide translation of {@link GiftCertificate} objects to
+ * {@link GiftCertificateDto} objects and vice versa.
+ */
 public interface GiftCertificateDtoTranslator {
     /**
      * Translates gift certificate entity to gift certificate DTO.

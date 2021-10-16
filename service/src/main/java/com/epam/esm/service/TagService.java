@@ -5,6 +5,9 @@ import com.epam.esm.domain.dto.GiftCertificateDto;
 
 import java.util.List;
 
+/**
+ * {@code TagService} is an interface that contains all operations available for tags resource of the API.
+ */
 public interface TagService {
 
     /**
