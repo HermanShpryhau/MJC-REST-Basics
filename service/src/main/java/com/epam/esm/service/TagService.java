@@ -9,6 +9,7 @@ public interface TagService {
 
     /**
      * Saves tag to data source.
+     *
      * @param tag Tag entity to save
      * @return Saved tag entity
      */
@@ -16,12 +17,14 @@ public interface TagService {
 
     /**
      * Fetches all tags in data source.
+     *
      * @return List of found tags
      */
     List<Tag> fetchAllTags();
 
     /**
      * Fetches tag by ID.
+     *
      * @param id ID of tag to fetch
      * @return Found tag entity
      */
@@ -29,6 +32,7 @@ public interface TagService {
 
     /**
      * Fetches tag by name.
+     *
      * @param name Name of tag to fetch
      * @return Found tag entity
      */
@@ -36,6 +40,7 @@ public interface TagService {
 
     /**
      * Fetches certificates associated with tag.
+     *
      * @param id ID of gift certificate to find tags for
      * @return List of associated tags
      */
@@ -43,6 +48,7 @@ public interface TagService {
 
     /**
      * Deletes tag from data source
+     *
      * @param id ID of tag entity to delete
      */
     void deleteTag(Long id);

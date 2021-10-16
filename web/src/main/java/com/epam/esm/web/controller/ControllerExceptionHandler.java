@@ -23,7 +23,7 @@ public class ControllerExceptionHandler {
     private final MessageSource messageSource;
 
     @Autowired
-    public ControllerExceptionHandler(@Qualifier("errorMessageSource") MessageSource messageSource){
+    public ControllerExceptionHandler(@Qualifier("errorMessageSource") MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
@@ -32,7 +32,7 @@ public class ControllerExceptionHandler {
     @ResponseBody
     public HttpErrorResponse handleServiceException(ServiceException e) {
         String message = messageSource.getMessage(e.getErrorCode(), e.getArguments(), Locale.ENGLISH);
-        return new HttpErrorResponse(e.getErrorCode(),message);
+        return new HttpErrorResponse(e.getErrorCode(), message);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

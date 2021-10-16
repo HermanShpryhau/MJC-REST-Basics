@@ -8,5 +8,6 @@ public class ColumnName {
     public static final String CREATE_DATE_COLUMN = "create_date";
     public static final String LAST_UPDATE_DATE_COLUMN = "last_update_date";
 
-    private ColumnName() {}
+    private ColumnName() {
+    }
 }

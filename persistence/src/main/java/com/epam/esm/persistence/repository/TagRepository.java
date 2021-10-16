@@ -9,6 +9,7 @@ public interface TagRepository extends CrudRepository<Tag> {
 
     /**
      * Finds all gift certificates associated with tag
+     *
      * @param tagId ID of tag
      * @return List of associated gift certificates
      */
@@ -16,6 +17,7 @@ public interface TagRepository extends CrudRepository<Tag> {
 
     /**
      * Finds tag by name
+     *
      * @param name Name of tag to search
      * @return Found tag or {@code null}
      */

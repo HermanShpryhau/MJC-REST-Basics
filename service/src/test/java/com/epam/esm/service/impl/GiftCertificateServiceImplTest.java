@@ -6,12 +6,11 @@ import com.epam.esm.domain.dto.GiftCertificateDto;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;
-
 import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
 import com.epam.esm.service.GiftCertificateService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -85,7 +84,8 @@ class GiftCertificateServiceImplTest {
                 .thenReturn(Collections.singletonList(TEST_CERTIFICATES[0]));
         Mockito.when(mockCertificateRepository.findAssociatedTags(TEST_CERTIFICATES[0].getId())).thenReturn(CERTIFICATE_1_TAGS);
 
-        List<GiftCertificateDto> certificate = service.fetchCertificatesWithFilters(Optional.empty(), Optional.empty(), Optional.empty());
+        List<GiftCertificateDto> certificate = service.fetchCertificatesWithFilters(Optional.empty(),
+                Optional.empty(), Optional.empty());
         Assertions.assertEquals(Collections.singletonList(TEST_CERTIFICATE_DTOS[0]), certificate);
     }
 

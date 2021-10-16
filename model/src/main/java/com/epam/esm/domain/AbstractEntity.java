@@ -3,7 +3,8 @@ package com.epam.esm.domain;
 public abstract class AbstractEntity {
     private Long id;
 
-    protected AbstractEntity() {}
+    protected AbstractEntity() {
+    }
 
     protected AbstractEntity(Long id) {
         this.id = id;

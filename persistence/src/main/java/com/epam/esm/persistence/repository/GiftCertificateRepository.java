@@ -10,6 +10,7 @@ public interface GiftCertificateRepository extends CrudRepository<GiftCertificat
 
     /**
      * Finds gift certificates according to filtering parameters supplied with {@link QueryFiltersConfig}
+     *
      * @param config Filter configuration
      * @return List of found gift certificates
      */
@@ -17,6 +18,7 @@ public interface GiftCertificateRepository extends CrudRepository<GiftCertificat
 
     /**
      * Finds tags associated with gift certificate
+     *
      * @param certificateId ID of gift certificate
      * @return List of associated tags
      */
@@ -24,15 +26,17 @@ public interface GiftCertificateRepository extends CrudRepository<GiftCertificat
 
     /**
      * Associates gift certificate with tag
+     *
      * @param certificateId ID of gift certificate to associate
-     * @param tagId ID of tag to associate
+     * @param tagId         ID of tag to associate
      */
     void addTagAssociation(Long certificateId, Long tagId);
 
     /**
      * Removes association between gift certificate and tag
+     *
      * @param certificateId ID of gift certificate to associate
-     * @param tagId ID of tag to associate
+     * @param tagId         ID of tag to associate
      */
     void removeTagAssociation(Long certificateId, Long tagId);
 }

@@ -11,7 +11,8 @@ public class Tag extends AbstractEntity implements Serializable {
     @Size(min = 1, max = 45, message = ValidationErrorCode.INVALID_TAG_NAME)
     private String name;
 
-    public Tag() {}
+    public Tag() {
+    }
 
     public Tag(String name) {
         this.name = name;

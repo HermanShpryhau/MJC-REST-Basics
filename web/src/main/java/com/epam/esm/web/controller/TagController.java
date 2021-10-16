@@ -6,14 +6,7 @@ import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,6 +26,7 @@ public class TagController {
 
     /**
      * Saves tag to data source.
+     *
      * @param tag Tag to save
      * @return Saved tag
      */
@@ -43,6 +37,7 @@ public class TagController {
 
     /**
      * Gets all tags in data source.
+     *
      * @return List of found tags
      */
     @GetMapping
@@ -52,6 +47,7 @@ public class TagController {
 
     /**
      * Gets tag by ID.
+     *
      * @param id ID of tag to fetch
      * @return Found tag entity
      */
@@ -62,6 +58,7 @@ public class TagController {
 
     /**
      * Gets certificates associated with tag.
+     *
      * @param id ID of gift certificate to find tags for
      * @return List of associated tags
      */
@@ -72,6 +69,7 @@ public class TagController {
 
     /**
      * Deletes tag from data source
+     *
      * @param id ID of tag entity to delete
      */
     @DeleteMapping("/{id}")

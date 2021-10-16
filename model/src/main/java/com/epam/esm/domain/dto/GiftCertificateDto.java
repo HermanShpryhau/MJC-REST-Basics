@@ -7,10 +7,9 @@ import com.epam.esm.domain.validation.SaveDto;
 import com.epam.esm.domain.validation.ValidationErrorCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import javax.validation.constraints.NotNull;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,11 +17,13 @@ public class GiftCertificateDto {
     private Long id;
 
     @NotNull(groups = SaveDto.class, message = ValidationErrorCode.CERTIFICATE_NAME_NOT_NULL)
-    @Size(min = 1, max = 45, groups = {SaveDto.class, PatchDto.class}, message = ValidationErrorCode.INVALID_CERTIFICATE_NAME_LENGTH)
+    @Size(min = 1, max = 45, groups = {SaveDto.class, PatchDto.class}, message =
+            ValidationErrorCode.INVALID_CERTIFICATE_NAME_LENGTH)
     private String name;
 
     @NotNull(groups = SaveDto.class, message = ValidationErrorCode.CERTIFICATE_DESCRIPTION_NOT_NULL)
-    @Size(min = 1, max = 300, groups = {SaveDto.class, PatchDto.class}, message = ValidationErrorCode.INVALID_CERTIFICATE_DESCRIPTION_LENGTH)
+    @Size(min = 1, max = 300, groups = {SaveDto.class, PatchDto.class}, message =
+            ValidationErrorCode.INVALID_CERTIFICATE_DESCRIPTION_LENGTH)
     private String description;
 
     @NotNull(groups = SaveDto.class, message = ValidationErrorCode.CERTIFICATE_PRICE_NOT_NULL)
@@ -45,7 +46,9 @@ public class GiftCertificateDto {
     public GiftCertificateDto() {
     }
 
-    public GiftCertificateDto(Long id, String name, String description, Integer price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> tags) {
+    public GiftCertificateDto(Long id, String name, String description, Integer price, Integer duration,
+                              LocalDateTime createDate, LocalDateTime lastUpdateDate, List<@DtoTag(groups =
+            {SaveDto.class, PatchDto.class}) Tag> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
