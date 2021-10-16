@@ -10,6 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * Implementation of {@link PreparedStatementCreator} that constructs prepared statements for searching the
+ * gift certificates table with filters.
+ */
 public class GiftCertificatePreparedStatementCreator implements PreparedStatementCreator {
     private static final String BASE_QUERY = "SELECT DISTINCT Gift_certificate.id, Gift_certificate.name, " +
             "Gift_certificate.description, Gift_certificate.price, Gift_certificate.duration, " +

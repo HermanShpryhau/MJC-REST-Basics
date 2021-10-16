@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller of gift certificates resource.
+ */
+
 @RestController
 @RequestMapping("/certificates")
 public class CertificatesController {
@@ -24,8 +28,9 @@ public class CertificatesController {
 
     /**
      * Gets gift certificate DTOs matching supplied filtering parameters.
-     * @param tagName Name of tag to search certificates by
-     * @param sortTypes Names of parameters ond sort directions to sort by. String must follow the pattern {@code [parameter name]-[asc|desc]}
+     *
+     * @param tagName       Name of tag to search certificates by
+     * @param sortTypes     Names of parameters ond sort directions to sort by. String must follow the patter {@code [parameter name]-[asc|desc]}
      * @param searchPattern String to search for in name or description of the certificate
      * @return List of matching gift certificate DTOs
      */
@@ -40,6 +45,7 @@ public class CertificatesController {
 
     /**
      * Gets gift certificate DTO by ID.
+     *
      * @param id ID of gift certificate to find
      * @return Gift certificate DTO derived from gift certificate entity with corresponding ID
      */
@@ -50,6 +56,7 @@ public class CertificatesController {
 
     /**
      * Gets tags associated with gift certificate.
+     *
      * @param id ID of gift certificate to find associated tags for
      * @return List of associated tags
      */
@@ -60,6 +67,7 @@ public class CertificatesController {
 
     /**
      * Saves gift certificate to data source.
+     *
      * @param certificate Gift certificate DTO
      * @return DTO derived from saved entity
      */
@@ -70,6 +78,7 @@ public class CertificatesController {
 
     /**
      * Updates gift certificate in data source with data supplied DTO.
+     *
      * @param certificate DTO containing updated data. Only the supplied data will be updated. The rest will remain unchanged.
      * @return Updated gift certificate DTO
      */
@@ -80,6 +89,7 @@ public class CertificatesController {
 
     /**
      * Deletes gift certificate from data source.
+     *
      * @param id ID of gift certificate to delete
      */
     @DeleteMapping("/{id}")

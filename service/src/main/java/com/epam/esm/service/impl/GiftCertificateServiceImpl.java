@@ -42,23 +42,49 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return dtoTranslator.giftCertificateToDto(savedCertificate, savedTags);
     }
 
+    /**
+     * Updates list of tags associated with gift certificate.
+     *
+     * @param certificateId ID of gift certificate
+     * @param newTags       List of tags that must be associated with certificate after update
+     * @return List of tags that were associated with certificate after update.
+     */
     private List<Tag> updateTags(Long certificateId, List<Tag> newTags) {
         unlinkTags(certificateId);
-        return relinkTags(certificateId, newTags);
+        return linkTags(certificateId, newTags);
     }
 
+    /**
+     * Removes all associations between gift certificate and it's tags.
+     *
+     * @param certificateId ID of gift certificate
+     */
     private void unlinkTags(Long certificateId) {
         Set<Tag> oldTagsSet = new HashSet<>(certificateRepository.findAssociatedTags(certificateId));
         oldTagsSet.forEach((tag) -> certificateRepository.removeTagAssociation(certificateId, tag.getId()));
     }
 
-    private List<Tag> relinkTags(Long certificateId, List<Tag> newTags) {
+    /**
+     * Associates tags with gift certificate.
+     *
+     * @param certificateId ID of gift certificate
+     * @param newTags       List of tags that must be associated with certificate after update
+     * @return List of tags associated with certificate.
+     */
+    private List<Tag> linkTags(Long certificateId, List<Tag> newTags) {
         Set<Tag> newTagsSet = new HashSet<>(newTags);
         List<Tag> associatedTags = new ArrayList<>();
         newTagsSet.forEach((tag) -> associatedTags.add(addTagToCertificate(certificateId, tag.getName())));
         return associatedTags;
     }
 
+    /**
+     * Adds association between tag and gift certificate.
+     *
+     * @param certificateId ID of gift certificate
+     * @param tagName       Name of tag to make association with
+     * @return Tag entity that was associated with gift certificate.
+     */
     private Tag addTagToCertificate(Long certificateId, String tagName) {
         Optional<Tag> tagToAdd = Optional.ofNullable(tagRepository.findByName(tagName));
         Tag tag = tagToAdd.orElse(tagRepository.save(new Tag(tagName)));
@@ -79,6 +105,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .map(dtoTranslator::giftCertificateToDto).collect(Collectors.toList());
     }
 
+    /**
+     * Parses sort parameters strings and adds that sorts to filter configuration
+     *
+     * @param sortTypes           List of sort parameters strings
+     * @param filterConfigBuilder {@link QueryFiltersConfig} builder
+     */
     private void addSortsToConfig(Optional<List<String>> sortTypes, QueryFiltersConfig.Builder filterConfigBuilder) {
         if (sortTypes.isPresent()) {
             List<String> sorts = sortTypes.get();
@@ -112,10 +144,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         GiftCertificate certificateToUpdate = Optional.ofNullable(certificateRepository.findById(dto.getId()))
                 .orElseThrow(() -> new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, dto.getId()));
         updateSpecifiedParameters(dto, certificateToUpdate);
-        GiftCertificate updatedCertificate = certificateRepository.update(certificateToUpdate.getId(), certificateToUpdate);
+        GiftCertificate updatedCertificate = certificateRepository.update(certificateToUpdate.getId(),
+                certificateToUpdate);
         return dtoTranslator.giftCertificateToDto(updatedCertificate);
     }
 
+    /**
+     * Updates state of gift certificate entity with state of supplied DTO.
+     *
+     * @param dto                 Gift certificate DTO
+     * @param certificateToUpdate Updated entity
+     */
     private void updateSpecifiedParameters(GiftCertificateDto dto, GiftCertificate certificateToUpdate) {
         Optional.ofNullable(dto.getName()).ifPresent(certificateToUpdate::setName);
         Optional.ofNullable(dto.getDescription()).ifPresent(certificateToUpdate::setDescription);

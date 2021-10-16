@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
+/**
+ * Controller of tags resource.
+ */
+
 @RestController
 @RequestMapping("/tags")
 public class TagController {
