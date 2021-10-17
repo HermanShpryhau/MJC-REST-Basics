@@ -8,11 +8,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "Tag")
-public class Tag {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+public class Tag extends AbstractEntity {
     @NotNull(message = ValidationErrorCode.TAG_NAME_NOT_NULL)
     @Size(min = 1, max = 45, message = ValidationErrorCode.INVALID_TAG_NAME)
     private String name;
@@ -25,16 +21,8 @@ public class Tag {
     }
 
     public Tag(Long id, String name) {
-        this.id = id;
+        super(id);
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
