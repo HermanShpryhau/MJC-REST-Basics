@@ -1,6 +1,6 @@
 package com.epam.esm.persistence.repository.filter;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class QueryFiltersConfig {
@@ -44,7 +44,7 @@ public class QueryFiltersConfig {
 
     public static class Builder {
         private String tag;
-        private final Map<SortColumn, SortDirection> sortParameters = new HashMap<>();
+        private final Map<SortColumn, SortDirection> sortParameters = new EnumMap<>(SortColumn.class);
         private String searchPattern;
 
         public Builder withTag(String tagName) {

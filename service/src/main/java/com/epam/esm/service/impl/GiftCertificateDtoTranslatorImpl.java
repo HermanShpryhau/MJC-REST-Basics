@@ -30,10 +30,10 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
         dto.setPrice(certificate.getPrice());
         dto.setDuration(certificate.getDuration());
         Optional.ofNullable(certificate.getCreateDate()).ifPresent(
-                (createDate) -> dto.setCreateDate(createDate.toLocalDateTime())
+                createDate -> dto.setCreateDate(createDate.toLocalDateTime())
         );
         Optional.ofNullable(certificate.getLastUpdateDate()).ifPresent(
-                (lastUpdateDate) -> dto.setLastUpdateDate(lastUpdateDate.toLocalDateTime())
+                lastUpdateDate -> dto.setLastUpdateDate(lastUpdateDate.toLocalDateTime())
         );
         dto.setTags(tags);
         return dto;
@@ -54,10 +54,10 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
         certificate.setPrice(dto.getPrice());
         certificate.setDuration(dto.getDuration());
         Optional.ofNullable(dto.getCreateDate()).ifPresent(
-                (createDate) -> certificate.setCreateDate(Timestamp.valueOf(createDate))
+                createDate -> certificate.setCreateDate(Timestamp.valueOf(createDate))
         );
         Optional.ofNullable(dto.getLastUpdateDate()).ifPresent(
-                (lastUpdateDate) -> certificate.setLastUpdateDate(Timestamp.valueOf(lastUpdateDate))
+                lastUpdateDate -> certificate.setLastUpdateDate(Timestamp.valueOf(lastUpdateDate))
         );
         return certificate;
     }

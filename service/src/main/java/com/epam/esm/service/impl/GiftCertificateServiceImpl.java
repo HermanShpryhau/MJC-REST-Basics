@@ -61,7 +61,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      */
     private void unlinkTags(Long certificateId) {
         Set<Tag> oldTagsSet = new HashSet<>(certificateRepository.findAssociatedTags(certificateId));
-        oldTagsSet.forEach((tag) -> certificateRepository.removeTagAssociation(certificateId, tag.getId()));
+        oldTagsSet.forEach(tag -> certificateRepository.removeTagAssociation(certificateId, tag.getId()));
     }
 
     /**
@@ -74,7 +74,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private List<Tag> linkTags(Long certificateId, List<Tag> newTags) {
         Set<Tag> newTagsSet = new HashSet<>(newTags);
         List<Tag> associatedTags = new ArrayList<>();
-        newTagsSet.forEach((tag) -> associatedTags.add(addTagToCertificate(certificateId, tag.getName())));
+        newTagsSet.forEach(tag -> associatedTags.add(addTagToCertificate(certificateId, tag.getName())));
         return associatedTags;
     }
 
@@ -114,7 +114,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private void addSortsToConfig(Optional<List<String>> sortTypes, QueryFiltersConfig.Builder filterConfigBuilder) {
         if (sortTypes.isPresent()) {
             List<String> sorts = sortTypes.get();
-            sorts.forEach((s) -> {
+            sorts.forEach(s -> {
                 String[] elements = s.split("-");
                 SortColumn column = SortColumn.tryInferColumn(elements[0]);
                 SortDirection direction = SortDirection.valueOf(elements[1].toUpperCase());
