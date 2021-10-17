@@ -1,6 +1,15 @@
 package com.epam.esm.domain;
 
+import com.epam.esm.domain.validation.DtoTag;
+import com.epam.esm.domain.validation.PatchDto;
+import com.epam.esm.domain.validation.SaveDto;
+import com.epam.esm.domain.validation.ValidationErrorCode;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,21 +18,34 @@ import java.util.Set;
 @Table(name = "Gift_certificate")
 public class GiftCertificate extends AbstractEntity {
     @Column(name = "name")
+    @NotNull(groups = SaveDto.class, message = ValidationErrorCode.CERTIFICATE_NAME_NOT_NULL)
+    @Size(min = 1, max = 45, groups = {SaveDto.class, PatchDto.class}, message =
+            ValidationErrorCode.INVALID_CERTIFICATE_NAME_LENGTH)
     private String name;
 
     @Column(name = "description")
+    @NotNull(groups = SaveDto.class, message = ValidationErrorCode.CERTIFICATE_DESCRIPTION_NOT_NULL)
+    @Size(min = 1, max = 300, groups = {SaveDto.class, PatchDto.class}, message =
+            ValidationErrorCode.INVALID_CERTIFICATE_DESCRIPTION_LENGTH)
     private String description;
 
     @Column(name = "price")
+    @NotNull(groups = SaveDto.class, message = ValidationErrorCode.CERTIFICATE_PRICE_NOT_NULL)
+    @Positive(groups = {SaveDto.class, PatchDto.class}, message = ValidationErrorCode.INVALID_CERTIFICATE_PRICE)
     private int price;
 
     @Column(name = "duration")
+    @NotNull(groups = SaveDto.class, message = ValidationErrorCode.CERTIFICATE_DURATION_NOT_NULL)
+    @Positive(groups = {SaveDto.class, PatchDto.class}, message = ValidationErrorCode.INVALID_CERTIFICATE_DURATION)
     private int duration;
 
     @Column(name = "create_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createDate;
 
     @Column(name = "last_update_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+
     private LocalDateTime lastUpdateDate;
 
     @ManyToMany
@@ -32,7 +54,7 @@ public class GiftCertificate extends AbstractEntity {
             joinColumns = @JoinColumn(name = "certificate"),
             inverseJoinColumns = @JoinColumn(name = "tag")
     )
-    private Set<Tag> associatedTags = new HashSet<>();
+    private Set<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> associatedTags = new HashSet<>();
 
     public GiftCertificate() {
     }
