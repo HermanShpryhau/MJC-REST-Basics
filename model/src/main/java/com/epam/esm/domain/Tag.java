@@ -2,11 +2,17 @@ package com.epam.esm.domain;
 
 import com.epam.esm.domain.validation.ValidationErrorCode;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
-public class Tag extends AbstractEntity implements Serializable {
+@Entity
+@Table(name = "Tag")
+public class Tag {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     @NotNull(message = ValidationErrorCode.TAG_NAME_NOT_NULL)
     @Size(min = 1, max = 45, message = ValidationErrorCode.INVALID_TAG_NAME)
     private String name;
@@ -19,8 +25,16 @@ public class Tag extends AbstractEntity implements Serializable {
     }
 
     public Tag(Long id, String name) {
-        super(id);
+        this.id = id;
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
