@@ -50,6 +50,14 @@ class TagServiceImplTest {
     private TagServiceImpl service;
 
     @Test
+    void addTagTest() {
+        Mockito.when(mockTagRepository.save(TEST_TAGS[0])).thenReturn(TEST_TAGS[0]);
+
+        Tag saved = service.addTag(TEST_TAGS[0]);
+        Assertions.assertEquals(TEST_TAGS[0], saved);
+    }
+
+    @Test
     void fetchAllTagsTest() {
         Mockito.when(mockTagRepository.findAll()).thenReturn(Arrays.asList(TEST_TAGS));
 
