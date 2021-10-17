@@ -26,13 +26,13 @@ class GiftCertificateDtoTranslatorImplTest {
     );
 
     private static final GiftCertificate TEST_CERTIFICATE = new GiftCertificate(1L, "Tag 1", "Description 1", 1, 1,
-            Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
+            LocalDateTime.now(), LocalDateTime.now());
 
     private static final GiftCertificateDto TEST_CERTIFICATE_DTO =
             new GiftCertificateDto(TEST_CERTIFICATE.getId(), TEST_CERTIFICATE.getName(),
                     TEST_CERTIFICATE.getDescription(), TEST_CERTIFICATE.getPrice(),
-                    TEST_CERTIFICATE.getDuration(), TEST_CERTIFICATE.getCreateDate().toLocalDateTime(),
-                    TEST_CERTIFICATE.getLastUpdateDate().toLocalDateTime(), CERTIFICATE_1_TAGS);
+                    TEST_CERTIFICATE.getDuration(), TEST_CERTIFICATE.getCreateDate(),
+                    TEST_CERTIFICATE.getLastUpdateDate(), CERTIFICATE_1_TAGS);
 
     @Mock
     private GiftCertificateRepository mockRepository;

@@ -35,20 +35,20 @@ class GiftCertificateServiceImplTest {
 
     private static final GiftCertificate[] TEST_CERTIFICATES = {
             new GiftCertificate(1L, "Tag 1", "Description 1", 1, 1,
-                    Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now())),
+                    LocalDateTime.now(), LocalDateTime.now()),
             new GiftCertificate(2L, "Tag 2", "Description 2", 2, 2,
-                    Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()))
+                    LocalDateTime.now(), LocalDateTime.now())
     };
 
     private static final GiftCertificateDto[] TEST_CERTIFICATE_DTOS = {
             new GiftCertificateDto(TEST_CERTIFICATES[0].getId(), TEST_CERTIFICATES[0].getName(),
                     TEST_CERTIFICATES[0].getDescription(), TEST_CERTIFICATES[0].getPrice(),
-                    TEST_CERTIFICATES[0].getDuration(), TEST_CERTIFICATES[0].getCreateDate().toLocalDateTime(),
-                    TEST_CERTIFICATES[0].getLastUpdateDate().toLocalDateTime(), CERTIFICATE_1_TAGS),
+                    TEST_CERTIFICATES[0].getDuration(), TEST_CERTIFICATES[0].getCreateDate(),
+                    TEST_CERTIFICATES[0].getLastUpdateDate(), CERTIFICATE_1_TAGS),
             new GiftCertificateDto(TEST_CERTIFICATES[1].getId(), TEST_CERTIFICATES[1].getName(),
                     TEST_CERTIFICATES[1].getDescription(), TEST_CERTIFICATES[1].getPrice(),
-                    TEST_CERTIFICATES[1].getDuration(), TEST_CERTIFICATES[1].getCreateDate().toLocalDateTime(),
-                    TEST_CERTIFICATES[1].getLastUpdateDate().toLocalDateTime(), CERTIFICATE_2_TAGS)
+                    TEST_CERTIFICATES[1].getDuration(), TEST_CERTIFICATES[1].getCreateDate(),
+                    TEST_CERTIFICATES[1].getLastUpdateDate(), CERTIFICATE_2_TAGS)
     };
 
     @Mock

@@ -1,23 +1,44 @@
 package com.epam.esm.domain;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Gift_certificate")
 public class GiftCertificate extends AbstractEntity {
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "price")
     private int price;
+
+    @Column(name = "duration")
     private int duration;
-    private Timestamp createDate;
-    private Timestamp lastUpdateDate;
+
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
+
+    @Column(name = "last_update_date")
+    private LocalDateTime lastUpdateDate;
+
+    @ManyToMany
+    @JoinTable(
+            name = "Gift_certificate_has_Tag",
+            joinColumns = @JoinColumn(name = "certificate"),
+            inverseJoinColumns = @JoinColumn(name = "tag")
+    )
+    private Set<Tag> associatedTags = new HashSet<>();
 
     public GiftCertificate() {
     }
 
-    public GiftCertificate(Long id, String name, String description, int price, int duration, Timestamp createDate,
-                           Timestamp lastUpdateDate) {
+    public GiftCertificate(Long id, String name, String description, int price, int duration, LocalDateTime createDate,
+                           LocalDateTime lastUpdateDate) {
         super(id);
         this.name = name;
         this.description = description;
@@ -59,38 +80,45 @@ public class GiftCertificate extends AbstractEntity {
         this.duration = duration;
     }
 
-    public Timestamp getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Timestamp createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public Timestamp getLastUpdateDate() {
+    public LocalDateTime getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public Set<Tag> getAssociatedTags() {
+        return associatedTags;
+    }
+
+    public void setAssociatedTags(Set<Tag> associatedTags) {
+        this.associatedTags = associatedTags;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof GiftCertificate)) return false;
+        if (o == null ||o.getClass() != getClass()) return false;
         if (!super.equals(o)) return false;
 
-        GiftCertificate other = (GiftCertificate) o;
+        GiftCertificate that = (GiftCertificate) o;
 
-        if (!getId().equals(other.getId())) return false;
-
-        if (price != other.price) return false;
-        if (duration != other.duration) return false;
-        if (!name.equals(other.name)) return false;
-        if (!description.equals(other.description)) return false;
-        if (!createDate.equals(other.createDate)) return false;
-        return lastUpdateDate.equals(other.lastUpdateDate);
+        if (price != that.price) return false;
+        if (duration != that.duration) return false;
+        if (!name.equals(that.name)) return false;
+        if (!description.equals(that.description)) return false;
+        if (!createDate.equals(that.createDate)) return false;
+        if (!lastUpdateDate.equals(that.lastUpdateDate)) return false;
+        return associatedTags.equals(that.associatedTags);
     }
 
     @Override
@@ -102,18 +130,7 @@ public class GiftCertificate extends AbstractEntity {
         result = 31 * result + duration;
         result = 31 * result + createDate.hashCode();
         result = 31 * result + lastUpdateDate.hashCode();
+        result = 31 * result + associatedTags.hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "GiftCertificate{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", duration=" + duration +
-                ", createDate=" + createDate +
-                ", lastUpdateDate=" + lastUpdateDate +
-                '}';
     }
 }

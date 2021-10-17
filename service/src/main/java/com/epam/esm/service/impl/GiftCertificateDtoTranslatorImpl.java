@@ -8,7 +8,6 @@ import com.epam.esm.service.GiftCertificateDtoTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,12 +28,8 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
         dto.setDescription(certificate.getDescription());
         dto.setPrice(certificate.getPrice());
         dto.setDuration(certificate.getDuration());
-        Optional.ofNullable(certificate.getCreateDate()).ifPresent(
-                createDate -> dto.setCreateDate(createDate.toLocalDateTime())
-        );
-        Optional.ofNullable(certificate.getLastUpdateDate()).ifPresent(
-                lastUpdateDate -> dto.setLastUpdateDate(lastUpdateDate.toLocalDateTime())
-        );
+        Optional.ofNullable(certificate.getCreateDate()).ifPresent(dto::setCreateDate);
+        Optional.ofNullable(certificate.getLastUpdateDate()).ifPresent(dto::setLastUpdateDate);
         dto.setTags(tags);
         return dto;
     }
@@ -53,12 +48,8 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
         certificate.setDescription(dto.getDescription());
         certificate.setPrice(dto.getPrice());
         certificate.setDuration(dto.getDuration());
-        Optional.ofNullable(dto.getCreateDate()).ifPresent(
-                createDate -> certificate.setCreateDate(Timestamp.valueOf(createDate))
-        );
-        Optional.ofNullable(dto.getLastUpdateDate()).ifPresent(
-                lastUpdateDate -> certificate.setLastUpdateDate(Timestamp.valueOf(lastUpdateDate))
-        );
+        Optional.ofNullable(dto.getCreateDate()).ifPresent(certificate::setCreateDate);
+        Optional.ofNullable(dto.getLastUpdateDate()).ifPresent(certificate::setLastUpdateDate);
         return certificate;
     }
 }

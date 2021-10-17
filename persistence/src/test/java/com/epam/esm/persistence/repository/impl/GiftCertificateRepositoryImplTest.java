@@ -31,11 +31,11 @@ class GiftCertificateRepositoryImplTest {
 
     private static final List<GiftCertificate> IN_DB_CERTIFICATES = Arrays.asList(
             new GiftCertificate(1L, "Certificate 1", "Description 1", 119, 25,
-                    Timestamp.valueOf(LocalDateTime.parse("2021-09-28T18:13:56")),
-                    Timestamp.valueOf(LocalDateTime.parse("2021-09-28T18:13:56"))),
+                    LocalDateTime.parse("2021-09-28T18:13:56"),
+                    LocalDateTime.parse("2021-09-28T18:13:56")),
             new GiftCertificate(2L, "Certificate 2", "Description 2", 191, 28,
-                    Timestamp.valueOf(LocalDateTime.parse("2021-09-27T18:13:56")),
-                    Timestamp.valueOf(LocalDateTime.parse("2021-09-27T18:13:56")))
+                    LocalDateTime.parse("2021-09-27T18:13:56"),
+                    LocalDateTime.parse("2021-09-27T18:13:56"))
     );
 
     private static final GiftCertificate TEST_CERTIFICATE = new GiftCertificate(0L, "test", "test", 12, 12,
