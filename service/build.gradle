@@ -14,15 +14,9 @@ dependencies {
     implementation project(':model')
     implementation project(':persistence')
 
-    implementation 'org.springframework:spring-context:5.3.10'
-    implementation 'org.springframework:spring-core:5.3.10'
-    implementation 'org.springframework:spring-tx:5.3.10'
-
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5'
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.5'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     testImplementation 'org.mockito:mockito-core:4.0.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:4.0.0'
 }
