@@ -5,7 +5,6 @@ import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
 import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
-import com.epam.esm.japrepository.JpaGiftCertificateRepository;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
@@ -22,12 +21,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
-    private final JpaGiftCertificateRepository certificateRepository;
+    private final GiftCertificateRepository certificateRepository;
     private final TagRepository tagRepository;
     private final GiftCertificateDtoTranslator dtoTranslator;
 
     @Autowired
-    public GiftCertificateServiceImpl(JpaGiftCertificateRepository certificateRepository,
+    public GiftCertificateServiceImpl(GiftCertificateRepository certificateRepository,
                                       TagRepository tagRepository,
                                       GiftCertificateDtoTranslator dtoTranslator) {
         this.certificateRepository = certificateRepository;
