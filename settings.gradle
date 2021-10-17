@@ -1,7 +1,6 @@
 rootProject.name = 'MJC-REST-Basics'
 include 'web'
 include 'service'
-include 'repository'
 include 'persistence'
 include 'model'
 
