@@ -5,7 +5,6 @@ import com.epam.esm.domain.Tag;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,13 +17,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
-@Import({ProdDataSourceConfig.class, DevDataSourceConfig.class})
 public class PersistenceConfig {
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
-
     @Bean
     public RowMapper<GiftCertificate> giftCertificateRowMapper() {
         return new BeanPropertyRowMapper<>(GiftCertificate.class);
