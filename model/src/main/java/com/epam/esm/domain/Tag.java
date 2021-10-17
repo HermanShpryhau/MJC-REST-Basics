@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "Tag")
 public class Tag extends AbstractEntity {
+    @Column(name = "name")
     @NotNull(message = ValidationErrorCode.TAG_NAME_NOT_NULL)
     @Size(min = 1, max = 45, message = ValidationErrorCode.INVALID_TAG_NAME)
     private String name;
