@@ -1,19 +1,14 @@
 package com.epam.esm.persistence.repository.impl;
 
-import com.epam.esm.CertificatesApplication;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
-import com.epam.esm.persistence.config.TestPersistenceConfig;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
@@ -22,8 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = CertificatesApplication.class)
-@ContextConfiguration(classes = TestPersistenceConfig.class)
+@SpringBootTest
 class GiftCertificateRepositoryImplTest {
     private static final List<Tag> IN_DB_TAGS = Arrays.asList(
             new Tag(1L, "Tag 1"),
