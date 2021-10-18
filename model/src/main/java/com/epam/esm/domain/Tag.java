@@ -5,6 +5,8 @@ import com.epam.esm.domain.validation.ValidationErrorCode;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Tag")
@@ -13,6 +15,9 @@ public class Tag extends AbstractEntity {
     @NotNull(message = ValidationErrorCode.TAG_NAME_NOT_NULL)
     @Size(min = 1, max = 45, message = ValidationErrorCode.INVALID_TAG_NAME)
     private String name;
+
+    @ManyToMany(mappedBy = "associatedTags")
+    private Set<GiftCertificate> associatedCertificates = new HashSet<>();
 
     public Tag() {
     }
