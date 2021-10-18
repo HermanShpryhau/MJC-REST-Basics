@@ -8,20 +8,16 @@ import com.epam.esm.service.GiftCertificateDtoTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTranslator {
-    private final GiftCertificateRepository certificateRepository;
-
-    @Autowired
-    public GiftCertificateDtoTranslatorImpl(GiftCertificateRepository certificateRepository) {
-        this.certificateRepository = certificateRepository;
-    }
 
     @Override
-    public GiftCertificateDto giftCertificateToDto(GiftCertificate certificate, List<Tag> tags) {
+    public GiftCertificateDto giftCertificateToDto(GiftCertificate certificate) {
         GiftCertificateDto dto = new GiftCertificateDto();
         dto.setId(certificate.getId());
         dto.setName(certificate.getName());
@@ -30,14 +26,8 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
         dto.setDuration(certificate.getDuration());
         Optional.ofNullable(certificate.getCreateDate()).ifPresent(dto::setCreateDate);
         Optional.ofNullable(certificate.getLastUpdateDate()).ifPresent(dto::setLastUpdateDate);
-        dto.setTags(tags);
+        dto.setTags(new ArrayList<>(certificate.getAssociatedTags()));
         return dto;
-    }
-
-    @Override
-    public GiftCertificateDto giftCertificateToDto(GiftCertificate certificate) {
-        List<Tag> tags = certificateRepository.findAssociatedTags(certificate.getId());
-        return giftCertificateToDto(certificate, tags);
     }
 
     @Override
@@ -50,6 +40,7 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
         certificate.setDuration(dto.getDuration());
         Optional.ofNullable(dto.getCreateDate()).ifPresent(certificate::setCreateDate);
         Optional.ofNullable(dto.getLastUpdateDate()).ifPresent(certificate::setLastUpdateDate);
+        certificate.setAssociatedTags(new HashSet<>(dto.getTags()));
         return certificate;
     }
 }
