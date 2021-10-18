@@ -32,11 +32,10 @@ public interface CrudRepository<T extends AbstractEntity> {
     /**
      * Updates entity of type {@code T} in data source
      *
-     * @param id     ID of entity to update
      * @param entity Entity's new state
      * @return Updated entity
      */
-    T update(Long id, T entity);
+    T update(T entity);
 
     /**
      * Deletes entity of type {@code T} from data source
