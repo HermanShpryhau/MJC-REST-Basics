@@ -50,9 +50,9 @@ public class GiftCertificate extends AbstractEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "Gift_certificate_has_Tag",
-            joinColumns = @JoinColumn(name = "certificate"),
-            inverseJoinColumns = @JoinColumn(name = "tag")
+        name = "Gift_certificate_has_Tag",
+        joinColumns = @JoinColumn(name = "certificate"),
+        inverseJoinColumns = @JoinColumn(name = "tag")
     )
     private Set<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> associatedTags = new HashSet<>();
 
@@ -129,7 +129,7 @@ public class GiftCertificate extends AbstractEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null ||o.getClass() != getClass()) return false;
+        if (o == null || o.getClass() != getClass()) return false;
         if (!super.equals(o)) return false;
 
         GiftCertificate that = (GiftCertificate) o;
