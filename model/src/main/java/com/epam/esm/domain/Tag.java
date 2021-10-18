@@ -1,6 +1,7 @@
 package com.epam.esm.domain;
 
 import com.epam.esm.domain.validation.ValidationErrorCode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ public class Tag extends AbstractEntity {
     private String name;
 
     @ManyToMany(mappedBy = "associatedTags")
+    @JsonIgnore
     private Set<GiftCertificate> associatedCertificates = new HashSet<>();
 
     public Tag() {
@@ -39,18 +41,38 @@ public class Tag extends AbstractEntity {
         this.name = name;
     }
 
+    public Set<GiftCertificate> getAssociatedCertificates() {
+        return associatedCertificates;
+    }
+
+    public void setAssociatedCertificates(Set<GiftCertificate> associatedCertificates) {
+        this.associatedCertificates = associatedCertificates;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || o.getClass() != getClass()) return false;
+        if (!super.equals(o)) return false;
 
-        Tag other = (Tag) o;
-        if (!getId().equals(other.getId())) return false;
-        return name.equals(other.name);
+        Tag tag = (Tag) o;
+
+        if (!name.equals(tag.name)) return false;
+        return associatedCertificates.equals(tag.associatedCertificates);
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        int result = super.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + associatedCertificates.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }
