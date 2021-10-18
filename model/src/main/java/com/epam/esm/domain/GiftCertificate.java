@@ -4,7 +4,6 @@ import com.epam.esm.domain.validation.DtoTag;
 import com.epam.esm.domain.validation.PatchDto;
 import com.epam.esm.domain.validation.SaveDto;
 import com.epam.esm.domain.validation.ValidationErrorCode;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -40,15 +39,12 @@ public class GiftCertificate extends AbstractEntity {
     private int duration;
 
     @Column(name = "create_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    private LocalDateTime createDate;
+    private LocalDateTime createDate = LocalDateTime.now();
 
     @Column(name = "last_update_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
-    private LocalDateTime lastUpdateDate;
-
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
         name = "Gift_certificate_has_Tag",
         joinColumns = @JoinColumn(name = "certificate"),
@@ -124,6 +120,11 @@ public class GiftCertificate extends AbstractEntity {
 
     public void setAssociatedTags(Set<Tag> associatedTags) {
         this.associatedTags = associatedTags;
+    }
+
+    @PreUpdate
+    public void setLastUpdateDate() {
+        lastUpdateDate = LocalDateTime.now();
     }
 
     @Override
