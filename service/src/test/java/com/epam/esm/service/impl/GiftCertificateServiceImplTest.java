@@ -64,7 +64,7 @@ class GiftCertificateServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        service = new GiftCertificateServiceImpl(mockCertificateRepository, mockTagRepository, translator);
+        service = new GiftCertificateServiceImpl(mockCertificateRepository, translator);
     }
 
     @Test
@@ -124,7 +124,7 @@ class GiftCertificateServiceImplTest {
     @Test
     void updateCertificateTest() {
         Mockito.when(mockCertificateRepository.findById(1L)).thenReturn(TEST_CERTIFICATES[0]);
-        Mockito.when(mockCertificateRepository.update(1L, TEST_CERTIFICATES[0])).thenReturn(TEST_CERTIFICATES[0]);
+        Mockito.when(mockCertificateRepository.update(TEST_CERTIFICATES[0])).thenReturn(TEST_CERTIFICATES[0]);
         Mockito.when(mockTagRepository.findByName(TEST_TAGS[0].getName())).thenReturn(TEST_TAGS[0]);
         Mockito.when(mockTagRepository.findByName(TEST_TAGS[1].getName())).thenReturn(TEST_TAGS[1]);
         Mockito.when(mockCertificateRepository.findAssociatedTags(1L)).thenReturn(CERTIFICATE_1_TAGS);

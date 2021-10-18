@@ -6,7 +6,6 @@ import com.epam.esm.domain.dto.GiftCertificateDto;
 import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
-import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
 import com.epam.esm.persistence.repository.filter.SortColumn;
 import com.epam.esm.persistence.repository.filter.SortDirection;
@@ -22,15 +21,12 @@ import java.util.stream.Collectors;
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository certificateRepository;
-    private final TagRepository tagRepository;
     private final GiftCertificateDtoTranslator dtoTranslator;
 
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateRepository certificateRepository,
-                                      TagRepository tagRepository,
                                       GiftCertificateDtoTranslator dtoTranslator) {
         this.certificateRepository = certificateRepository;
-        this.tagRepository = tagRepository;
         this.dtoTranslator = dtoTranslator;
     }
 
@@ -38,58 +34,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto addCertificate(GiftCertificateDto dto) {
         GiftCertificate savedCertificate = certificateRepository.save(dtoTranslator.dtoToGiftCertificate(dto));
-        List<Tag> savedTags = updateTags(savedCertificate.getId(), dto.getTags());
-        return dtoTranslator.giftCertificateToDto(savedCertificate, savedTags);
-    }
-
-    /**
-     * Updates list of tags associated with gift certificate.
-     *
-     * @param certificateId ID of gift certificate
-     * @param newTags       List of tags that must be associated with certificate after update
-     * @return List of tags that were associated with certificate after update.
-     */
-    private List<Tag> updateTags(Long certificateId, List<Tag> newTags) {
-        unlinkTags(certificateId);
-        return linkTags(certificateId, newTags);
-    }
-
-    /**
-     * Removes all associations between gift certificate and it's tags.
-     *
-     * @param certificateId ID of gift certificate
-     */
-    private void unlinkTags(Long certificateId) {
-        Set<Tag> oldTagsSet = new HashSet<>(certificateRepository.findAssociatedTags(certificateId));
-        oldTagsSet.forEach(tag -> certificateRepository.removeTagAssociation(certificateId, tag.getId()));
-    }
-
-    /**
-     * Associates tags with gift certificate.
-     *
-     * @param certificateId ID of gift certificate
-     * @param newTags       List of tags that must be associated with certificate after update
-     * @return List of tags associated with certificate.
-     */
-    private List<Tag> linkTags(Long certificateId, List<Tag> newTags) {
-        Set<Tag> newTagsSet = new HashSet<>(newTags);
-        List<Tag> associatedTags = new ArrayList<>();
-        newTagsSet.forEach(tag -> associatedTags.add(addTagToCertificate(certificateId, tag.getName())));
-        return associatedTags;
-    }
-
-    /**
-     * Adds association between tag and gift certificate.
-     *
-     * @param certificateId ID of gift certificate
-     * @param tagName       Name of tag to make association with
-     * @return Tag entity that was associated with gift certificate.
-     */
-    private Tag addTagToCertificate(Long certificateId, String tagName) {
-        Optional<Tag> tagToAdd = Optional.ofNullable(tagRepository.findByName(tagName));
-        Tag tag = tagToAdd.orElse(tagRepository.save(new Tag(tagName)));
-        certificateRepository.addTagAssociation(certificateId, tag.getId());
-        return tag;
+        return dtoTranslator.giftCertificateToDto(savedCertificate);
     }
 
     @Override
@@ -144,8 +89,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         GiftCertificate certificateToUpdate = Optional.ofNullable(certificateRepository.findById(dto.getId()))
                 .orElseThrow(() -> new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, dto.getId()));
         updateSpecifiedParameters(dto, certificateToUpdate);
-        GiftCertificate updatedCertificate = certificateRepository.update(certificateToUpdate.getId(),
-                certificateToUpdate);
+        GiftCertificate updatedCertificate = certificateRepository.update(certificateToUpdate);
         return dtoTranslator.giftCertificateToDto(updatedCertificate);
     }
 
@@ -160,7 +104,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         Optional.ofNullable(dto.getDescription()).ifPresent(certificateToUpdate::setDescription);
         Optional.ofNullable(dto.getPrice()).ifPresent(certificateToUpdate::setPrice);
         Optional.ofNullable(dto.getDuration()).ifPresent(certificateToUpdate::setDuration);
-        updateTags(certificateToUpdate.getId(), dto.getTags());
     }
 
     @Override

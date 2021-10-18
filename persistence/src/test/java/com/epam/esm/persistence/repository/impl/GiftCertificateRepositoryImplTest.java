@@ -1,5 +1,6 @@
 package com.epam.esm.persistence.repository.impl;
 
+import com.epam.esm.CertificatesApplication;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.persistence.config.TestPersistenceConfig;
@@ -9,16 +10,19 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = CertificatesApplication.class)
 @ContextConfiguration(classes = TestPersistenceConfig.class)
 class GiftCertificateRepositoryImplTest {
     private static final List<Tag> IN_DB_TAGS = Arrays.asList(
@@ -102,7 +106,7 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void update() {
-        GiftCertificate updatedCertificate = repository.update(1L, TEST_CERTIFICATE);
+        GiftCertificate updatedCertificate = repository.update(TEST_CERTIFICATE);
         Assertions.assertEquals(TEST_CERTIFICATE, updatedCertificate);
     }
 
@@ -114,18 +118,5 @@ class GiftCertificateRepositoryImplTest {
     @Test
     void deleteNonExistingCertificate() {
         Assertions.assertFalse(repository.delete(123L));
-    }
-
-    @Test
-    void addTagAssociation() {
-        repository.addTagAssociation(1L, IN_DB_TAGS.get(2).getId());
-        Assertions.assertEquals(IN_DB_TAGS, repository.findAssociatedTags(1L));
-    }
-
-    @Test
-    void removeTagAssociation() {
-        List<GiftCertificate> certificates = repository.findAll();
-        repository.removeTagAssociation(2L, IN_DB_TAGS.get(2).getId());
-        Assertions.assertEquals(Collections.singletonList(IN_DB_TAGS.get(1)), repository.findAssociatedTags(2L));
     }
 }
