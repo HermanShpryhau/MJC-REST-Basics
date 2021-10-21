@@ -3,15 +3,16 @@ package com.epam.esm.service.impl;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.domain.dto.serialization.DtoSerializer;
 import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
 import com.epam.esm.persistence.repository.filter.SortAttribute;
 import com.epam.esm.persistence.repository.filter.SortDirection;
-import com.epam.esm.service.GiftCertificateDtoTranslator;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,20 +22,20 @@ import java.util.stream.Collectors;
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository certificateRepository;
-    private final GiftCertificateDtoTranslator dtoTranslator;
+    private final DtoSerializer<GiftCertificateDto, GiftCertificate> dtoSerializer;
 
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateRepository certificateRepository,
-                                      GiftCertificateDtoTranslator dtoTranslator) {
+                                      @Qualifier("giftCertificateDtoSerializer") DtoSerializer<GiftCertificateDto, GiftCertificate> dtoSerializer) {
         this.certificateRepository = certificateRepository;
-        this.dtoTranslator = dtoTranslator;
+        this.dtoSerializer = dtoSerializer;
     }
 
     @Override
     @Transactional
     public GiftCertificateDto addCertificate(GiftCertificateDto dto) {
-        GiftCertificate savedCertificate = certificateRepository.save(dtoTranslator.dtoToGiftCertificate(dto));
-        return dtoTranslator.giftCertificateToDto(savedCertificate);
+        GiftCertificate savedCertificate = certificateRepository.save(dtoSerializer.dtoToEntity(dto));
+        return dtoSerializer.dtoFromEntity(savedCertificate);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         searchPattern.ifPresent(filterConfigBuilder::withSearchPattern);
         QueryFiltersConfig config = filterConfigBuilder.build();
         return certificateRepository.findWithFilters(config, page, size).stream()
-                .map(dtoTranslator::giftCertificateToDto).collect(Collectors.toList());
+                .map(dtoSerializer::dtoFromEntity).collect(Collectors.toList());
     }
 
     /**
@@ -72,7 +73,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificateDto fetchCertificateById(Long id) {
         Optional<GiftCertificate> certificateOptional = Optional.ofNullable(certificateRepository.findById(id));
-        return certificateOptional.map(dtoTranslator::giftCertificateToDto)
+        return certificateOptional.map(dtoSerializer::dtoFromEntity)
                 .orElseThrow(() -> new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, id));
     }
 
@@ -91,7 +92,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .orElseThrow(() -> new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, dto.getId()));
         updateSpecifiedParameters(dto, certificateToUpdate);
         GiftCertificate updatedCertificate = certificateRepository.update(certificateToUpdate);
-        return dtoTranslator.giftCertificateToDto(updatedCertificate);
+        return dtoSerializer.dtoFromEntity(updatedCertificate);
     }
 
     /**
