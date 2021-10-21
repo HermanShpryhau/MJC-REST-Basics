@@ -4,32 +4,25 @@ import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.RowMapper;
+import com.epam.esm.persistence.repository.filter.SortAttribute;
+import com.epam.esm.persistence.repository.filter.SortDirection;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
     private static final String SELECT_ALL_QUERY = "SELECT giftCertificate from GiftCertificate giftCertificate";
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<GiftCertificate> certificateRowMapper;
-
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    public GiftCertificateRepositoryImpl(JdbcTemplate jdbcTemplate, RowMapper<GiftCertificate> certificateRowMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.certificateRowMapper = certificateRowMapper;
-    }
 
     @Override
     public GiftCertificate save(GiftCertificate entity) {
@@ -65,8 +58,75 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public List<GiftCertificate> findWithFilters(QueryFiltersConfig config) {
-        PreparedStatementCreator statementCreator = new GiftCertificatePreparedStatementCreator(config);
-        return jdbcTemplate.query(statementCreator, certificateRowMapper);
+        CriteriaQuery<GiftCertificate> criteriaQuery = buildCriteriaQuery(config);
+        TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(criteriaQuery);
+        return typedQuery.getResultList();
+    }
+
+    private CriteriaQuery<GiftCertificate> buildCriteriaQuery(QueryFiltersConfig config) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
+        Root<GiftCertificate> root = criteriaQuery.from(GiftCertificate.class);
+
+        Predicate[] predicatesArray = buildPredicates(config, criteriaBuilder, root);
+
+        List<Order> sortOrders = buildSortingCriteria(config, criteriaBuilder, root);
+
+        criteriaQuery.orderBy(sortOrders).select(root).where(predicatesArray);
+        return criteriaQuery;
+    }
+
+    private Predicate[] buildPredicates(QueryFiltersConfig config, CriteriaBuilder criteriaBuilder,
+                                        Root<GiftCertificate> root) {
+        List<Predicate> predicates = new ArrayList<>();
+        if (config.hasSearchPattern()) {
+            predicates.add(buildSearchPatternPredicate(config.getSearchPattern(), criteriaBuilder, root));
+        }
+        if (config.hasTag()) {
+            predicates.add(buildTagsPredicate(Collections.singletonList(config.getTag()), criteriaBuilder, root));
+        }
+        return toPredicatesArray(predicates);
+    }
+
+    private Predicate buildSearchPatternPredicate(String searchPattern, CriteriaBuilder criteriaBuilder,
+                                                  Root<GiftCertificate> root) {
+        return criteriaBuilder.or(
+                criteriaBuilder.like(root.get("name"), "%" + searchPattern + "%"),
+                criteriaBuilder.like(root.get("description"), "%" + searchPattern + "%")
+        );
+    }
+
+    private Predicate buildTagsPredicate(List<String> tagNames, CriteriaBuilder criteriaBuilder,
+                                         Root<GiftCertificate> root) {
+        List<Predicate> predicates = new ArrayList<>();
+        ListJoin<GiftCertificate, Tag> tags = root.joinList("associatedTags");
+        tagNames.forEach(tagName -> predicates.add(criteriaBuilder.equal(tags.get("name"), tagName)));
+        return criteriaBuilder.and(toPredicatesArray(predicates));
+    }
+
+    private List<Order> buildSortingCriteria(QueryFiltersConfig config, CriteriaBuilder criteriaBuilder,
+                                             Root<GiftCertificate> root) {
+        List<Order> sortOrders = new ArrayList<>();
+        if (config.hasSortParameters()) {
+            Map<SortAttribute, SortDirection> sorts = config.getSortParameters();
+            sorts.forEach((key, value) -> {
+                Expression<GiftCertificate> expression = root.get(key.getAttributeName());
+                if (value == SortDirection.ASC) {
+                    sortOrders.add(criteriaBuilder.asc(expression));
+                } else {
+                    sortOrders.add(criteriaBuilder.desc(expression));
+                }
+            });
+        }
+        return sortOrders;
+    }
+
+    private Predicate[] toPredicatesArray(List<Predicate> predicates) {
+        Predicate[] predicatesArray = new Predicate[predicates.size()];
+        for (int i = 0; i < predicates.size(); i++) {
+            predicatesArray[i] = predicates.get(i);
+        }
+        return predicatesArray;
     }
 
     @Override
