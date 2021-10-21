@@ -38,6 +38,8 @@ public class TagController {
     /**
      * Gets all tags in data source.
      *
+     * @param page Index of page
+     * @param size Size of page
      * @return List of found tags
      */
     @GetMapping
