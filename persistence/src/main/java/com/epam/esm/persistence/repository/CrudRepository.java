@@ -19,7 +19,7 @@ public interface CrudRepository<T extends AbstractEntity> {
      *
      * @return List of found entities
      */
-    List<T> findAll(long page, long count);
+    List<T> findAll(int page, int size);
 
     /**
      * Finds entity of type {@code T} by id in data source

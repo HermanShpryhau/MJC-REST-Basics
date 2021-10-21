@@ -32,15 +32,19 @@ public class CertificatesController {
      * @param tagNames      List of tag names to search certificates by
      * @param sortTypes     Names of parameters ond sort directions to sort by. String must follow the patter {@code [parameter name]-[asc|desc]}
      * @param searchPattern String to search for in name or description of the certificate
+     * @param page          Index of page
+     * @param size          Size of page
      * @return List of matching gift certificate DTOs
      */
     @GetMapping
     public List<GiftCertificateDto> getAllCertificatesWithFilters(
             @RequestParam("tag") Optional<List<String>> tagNames,
             @RequestParam("sort") Optional<List<String>> sortTypes,
-            @RequestParam("search") Optional<String> searchPattern
+            @RequestParam("search") Optional<String> searchPattern,
+            @RequestParam(name = "page", defaultValue = "1") Integer page,
+            @RequestParam(name = "size", defaultValue = "10") Integer size
     ) {
-        return certificateService.fetchCertificatesWithFilters(tagNames, sortTypes, searchPattern);
+        return certificateService.fetchCertificatesWithFilters(tagNames, sortTypes, searchPattern, page, size);
     }
 
     /**

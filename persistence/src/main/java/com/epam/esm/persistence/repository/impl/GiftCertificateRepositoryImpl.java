@@ -29,9 +29,11 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public List<GiftCertificate> findAll() {
+    public List<GiftCertificate> findAll(int page, int count) {
         return entityManager
                 .createQuery(SELECT_ALL_QUERY, GiftCertificate.class)
+                .setFirstResult(page - 1)
+                .setMaxResults(count)
                 .getResultList();
     }
 
@@ -56,9 +58,11 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public List<GiftCertificate> findWithFilters(QueryFiltersConfig config) {
+    public List<GiftCertificate> findWithFilters(QueryFiltersConfig config, int page, int count) {
         CriteriaQuery<GiftCertificate> criteriaQuery = buildCriteriaQuery(config);
         TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(criteriaQuery);
+        typedQuery.setFirstResult(page - 1);
+        typedQuery.setMaxResults(count);
         return typedQuery.getResultList();
     }
 

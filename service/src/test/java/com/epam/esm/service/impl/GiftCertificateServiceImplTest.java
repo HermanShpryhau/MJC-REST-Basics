@@ -80,12 +80,12 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void fetchCertificatesWithFiltersTest() {
-        Mockito.when(mockCertificateRepository.findWithFilters(Mockito.any(QueryFiltersConfig.class)))
+        Mockito.when(mockCertificateRepository.findWithFilters(Mockito.any(QueryFiltersConfig.class), 1, 10))
                 .thenReturn(Collections.singletonList(TEST_CERTIFICATES[0]));
         Mockito.when(mockCertificateRepository.findAssociatedTags(TEST_CERTIFICATES[0].getId())).thenReturn(CERTIFICATE_1_TAGS);
 
         List<GiftCertificateDto> certificate = service.fetchCertificatesWithFilters(Optional.empty(),
-                Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), 1, 10);
         Assertions.assertEquals(Collections.singletonList(TEST_CERTIFICATE_DTOS[0]), certificate);
     }
 

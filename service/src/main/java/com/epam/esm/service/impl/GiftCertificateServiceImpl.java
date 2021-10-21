@@ -40,13 +40,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<List<String>> tagNames,
                                                                  Optional<List<String>> sortTypes,
-                                                                 Optional<String> searchPattern) {
+                                                                 Optional<String> searchPattern,
+                                                                 int page, int size) {
         QueryFiltersConfig.Builder filterConfigBuilder = QueryFiltersConfig.builder();
         tagNames.ifPresent(filterConfigBuilder::withTags);
         addSortsToConfig(sortTypes, filterConfigBuilder);
         searchPattern.ifPresent(filterConfigBuilder::withSearchPattern);
         QueryFiltersConfig config = filterConfigBuilder.build();
-        return certificateRepository.findWithFilters(config).stream()
+        return certificateRepository.findWithFilters(config, page, size).stream()
                 .map(dtoTranslator::giftCertificateToDto).collect(Collectors.toList());
     }
 

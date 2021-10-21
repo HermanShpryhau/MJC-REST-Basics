@@ -23,11 +23,14 @@ public interface GiftCertificateService {
      * @param sortTypes     Names of parameters ond sort directions to sort by. String must follow the pattern {@code
      * [parameter name]-[asc|desc]}
      * @param searchPattern String to search for in name or description of the certificate
+     * @param page          Index of page
+     * @param size          Size of page
      * @return List of certificate that confirm to supplied filtering parameters
      */
     List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<List<String>> tagNames,
                                                           Optional<List<String>> sortTypes,
-                                                          Optional<String> searchPattern);
+                                                          Optional<String> searchPattern,
+                                                          int page, int size);
 
     /**
      * Fetches gift certificate DTO by ID.

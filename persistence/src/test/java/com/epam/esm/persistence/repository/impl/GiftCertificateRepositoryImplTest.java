@@ -56,7 +56,7 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void findAll() {
-        List<GiftCertificate> certificates = repository.findAll();
+        List<GiftCertificate> certificates = repository.findAll(1, 10);
         Assertions.assertEquals(IN_DB_CERTIFICATES, certificates);
     }
 
@@ -75,14 +75,14 @@ class GiftCertificateRepositoryImplTest {
     @Test
     void findWithFilters() {
         QueryFiltersConfig config = QueryFiltersConfig.builder().withSearchPattern("2").build();
-        GiftCertificate certificate = repository.findWithFilters(config).get(0);
+        GiftCertificate certificate = repository.findWithFilters(config, 1, 10).get(0);
         Assertions.assertEquals(IN_DB_CERTIFICATES.get(1), certificate);
     }
 
     @Test
     void findWithFiltersNoMatchingCertificates() {
         QueryFiltersConfig config = QueryFiltersConfig.builder().withTags(Collections.singletonList("Tag 123")).build();
-        List<GiftCertificate> certificates = repository.findWithFilters(config);
+        List<GiftCertificate> certificates = repository.findWithFilters(config, 1, 10);
         Assertions.assertEquals(Collections.emptyList(), certificates);
     }
 
