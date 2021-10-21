@@ -6,7 +6,7 @@ import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Order")
+@Table(name = "Orders")
 public class Order extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
