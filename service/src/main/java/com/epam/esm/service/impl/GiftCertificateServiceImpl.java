@@ -38,11 +38,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<String> tagName,
+    public List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<List<String>> tagNames,
                                                                  Optional<List<String>> sortTypes,
                                                                  Optional<String> searchPattern) {
         QueryFiltersConfig.Builder filterConfigBuilder = QueryFiltersConfig.builder();
-        tagName.ifPresent(filterConfigBuilder::withTag);
+        tagNames.ifPresent(filterConfigBuilder::withTags);
         addSortsToConfig(sortTypes, filterConfigBuilder);
         searchPattern.ifPresent(filterConfigBuilder::withSearchPattern);
         QueryFiltersConfig config = filterConfigBuilder.build();

@@ -81,7 +81,7 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void findWithFiltersNoMatchingCertificates() {
-        QueryFiltersConfig config = QueryFiltersConfig.builder().withTag("Tag 123").build();
+        QueryFiltersConfig config = QueryFiltersConfig.builder().withTags(Collections.singletonList("Tag 123")).build();
         List<GiftCertificate> certificates = repository.findWithFilters(config);
         Assertions.assertEquals(Collections.emptyList(), certificates);
     }

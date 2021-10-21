@@ -29,18 +29,18 @@ public class CertificatesController {
     /**
      * Gets gift certificate DTOs matching supplied filtering parameters.
      *
-     * @param tagName       Name of tag to search certificates by
+     * @param tagNames      List of tag names to search certificates by
      * @param sortTypes     Names of parameters ond sort directions to sort by. String must follow the patter {@code [parameter name]-[asc|desc]}
      * @param searchPattern String to search for in name or description of the certificate
      * @return List of matching gift certificate DTOs
      */
     @GetMapping
     public List<GiftCertificateDto> getAllCertificatesWithFilters(
-            @RequestParam("tag") Optional<String> tagName,
+            @RequestParam("tag") Optional<List<String>> tagNames,
             @RequestParam("sort") Optional<List<String>> sortTypes,
             @RequestParam("search") Optional<String> searchPattern
     ) {
-        return certificateService.fetchCertificatesWithFilters(tagName, sortTypes, searchPattern);
+        return certificateService.fetchCertificatesWithFilters(tagNames, sortTypes, searchPattern);
     }
 
     /**

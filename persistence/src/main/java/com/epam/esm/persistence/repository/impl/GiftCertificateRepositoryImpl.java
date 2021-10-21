@@ -13,7 +13,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -82,8 +81,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         if (config.hasSearchPattern()) {
             predicates.add(buildSearchPatternPredicate(config.getSearchPattern(), criteriaBuilder, root));
         }
-        if (config.hasTag()) {
-            predicates.add(buildTagsPredicate(Collections.singletonList(config.getTag()), criteriaBuilder, root));
+        if (config.hasTags()) {
+            predicates.add(buildTagsPredicate(config.getTags(), criteriaBuilder, root));
         }
         return toPredicatesArray(predicates);
     }
@@ -99,8 +98,10 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private Predicate buildTagsPredicate(List<String> tagNames, CriteriaBuilder criteriaBuilder,
                                          Root<GiftCertificate> root) {
         List<Predicate> predicates = new ArrayList<>();
-        ListJoin<GiftCertificate, Tag> tags = root.joinList("associatedTags");
-        tagNames.forEach(tagName -> predicates.add(criteriaBuilder.equal(tags.get("name"), tagName)));
+        tagNames.forEach(tagName -> {
+            ListJoin<GiftCertificate, Tag> tags = root.joinList("associatedTags");
+            predicates.add(criteriaBuilder.equal(tags.get("name"), tagName));
+        });
         return criteriaBuilder.and(toPredicatesArray(predicates));
     }
 

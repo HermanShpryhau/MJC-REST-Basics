@@ -1,21 +1,23 @@
 package com.epam.esm.persistence.repository.filter;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public class QueryFiltersConfig {
-    private final String tag;
+    private final List<String> tags;
     private final Map<SortAttribute, SortDirection> sortParameters;
     private final String searchPattern;
 
-    private QueryFiltersConfig(String tag, Map<SortAttribute, SortDirection> sortParameters, String searchPattern) {
-        this.tag = tag;
+    private QueryFiltersConfig(List<String> tags, Map<SortAttribute, SortDirection> sortParameters, String searchPattern) {
+        this.tags = tags;
         this.sortParameters = sortParameters;
         this.searchPattern = searchPattern;
     }
 
-    public String getTag() {
-        return tag;
+    public List<String> getTags() {
+        return tags;
     }
 
     public Map<SortAttribute, SortDirection> getSortParameters() {
@@ -26,8 +28,8 @@ public class QueryFiltersConfig {
         return searchPattern;
     }
 
-    public boolean hasTag() {
-        return tag != null;
+    public boolean hasTags() {
+        return !tags.isEmpty();
     }
 
     public boolean hasSortParameters() {
@@ -43,12 +45,12 @@ public class QueryFiltersConfig {
     }
 
     public static class Builder {
-        private String tag;
+        private List<String> tags = new ArrayList<>();
         private final Map<SortAttribute, SortDirection> sortParameters = new EnumMap<>(SortAttribute.class);
         private String searchPattern;
 
-        public Builder withTag(String tagName) {
-            tag = tagName;
+        public Builder withTags(List<String> tagsList) {
+            tags = tagsList;
             return this;
         }
 
@@ -63,7 +65,7 @@ public class QueryFiltersConfig {
         }
 
         public QueryFiltersConfig build() {
-            return new QueryFiltersConfig(tag, sortParameters, searchPattern);
+            return new QueryFiltersConfig(tags, sortParameters, searchPattern);
         }
     }
 }
