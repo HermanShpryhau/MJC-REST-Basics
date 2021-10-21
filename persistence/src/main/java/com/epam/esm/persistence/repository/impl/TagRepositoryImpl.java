@@ -25,8 +25,11 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public List<Tag> findAll() {
-        return entityManager.createQuery(SELECT_ALL_QUERY, Tag.class).getResultList();
+    public List<Tag> findAll(int page, int size) {
+        return entityManager.createQuery(SELECT_ALL_QUERY, Tag.class)
+                .setFirstResult(page - 1)
+                .setMaxResults(size)
+                .getResultList();
     }
 
     @Override

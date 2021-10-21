@@ -51,17 +51,17 @@ class TagServiceImplTest {
 
     @Test
     void fetchAllTagsTest() {
-        Mockito.when(mockTagRepository.findAll()).thenReturn(Arrays.asList(TEST_TAGS));
+        Mockito.when(mockTagRepository.findAll(1, 10)).thenReturn(Arrays.asList(TEST_TAGS));
 
-        List<Tag> result = service.fetchAllTags();
+        List<Tag> result = service.fetchAllTags(1, 10);
         Assertions.assertEquals(Arrays.asList(TEST_TAGS), result);
     }
 
     @Test
     void fetchEmptyListIfNoTagsInDBTest() {
-        Mockito.when(mockTagRepository.findAll()).thenReturn(Collections.emptyList());
+        Mockito.when(mockTagRepository.findAll(1, 10)).thenReturn(Collections.emptyList());
 
-        List<Tag> result = service.fetchAllTags();
+        List<Tag> result = service.fetchAllTags(1, 10);
         Assertions.assertEquals(Collections.emptyList(), result);
     }
 

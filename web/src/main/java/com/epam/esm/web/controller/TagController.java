@@ -41,8 +41,9 @@ public class TagController {
      * @return List of found tags
      */
     @GetMapping
-    public List<Tag> getAllTags() {
-        return tagService.fetchAllTags();
+    public List<Tag> getAllTags(@RequestParam(name = "page", defaultValue = "1") Integer page,
+                                @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return tagService.fetchAllTags(page, size);
     }
 
     /**

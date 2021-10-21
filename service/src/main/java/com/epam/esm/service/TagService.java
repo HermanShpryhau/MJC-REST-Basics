@@ -18,9 +18,11 @@ public interface TagService {
     /**
      * Fetches all tags in data source.
      *
+     * @param page Index of page
+     * @param size Size of page
      * @return List of found tags
      */
-    List<Tag> fetchAllTags();
+    List<Tag> fetchAllTags(int page, int size);
 
     /**
      * Fetches tag by ID.
