@@ -44,7 +44,7 @@ public class TagController {
      */
     @GetMapping
     public List<TagDto> getAllTags(@RequestParam(name = "page", defaultValue = "1") Integer page,
-                                @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                   @RequestParam(name = "size", defaultValue = "10") Integer size) {
         return tagService.fetchAllTags(page, size);
     }
 
