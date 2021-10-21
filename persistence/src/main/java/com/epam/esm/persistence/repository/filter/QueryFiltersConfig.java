@@ -5,10 +5,10 @@ import java.util.Map;
 
 public class QueryFiltersConfig {
     private final String tag;
-    private final Map<SortColumn, SortDirection> sortParameters;
+    private final Map<SortAttribute, SortDirection> sortParameters;
     private final String searchPattern;
 
-    private QueryFiltersConfig(String tag, Map<SortColumn, SortDirection> sortParameters, String searchPattern) {
+    private QueryFiltersConfig(String tag, Map<SortAttribute, SortDirection> sortParameters, String searchPattern) {
         this.tag = tag;
         this.sortParameters = sortParameters;
         this.searchPattern = searchPattern;
@@ -18,7 +18,7 @@ public class QueryFiltersConfig {
         return tag;
     }
 
-    public Map<SortColumn, SortDirection> getSortParameters() {
+    public Map<SortAttribute, SortDirection> getSortParameters() {
         return sortParameters;
     }
 
@@ -44,7 +44,7 @@ public class QueryFiltersConfig {
 
     public static class Builder {
         private String tag;
-        private final Map<SortColumn, SortDirection> sortParameters = new EnumMap<>(SortColumn.class);
+        private final Map<SortAttribute, SortDirection> sortParameters = new EnumMap<>(SortAttribute.class);
         private String searchPattern;
 
         public Builder withTag(String tagName) {
@@ -52,7 +52,7 @@ public class QueryFiltersConfig {
             return this;
         }
 
-        public Builder withSort(SortColumn column, SortDirection direction) {
+        public Builder withSort(SortAttribute column, SortDirection direction) {
             sortParameters.put(column, direction);
             return this;
         }

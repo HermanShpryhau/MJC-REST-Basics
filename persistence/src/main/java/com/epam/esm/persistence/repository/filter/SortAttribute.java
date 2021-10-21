@@ -1,22 +1,22 @@
 package com.epam.esm.persistence.repository.filter;
 
-public enum SortColumn {
-    DATE("create_date"), NAME("name");
+public enum SortAttribute {
+    DATE("createDate"), NAME("name");
 
     private static final String NAME_SORT_PARAM = "name";
     private static final String DATE_SORT_PARAM = "date";
 
-    private final String columnName;
+    private final String attributeName;
 
-    SortColumn(String columnName) {
-        this.columnName = columnName;
+    SortAttribute(String attributeName) {
+        this.attributeName = attributeName;
     }
 
-    public String getColumnName() {
-        return columnName;
+    public String getAttributeName() {
+        return attributeName;
     }
 
-    public static SortColumn tryInferColumn(String name) {
+    public static SortAttribute inferAttribute(String name) {
         switch (name) {
             case NAME_SORT_PARAM:
                 return NAME;
