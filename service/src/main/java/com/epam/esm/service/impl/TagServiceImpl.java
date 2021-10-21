@@ -1,13 +1,16 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.domain.dto.TagDto;
+import com.epam.esm.domain.dto.serialization.DtoSerializer;
 import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.TagRepository;
-import com.epam.esm.service.GiftCertificateDtoTranslator;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,34 +20,44 @@ import java.util.stream.Collectors;
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
-    private final GiftCertificateDtoTranslator dtoTranslator;
+    private final DtoSerializer<TagDto, Tag> tagDtoSerializer;
+    private final DtoSerializer<GiftCertificateDto, GiftCertificate> certificateDtoSerializer;
 
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository, GiftCertificateDtoTranslator dtoTranslator) {
+    public TagServiceImpl(TagRepository tagRepository,
+                          @Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer,
+                          @Qualifier("giftCertificateDtoSerializer")DtoSerializer<GiftCertificateDto, GiftCertificate> certificateDtoSerializer) {
         this.tagRepository = tagRepository;
-        this.dtoTranslator = dtoTranslator;
+        this.tagDtoSerializer = tagDtoSerializer;
+        this.certificateDtoSerializer = certificateDtoSerializer;
     }
 
     @Override
-    public Tag addTag(Tag tag) {
-        return tagRepository.save(tag);
+    public TagDto addTag(TagDto tag) {
+        Tag tagEntity = tagDtoSerializer.dtoToEntity(tag);
+        Tag savedTag = tagRepository.save(tagEntity);
+        return tagDtoSerializer.dtoFromEntity(savedTag);
     }
 
     @Override
-    public List<Tag> fetchAllTags(int page, int size) {
-        return tagRepository.findAll(page, size);
+    public List<TagDto> fetchAllTags(int page, int size) {
+        return tagRepository.findAll(page, size).stream()
+                .map(tagDtoSerializer::dtoFromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Tag fetchTagById(Long id) {
-        return Optional.ofNullable(tagRepository.findById(id))
+    public TagDto fetchTagById(Long id) {
+        Tag tag = Optional.ofNullable(tagRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
+        return tagDtoSerializer.dtoFromEntity(tag);
     }
 
     @Override
-    public Tag fetchTagByName(String name) {
-        return Optional.ofNullable(tagRepository.findByName(name))
+    public TagDto fetchTagByName(String name) {
+        Tag tag = Optional.ofNullable(tagRepository.findByName(name))
                 .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND));
+        return tagDtoSerializer.dtoFromEntity(tag);
     }
 
     @Override
@@ -52,7 +65,7 @@ public class TagServiceImpl implements TagService {
         Tag tag = Optional.ofNullable(tagRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
         return tagRepository.findAssociatedGiftCertificates(tag.getId()).stream()
-                .map(dtoTranslator::giftCertificateToDto)
+                .map(certificateDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
     }
 

@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
-import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.domain.dto.TagDto;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface TagService {
      * @param tag Tag entity to save
      * @return Saved tag entity
      */
-    Tag addTag(Tag tag);
+    TagDto addTag(TagDto tag);
 
     /**
      * Fetches all tags in data source.
@@ -22,7 +22,7 @@ public interface TagService {
      * @param size Size of page
      * @return List of found tags
      */
-    List<Tag> fetchAllTags(int page, int size);
+    List<TagDto> fetchAllTags(int page, int size);
 
     /**
      * Fetches tag by ID.
@@ -30,7 +30,7 @@ public interface TagService {
      * @param id ID of tag to fetch
      * @return Found tag entity
      */
-    Tag fetchTagById(Long id);
+    TagDto fetchTagById(Long id);
 
     /**
      * Fetches tag by name.
@@ -38,7 +38,7 @@ public interface TagService {
      * @param name Name of tag to fetch
      * @return Found tag entity
      */
-    Tag fetchTagByName(String name);
+    TagDto fetchTagByName(String name);
 
     /**
      * Fetches certificates associated with tag.

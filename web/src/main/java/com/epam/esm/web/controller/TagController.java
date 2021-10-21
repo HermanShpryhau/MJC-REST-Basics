@@ -1,7 +1,7 @@
 package com.epam.esm.web.controller;
 
-import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.domain.dto.TagDto;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class TagController {
      * @return Saved tag
      */
     @PostMapping
-    public Tag addTag(@Validated @RequestBody Tag tag) {
+    public TagDto addTag(@Validated @RequestBody TagDto tag) {
         return tagService.addTag(tag);
     }
 
@@ -43,7 +43,7 @@ public class TagController {
      * @return List of found tags
      */
     @GetMapping
-    public List<Tag> getAllTags(@RequestParam(name = "page", defaultValue = "1") Integer page,
+    public List<TagDto> getAllTags(@RequestParam(name = "page", defaultValue = "1") Integer page,
                                 @RequestParam(name = "size", defaultValue = "10") Integer size) {
         return tagService.fetchAllTags(page, size);
     }
@@ -55,7 +55,7 @@ public class TagController {
      * @return Found tag entity
      */
     @GetMapping("/{id}")
-    public Tag getTagById(@PathVariable Long id) {
+    public TagDto getTagById(@PathVariable Long id) {
         return tagService.fetchTagById(id);
     }
 
