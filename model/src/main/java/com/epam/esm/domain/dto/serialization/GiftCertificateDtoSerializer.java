@@ -1,18 +1,19 @@
-package com.epam.esm.service.impl;
+package com.epam.esm.domain.dto.serialization;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.dto.GiftCertificateDto;
-import com.epam.esm.service.GiftCertificateDtoTranslator;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-@Service
-public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTranslator {
+@Component
+@Qualifier("giftCertificateDtoSerializer")
+public class GiftCertificateDtoSerializer implements DtoSerializer<GiftCertificateDto, GiftCertificate> {
 
     @Override
-    public GiftCertificateDto giftCertificateToDto(GiftCertificate certificate) {
+    public GiftCertificateDto dtoFromEntity(GiftCertificate certificate) {
         GiftCertificateDto dto = new GiftCertificateDto();
         dto.setId(certificate.getId());
         dto.setName(certificate.getName());
@@ -26,7 +27,7 @@ public class GiftCertificateDtoTranslatorImpl implements GiftCertificateDtoTrans
     }
 
     @Override
-    public GiftCertificate dtoToGiftCertificate(GiftCertificateDto dto) {
+    public GiftCertificate dtoToEntity(GiftCertificateDto dto) {
         GiftCertificate certificate = new GiftCertificate();
         certificate.setId(dto.getId());
         certificate.setName(dto.getName());

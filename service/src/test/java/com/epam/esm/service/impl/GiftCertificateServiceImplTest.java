@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.domain.dto.serialization.DtoSerializer;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;
@@ -57,8 +58,8 @@ class GiftCertificateServiceImplTest {
     @Mock
     private TagRepository mockTagRepository;
 
-    @InjectMocks
-    private GiftCertificateDtoTranslatorImpl translator;
+    @Mock
+    private DtoSerializer<GiftCertificateDto, GiftCertificate> translator;
 
     private GiftCertificateService service;
 
