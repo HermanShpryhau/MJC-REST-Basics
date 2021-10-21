@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Gift_certificate")
@@ -50,7 +50,7 @@ public class GiftCertificate extends AbstractEntity {
         joinColumns = @JoinColumn(name = "certificate"),
         inverseJoinColumns = @JoinColumn(name = "tag")
     )
-    private Set<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> associatedTags = new HashSet<>();
+    private List<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> associatedTags = new ArrayList<>();
 
     public GiftCertificate() {
     }
@@ -114,11 +114,11 @@ public class GiftCertificate extends AbstractEntity {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Set<Tag> getAssociatedTags() {
+    public List<Tag> getAssociatedTags() {
         return associatedTags;
     }
 
-    public void setAssociatedTags(Set<Tag> associatedTags) {
+    public void setAssociatedTags(List<Tag> associatedTags) {
         this.associatedTags = associatedTags;
     }
 

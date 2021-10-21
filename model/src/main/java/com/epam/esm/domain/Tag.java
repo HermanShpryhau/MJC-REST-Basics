@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Tag")
@@ -19,7 +19,7 @@ public class Tag extends AbstractEntity {
 
     @ManyToMany(mappedBy = "associatedTags")
     @JsonIgnore
-    private Set<GiftCertificate> associatedCertificates = new HashSet<>();
+    private List<GiftCertificate> associatedCertificates = new ArrayList<>();
 
     public Tag() {
     }
@@ -41,11 +41,11 @@ public class Tag extends AbstractEntity {
         this.name = name;
     }
 
-    public Set<GiftCertificate> getAssociatedCertificates() {
+    public List<GiftCertificate> getAssociatedCertificates() {
         return associatedCertificates;
     }
 
-    public void setAssociatedCertificates(Set<GiftCertificate> associatedCertificates) {
+    public void setAssociatedCertificates(List<GiftCertificate> associatedCertificates) {
         this.associatedCertificates = associatedCertificates;
     }
 
