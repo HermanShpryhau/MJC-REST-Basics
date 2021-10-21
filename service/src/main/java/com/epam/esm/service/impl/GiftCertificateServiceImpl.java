@@ -7,7 +7,7 @@ import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
-import com.epam.esm.persistence.repository.filter.SortColumn;
+import com.epam.esm.persistence.repository.filter.SortAttribute;
 import com.epam.esm.persistence.repository.filter.SortDirection;
 import com.epam.esm.service.GiftCertificateDtoTranslator;
 import com.epam.esm.service.GiftCertificateService;
@@ -61,7 +61,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             List<String> sorts = sortTypes.get();
             sorts.forEach(s -> {
                 String[] elements = s.split("-");
-                SortColumn column = SortColumn.tryInferColumn(elements[0]);
+                SortAttribute column = SortAttribute.inferAttribute(elements[0]);
                 SortDirection direction = SortDirection.valueOf(elements[1].toUpperCase());
                 filterConfigBuilder.withSort(column, direction);
             });
