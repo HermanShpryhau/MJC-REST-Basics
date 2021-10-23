@@ -16,7 +16,7 @@ create table Gift_certificate
 create table Tag
 (
     id   bigint auto_increment primary key,
-    name varchar(45) not null
+    name varchar(45) not null unique
 );
 
 create table Gift_certificate_has_Tag
