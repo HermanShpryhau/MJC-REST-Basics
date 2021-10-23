@@ -1,8 +1,11 @@
 package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.domain.GiftCertificate;
+import com.epam.esm.domain.Order;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
+import com.epam.esm.persistence.repository.RepositoryErrorCode;
+import com.epam.esm.persistence.repository.RepositoryException;
 import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,13 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
     private static final String SELECT_ALL_QUERY = "SELECT giftCertificate from GiftCertificate giftCertificate";
+    private static final String SELECT_ASSOCIATED_ORDERS =
+            "SELECT order FROM Order order WHERE order.giftCertificate=:giftCertificate";
+    public static final String GIFT_CERTIFICATE_ENTITY_NAME = "gift certificate";
+    public static final String ORDER_ENTITY_NAME = "order";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -52,8 +59,19 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         if (certificate == null) {
             return false;
         }
+        if (hasAssociatedOrders(certificate)) {
+            throw new RepositoryException(RepositoryErrorCode.DELETION_FORBIDDEN, GIFT_CERTIFICATE_ENTITY_NAME, id,
+                    ORDER_ENTITY_NAME);
+        }
         entityManager.remove(certificate);
         return true;
+    }
+
+    private boolean hasAssociatedOrders(GiftCertificate certificate) {
+        TypedQuery<Order> query = entityManager.createQuery(SELECT_ASSOCIATED_ORDERS, Order.class);
+        query.setParameter("giftCertificate", certificate);
+        List<Order> resultList = query.getResultList();
+        return !resultList.isEmpty();
     }
 
     @Override
