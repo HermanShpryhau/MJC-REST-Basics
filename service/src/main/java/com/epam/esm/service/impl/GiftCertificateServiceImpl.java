@@ -8,7 +8,7 @@ import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;
-import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
+import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
 import com.epam.esm.persistence.repository.filter.SortAttribute;
 import com.epam.esm.persistence.repository.filter.SortDirection;
 import com.epam.esm.service.GiftCertificateService;
@@ -59,11 +59,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                                                  Optional<List<String>> sortTypes,
                                                                  Optional<String> searchPattern,
                                                                  int page, int size) {
-        QueryFiltersConfig.Builder filterConfigBuilder = QueryFiltersConfig.builder();
+        GiftCertificatesFilterConfig.Builder filterConfigBuilder = GiftCertificatesFilterConfig.builder();
         tagNames.ifPresent(filterConfigBuilder::withTags);
         addSortsToConfig(sortTypes, filterConfigBuilder);
         searchPattern.ifPresent(filterConfigBuilder::withSearchPattern);
-        QueryFiltersConfig config = filterConfigBuilder.build();
+        GiftCertificatesFilterConfig config = filterConfigBuilder.build();
         return certificateRepository.findWithFilters(config, page, size).stream()
                 .map(dtoSerializer::dtoFromEntity).collect(Collectors.toList());
     }
@@ -72,9 +72,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * Parses sort parameters strings and adds that sorts to filter configuration
      *
      * @param sortTypes           List of sort parameters strings
-     * @param filterConfigBuilder {@link QueryFiltersConfig} builder
+     * @param filterConfigBuilder {@link GiftCertificatesFilterConfig} builder
      */
-    private void addSortsToConfig(Optional<List<String>> sortTypes, QueryFiltersConfig.Builder filterConfigBuilder) {
+    private void addSortsToConfig(Optional<List<String>> sortTypes, GiftCertificatesFilterConfig.Builder filterConfigBuilder) {
         if (sortTypes.isPresent()) {
             List<String> sorts = sortTypes.get();
             sorts.forEach(s -> {
