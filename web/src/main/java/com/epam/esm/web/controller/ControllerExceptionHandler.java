@@ -1,6 +1,7 @@
 package com.epam.esm.web.controller;
 
 import com.epam.esm.exception.ServiceException;
+import com.epam.esm.persistence.repository.RepositoryException;
 import com.epam.esm.web.exception.HttpErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,6 +32,14 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public HttpErrorResponse handleServiceException(ServiceException e) {
+        String message = messageSource.getMessage(e.getErrorCode(), e.getArguments(), Locale.ENGLISH);
+        return new HttpErrorResponse(e.getErrorCode(), message);
+    }
+
+    @ExceptionHandler(RepositoryException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public HttpErrorResponse handleRepositoryException(RepositoryException e) {
         String message = messageSource.getMessage(e.getErrorCode(), e.getArguments(), Locale.ENGLISH);
         return new HttpErrorResponse(e.getErrorCode(), message);
     }
