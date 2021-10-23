@@ -1,6 +1,6 @@
 package com.epam.esm.domain.validation;
 
-public class ValidationErrorCode {
+public final class ValidationErrorCode {
     public static final String CERTIFICATE_NAME_NOT_NULL = "40001";
     public static final String INVALID_CERTIFICATE_NAME_LENGTH = "40002";
     public static final String CERTIFICATE_DESCRIPTION_NOT_NULL = "40003";
