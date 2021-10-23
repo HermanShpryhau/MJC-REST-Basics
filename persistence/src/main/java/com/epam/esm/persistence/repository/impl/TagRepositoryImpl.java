@@ -2,7 +2,6 @@ package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
-import com.epam.esm.persistence.repository.RepositoryException;
 import com.epam.esm.persistence.repository.TagRepository;
 import org.springframework.stereotype.Repository;
 
@@ -43,11 +42,6 @@ public class TagRepositoryImpl implements TagRepository {
         TypedQuery<Tag> query = entityManager.createQuery(SELECT_BY_NAME_QUERY, Tag.class);
         query.setParameter("tagName", name);
         return query.getResultStream().findFirst().orElse(null);
-    }
-
-    @Override
-    public Tag update(Tag entity) throws RepositoryException {
-        throw new RepositoryException("Unsupported operation.");
     }
 
     @Override

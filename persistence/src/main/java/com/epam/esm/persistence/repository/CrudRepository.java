@@ -12,7 +12,9 @@ public interface CrudRepository<T extends AbstractEntity> {
      * @param entity Entity object to save
      * @return Saved entity object from datasource
      */
-    T save(T entity);
+    default T save(T entity) {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "SAVE");
+    }
 
     /**
      * Finds all entities of type {@code T} in data source.
@@ -21,7 +23,9 @@ public interface CrudRepository<T extends AbstractEntity> {
      * @param size Size of page
      * @return List of found entities
      */
-    List<T> findAll(int page, int size);
+    default List<T> findAll(int page, int size) {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "FIND ALL");
+    }
 
     /**
      * Finds entity of type {@code T} by id in data source.
@@ -29,7 +33,9 @@ public interface CrudRepository<T extends AbstractEntity> {
      * @param id ID of entity
      * @return Entity if it was found, {@code null} otherwise
      */
-    T findById(Long id);
+    default T findById(Long id) {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "FIND BY ID");
+    }
 
     /**
      * Updates entity of type {@code T} in data source.
@@ -37,7 +43,9 @@ public interface CrudRepository<T extends AbstractEntity> {
      * @param entity Entity's new state
      * @return Updated entity
      */
-    T update(T entity);
+    default T update(T entity) {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "UPDATE");
+    }
 
     /**
      * Deletes entity of type {@code T} from data source.
@@ -45,5 +53,7 @@ public interface CrudRepository<T extends AbstractEntity> {
      * @param id ID of entity to delete
      * @return True if entity was deleted, false otherwise
      */
-    boolean delete(Long id);
+    default boolean delete(Long id) {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "DELETE");
+    }
 }
