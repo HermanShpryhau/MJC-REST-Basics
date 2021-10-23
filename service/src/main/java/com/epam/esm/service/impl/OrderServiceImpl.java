@@ -13,6 +13,7 @@ import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,6 +54,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto placeOrder(Long userId, Long certificateId, int quantity) {
         // TODO Add error code
         User user = Optional.ofNullable(userRepository.findById(userId))
