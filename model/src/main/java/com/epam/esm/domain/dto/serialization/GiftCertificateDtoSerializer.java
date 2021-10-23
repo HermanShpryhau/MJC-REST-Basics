@@ -1,16 +1,27 @@
 package com.epam.esm.domain.dto.serialization;
 
 import com.epam.esm.domain.GiftCertificate;
+import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.domain.dto.TagDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @Qualifier("giftCertificateDtoSerializer")
 public class GiftCertificateDtoSerializer implements DtoSerializer<GiftCertificateDto, GiftCertificate> {
+    private final DtoSerializer<TagDto, Tag> tagDtoSerializer;
+
+    @Autowired
+    public GiftCertificateDtoSerializer(@Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer) {
+        this.tagDtoSerializer = tagDtoSerializer;
+    }
 
     @Override
     public GiftCertificateDto dtoFromEntity(GiftCertificate certificate) {
@@ -22,7 +33,11 @@ public class GiftCertificateDtoSerializer implements DtoSerializer<GiftCertifica
         dto.setDuration(certificate.getDuration());
         Optional.ofNullable(certificate.getCreateDate()).ifPresent(dto::setCreateDate);
         Optional.ofNullable(certificate.getLastUpdateDate()).ifPresent(dto::setLastUpdateDate);
-        dto.setTags(new ArrayList<>(certificate.getAssociatedTags()));
+        List<TagDto> tagDtos = new ArrayList<>(
+                certificate.getAssociatedTags()).stream()
+                .map(tagDtoSerializer::dtoFromEntity)
+                .collect(Collectors.toList());
+        dto.setTags(tagDtos);
         return dto;
     }
 
@@ -36,7 +51,9 @@ public class GiftCertificateDtoSerializer implements DtoSerializer<GiftCertifica
         certificate.setDuration(dto.getDuration());
         Optional.ofNullable(dto.getCreateDate()).ifPresent(certificate::setCreateDate);
         Optional.ofNullable(dto.getLastUpdateDate()).ifPresent(certificate::setLastUpdateDate);
-        certificate.setAssociatedTags(dto.getTags());
+        certificate.setAssociatedTags(
+                dto.getTags().stream().map(tagDtoSerializer::dtoToEntity).collect(Collectors.toList())
+        );
         return certificate;
     }
 }
