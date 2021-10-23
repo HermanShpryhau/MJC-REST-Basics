@@ -13,7 +13,7 @@ public class User extends AbstractEntity {
     @Size(min = 1, max = 50)
     private String name;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
     private List<Order> orders;
 
     public User() {}
