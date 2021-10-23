@@ -41,14 +41,14 @@ public class GiftCertificateDto {
     private LocalDateTime lastUpdateDate;
 
     @NotNull(groups = {SaveDto.class}, message = ValidationErrorCode.DTO_TAG_LIST_NOT_NULL)
-    private List<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> tags;
+    private List<@DtoTag(groups = {SaveDto.class, PatchDto.class}) TagDto> tags;
 
     public GiftCertificateDto() {
     }
 
     public GiftCertificateDto(Long id, String name, String description, Integer price, Integer duration,
                               LocalDateTime createDate, LocalDateTime lastUpdateDate, List<@DtoTag(groups =
-            {SaveDto.class, PatchDto.class}) Tag> tags) {
+            {SaveDto.class, PatchDto.class}) TagDto> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
