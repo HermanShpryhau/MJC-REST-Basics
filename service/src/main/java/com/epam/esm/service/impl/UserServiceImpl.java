@@ -5,6 +5,7 @@ import com.epam.esm.domain.User;
 import com.epam.esm.domain.dto.OrderDto;
 import com.epam.esm.domain.dto.UserDto;
 import com.epam.esm.domain.dto.serialization.DtoSerializer;
+import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.UserRepository;
 import com.epam.esm.service.UserService;
@@ -45,9 +46,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<OrderDto> fetchUserOrders(Long id, int page, int size) {
-        // TODO add error code
         User user = Optional.ofNullable(userRepository.findById(id))
-                .orElseThrow(() -> new ServiceException("1", id));
+                .orElseThrow(() -> new ServiceException(ErrorCode.USER_NOT_FOUND, id));
         List<OrderDto> orders = user.getOrders().stream()
                 .map(orderDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());

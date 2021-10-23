@@ -5,6 +5,7 @@ import com.epam.esm.domain.Order;
 import com.epam.esm.domain.User;
 import com.epam.esm.domain.dto.OrderDto;
 import com.epam.esm.domain.dto.serialization.DtoSerializer;
+import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.OrderRepository;
@@ -47,22 +48,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto fetchOrderById(Long id) {
-        // TODO Add error code
         Order order = Optional.ofNullable(orderRepository.findById(id))
-                .orElseThrow(() -> new ServiceException("1"));
+                .orElseThrow(() -> new ServiceException(ErrorCode.ORDER_NOT_FOUND, id));
         return orderDtoSerializer.dtoFromEntity(order);
     }
 
     @Override
     @Transactional
     public OrderDto placeOrder(Long userId, Long certificateId, int quantity) {
-        // TODO Add error code
         User user = Optional.ofNullable(userRepository.findById(userId))
-                .orElseThrow(() -> new ServiceException("1"));
-
-        // TODO Add error code
+                .orElseThrow(() -> new ServiceException(ErrorCode.USER_NOT_FOUND, userId));
         GiftCertificate certificate = Optional.ofNullable(certificateRepository.findById(certificateId))
-                .orElseThrow(() -> new ServiceException("1"));
+                .orElseThrow(() -> new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, certificateId));
 
         int totalPrice = calculateTotalPrice(quantity, certificate);
         Order order = orderRepository.save(new Order(user, certificate, quantity, totalPrice, LocalDateTime.now()));
