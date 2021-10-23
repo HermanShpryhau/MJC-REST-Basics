@@ -7,6 +7,7 @@ import com.epam.esm.domain.dto.serialization.DtoSerializer;
 import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
+import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
 import com.epam.esm.persistence.repository.filter.SortAttribute;
 import com.epam.esm.persistence.repository.filter.SortDirection;
@@ -16,26 +17,42 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository certificateRepository;
+    private final TagRepository tagRepository;
     private final DtoSerializer<GiftCertificateDto, GiftCertificate> dtoSerializer;
 
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateRepository certificateRepository,
-                                      @Qualifier("giftCertificateDtoSerializer") DtoSerializer<GiftCertificateDto, GiftCertificate> dtoSerializer) {
+                                      TagRepository tagRepository,
+                                      @Qualifier("giftCertificateDtoSerializer") DtoSerializer<GiftCertificateDto,
+                                              GiftCertificate> dtoSerializer) {
         this.certificateRepository = certificateRepository;
+        this.tagRepository = tagRepository;
         this.dtoSerializer = dtoSerializer;
     }
 
     @Override
     @Transactional
     public GiftCertificateDto addCertificate(GiftCertificateDto dto) {
-        GiftCertificate savedCertificate = certificateRepository.save(dtoSerializer.dtoToEntity(dto));
+        dto.setId(null);
+        GiftCertificate certificateEntity = dtoSerializer.dtoToEntity(dto);
+        certificateEntity.setAssociatedTags(fetchRelatedTagEntities(certificateEntity.getAssociatedTags()));
+        GiftCertificate savedCertificate = certificateRepository.save(certificateEntity);
         return dtoSerializer.dtoFromEntity(savedCertificate);
+    }
+
+    private List<Tag> fetchRelatedTagEntities(List<Tag> dtoTags) {
+        return dtoTags.stream()
+                .map(tag -> Optional.ofNullable(tagRepository.findByName(tag.getName()))
+                                .orElseGet(() -> tagRepository.save(tag)))
+                .collect(Collectors.toList());
     }
 
     @Override
