@@ -44,7 +44,7 @@ public class GiftCertificate extends AbstractEntity {
     @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
         name = "Gift_certificate_has_Tag",
         joinColumns = @JoinColumn(name = "certificate"),
