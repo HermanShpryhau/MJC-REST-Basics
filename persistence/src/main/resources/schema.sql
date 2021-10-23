@@ -27,7 +27,7 @@ create table Gift_certificate_has_Tag
     constraint fk_Gift_certificate_has_Tag_Gift_certificate
         foreign key (certificate) references Gift_certificate (id) on delete cascade,
     constraint fk_Gift_certificate_has_Tag_Tag1
-        foreign key (tag) references Tag (id) on delete cascade
+        foreign key (tag) references Tag (id) on delete restrict
 );
 
 create table User
@@ -53,6 +53,6 @@ create table Orders
             on delete restrict,
     constraint Order_User_id_fk
         foreign key (user_id) references User (id)
-            on delete cascade
+            on delete restrict
 );
 
