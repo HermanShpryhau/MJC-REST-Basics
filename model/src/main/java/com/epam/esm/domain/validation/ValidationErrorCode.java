@@ -13,6 +13,11 @@ public class ValidationErrorCode {
     public static final String INVALID_DTO_TAG = "40010";
     public static final String TAG_NAME_NOT_NULL = "40011";
     public static final String INVALID_TAG_NAME = "40012";
+    public static final String ORDER_USER_NOT_NULL = "40013";
+    public static final String ORDER_CERTIFICATE_NOT_NULL = "40014";
+    public static final String ORDER_QUANTITY_NOT_NULL = "40015";
+    public static final String INVALID_ORDER_QUANTITY = "40016";
+
 
     private ValidationErrorCode() {
     }
