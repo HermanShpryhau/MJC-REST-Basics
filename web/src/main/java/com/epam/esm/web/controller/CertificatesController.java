@@ -15,7 +15,6 @@ import java.util.Optional;
 /**
  * Controller of gift certificates resource.
  */
-
 @RestController
 @RequestMapping("/certificates")
 public class CertificatesController {

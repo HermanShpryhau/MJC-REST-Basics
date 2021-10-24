@@ -1,6 +1,5 @@
 package com.epam.esm.service;
 
-import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
 import com.epam.esm.domain.dto.TagDto;
 

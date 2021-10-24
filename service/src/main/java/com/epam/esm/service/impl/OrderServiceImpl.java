@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of {@link OrderService}.
+ */
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
@@ -68,6 +71,13 @@ public class OrderServiceImpl implements OrderService {
         return orderDtoSerializer.dtoFromEntity(order);
     }
 
+    /**
+     * Calculates total price of order.
+     *
+     * @param quantity Quantity of certificates in order
+     * @param certificate Gift certificate entity
+     * @return Total price of order.
+     */
     private int calculateTotalPrice(int quantity, GiftCertificate certificate) {
         return certificate.getPrice() * quantity;
     }

@@ -68,6 +68,12 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         return true;
     }
 
+    /**
+     * Checks if gift certificate has orders associated with it.
+     *
+     * @param certificate Gift certificate entity
+     * @return {@code true} if gift certificate has orders associated with it
+     */
     private boolean hasAssociatedOrders(GiftCertificate certificate) {
         TypedQuery<Order> query = entityManager.createQuery(SELECT_ASSOCIATED_ORDERS, Order.class);
         query.setParameter("giftCertificate", certificate);

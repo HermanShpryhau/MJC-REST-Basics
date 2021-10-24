@@ -74,8 +74,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .map(dtoSerializer::dtoFromEntity).collect(Collectors.toList());
     }
 
-
-
     /**
      * Parses sort parameters strings and adds that sorts to filter configuration
      *

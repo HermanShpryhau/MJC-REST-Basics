@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of {@link DtoSerializer} for {@link GiftCertificate} entity.
+ */
 @Component
 @Qualifier("giftCertificateDtoSerializer")
 public class GiftCertificateDtoSerializer implements DtoSerializer<GiftCertificateDto, GiftCertificate> {

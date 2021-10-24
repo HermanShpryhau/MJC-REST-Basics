@@ -5,6 +5,9 @@ import com.epam.esm.domain.dto.UserDto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+/**
+ * Implementation of {@link DtoSerializer} for {@link User} entity.
+ */
 @Component
 @Qualifier("userDtoSerializer")
 public class UserDtoSerializer implements DtoSerializer<UserDto, User> {

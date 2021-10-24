@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+/**
+ * Implementation of {@link DtoSerializer} for {@link Order} entity.
+ */
 @Component
 @Qualifier("orderDtoSerializer")
 public class OrderDtoSerializer implements DtoSerializer<OrderDto, Order> {

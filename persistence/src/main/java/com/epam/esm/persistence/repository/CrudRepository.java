@@ -7,7 +7,8 @@ import java.util.List;
 public interface CrudRepository<T extends AbstractEntity> {
 
     /**
-     * Saves entity of type {@code T} to data source.
+     * Saves entity of type {@code T} to data source. Default implementation throws {@link RepositoryException}
+     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
      *
      * @param entity Entity object to save
      * @return Saved entity object from datasource
@@ -17,7 +18,8 @@ public interface CrudRepository<T extends AbstractEntity> {
     }
 
     /**
-     * Finds all entities of type {@code T} in data source.
+     * Finds all entities of type {@code T} in data source. Default implementation throws {@link RepositoryException}
+     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
      *
      * @param page Index of page
      * @param size Size of page
@@ -28,7 +30,8 @@ public interface CrudRepository<T extends AbstractEntity> {
     }
 
     /**
-     * Finds entity of type {@code T} by id in data source.
+     * Finds entity of type {@code T} by id in data source. Default implementation throws {@link RepositoryException}
+     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
      *
      * @param id ID of entity
      * @return Entity if it was found, {@code null} otherwise
@@ -38,7 +41,8 @@ public interface CrudRepository<T extends AbstractEntity> {
     }
 
     /**
-     * Updates entity of type {@code T} in data source.
+     * Updates entity of type {@code T} in data source. Default implementation throws {@link RepositoryException}
+     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
      *
      * @param entity Entity's new state
      * @return Updated entity
@@ -48,7 +52,8 @@ public interface CrudRepository<T extends AbstractEntity> {
     }
 
     /**
-     * Deletes entity of type {@code T} from data source.
+     * Deletes entity of type {@code T} from data source. Default implementation throws {@link RepositoryException}
+     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
      *
      * @param id ID of entity to delete
      * @return True if entity was deleted, false otherwise
@@ -57,5 +62,13 @@ public interface CrudRepository<T extends AbstractEntity> {
         throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "DELETE");
     }
 
-    int countAll();
+    /**
+     * Counts all entities in repository. Default implementation throws {@link RepositoryException}
+     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
+     *
+     * @return Number of entities in repository.
+     */
+    default int countAll() {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "COUNT ALL");
+    }
 }
