@@ -6,11 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     private static final String SELECT_ALL_QUERY = "SELECT user FROM User user";
+    private static final String COUNT_ALL_QUERY = "SELECT COUNT(user) FROM User user";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -26,5 +28,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User findById(Long id) {
         return entityManager.find(User.class, id);
+    }
+
+    @Override
+    public int countAll() {
+        TypedQuery<Long> query = entityManager.createQuery(COUNT_ALL_QUERY, Long.class);
+        return query.getSingleResult().intValue();
     }
 }

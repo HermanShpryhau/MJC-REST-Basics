@@ -56,4 +56,6 @@ public interface CrudRepository<T extends AbstractEntity> {
     default boolean delete(Long id) {
         throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "DELETE");
     }
+
+    int countAll();
 }

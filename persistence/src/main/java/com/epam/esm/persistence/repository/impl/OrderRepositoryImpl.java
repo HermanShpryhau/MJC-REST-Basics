@@ -6,12 +6,14 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
     private static final String SELECT_ALL_QUERY = "SELECT order FROM Order order";
+    private static final String COUNT_ALL_QUERY = "SELECT COUNT(order) FROM Order order";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -47,5 +49,11 @@ public class OrderRepositoryImpl implements OrderRepository {
         }
         entityManager.remove(order);
         return true;
+    }
+
+    @Override
+    public int countAll() {
+        TypedQuery<Long> query = entityManager.createQuery(COUNT_ALL_QUERY, Long.class);
+        return query.getSingleResult().intValue();
     }
 }

@@ -22,8 +22,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String SELECT_ALL_QUERY = "SELECT giftCertificate from GiftCertificate giftCertificate";
     private static final String SELECT_ASSOCIATED_ORDERS =
             "SELECT order FROM Order order WHERE order.giftCertificate=:giftCertificate";
-    public static final String GIFT_CERTIFICATE_ENTITY_NAME = "gift certificate";
-    public static final String ORDER_ENTITY_NAME = "order";
+    private static final String COUNT_ALL_QUERY = "SELECT COUNT(giftCertificate) FROM GiftCertificate giftCertificate";
+    private static final String GIFT_CERTIFICATE_ENTITY_NAME = "gift certificate";
+    private static final String ORDER_ENTITY_NAME = "order";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -86,5 +87,11 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     @Override
     public List<Tag> findAssociatedTags(Long certificateId) {
         return new ArrayList<>(entityManager.find(GiftCertificate.class, certificateId).getAssociatedTags());
+    }
+
+    @Override
+    public int countAll() {
+        TypedQuery<Long> query = entityManager.createQuery(COUNT_ALL_QUERY, Long.class);
+        return query.getSingleResult().intValue();
     }
 }

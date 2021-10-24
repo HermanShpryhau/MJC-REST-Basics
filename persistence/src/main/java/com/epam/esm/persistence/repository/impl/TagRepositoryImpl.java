@@ -15,6 +15,8 @@ import java.util.List;
 public class TagRepositoryImpl implements TagRepository {
     private static final String SELECT_ALL_QUERY = "SELECT tag FROM Tag tag";
     private static final String SELECT_BY_NAME_QUERY = "SELECT tag FROM Tag tag WHERE tag.name=:tagName";
+    private static final String COUNT_ALL_QUERY = "SELECT COUNT(tag) FROM Tag tag";
+
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -57,5 +59,11 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public List<GiftCertificate> findAssociatedGiftCertificates(Long tagId) {
         return new ArrayList<>(entityManager.find(Tag.class, tagId).getAssociatedCertificates());
+    }
+
+    @Override
+    public int countAll() {
+        TypedQuery<Long> query = entityManager.createQuery(COUNT_ALL_QUERY, Long.class);
+        return query.getSingleResult().intValue();
     }
 }
