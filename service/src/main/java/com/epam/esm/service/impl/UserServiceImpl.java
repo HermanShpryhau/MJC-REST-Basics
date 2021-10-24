@@ -9,6 +9,7 @@ import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.UserRepository;
 import com.epam.esm.service.UserService;
+import com.epam.esm.service.util.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> fetchAllUsers(int page, int size) {
+        page = PaginationUtil.correctPage(page, size, userRepository::countAll);
         return userRepository.findAll(page, size).stream()
                 .map(userDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
@@ -48,7 +50,10 @@ public class UserServiceImpl implements UserService {
     public List<OrderDto> fetchUserOrders(Long id, int page, int size) {
         User user = Optional.ofNullable(userRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.USER_NOT_FOUND, id));
+        page = PaginationUtil.correctPage(page, size, user.getOrders()::size);
         List<OrderDto> orders = user.getOrders().stream()
+                .skip((page - 1) * size)
+                .limit(size)
                 .map(orderDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
         return orders;

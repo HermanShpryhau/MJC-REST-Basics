@@ -11,6 +11,7 @@ import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.OrderRepository;
 import com.epam.esm.persistence.repository.UserRepository;
 import com.epam.esm.service.OrderService;
+import com.epam.esm.service.util.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> fetchAllOrders(int page, int size) {
+        page = PaginationUtil.correctPage(page, size, orderRepository::countAll);
         return orderRepository.findAll(page, size).stream()
                 .map(orderDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());

@@ -9,9 +9,11 @@ import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.service.TagService;
+import com.epam.esm.service.util.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +43,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDto> fetchAllTags(int page, int size) {
+        page = PaginationUtil.correctPage(page, size, tagRepository::countAll);
         return tagRepository.findAll(page, size).stream()
                 .map(tagDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());

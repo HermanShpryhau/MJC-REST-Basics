@@ -12,6 +12,7 @@ import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
 import com.epam.esm.persistence.repository.filter.SortAttribute;
 import com.epam.esm.persistence.repository.filter.SortDirection;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.service.util.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                                                  Optional<List<String>> sortTypes,
                                                                  Optional<String> searchPattern,
                                                                  int page, int size) {
+        page = PaginationUtil.correctPage(page, size, certificateRepository::countAll);
         GiftCertificatesFilterConfig.Builder filterConfigBuilder = GiftCertificatesFilterConfig.builder();
         tagNames.ifPresent(filterConfigBuilder::withTags);
         addSortsToConfig(sortTypes, filterConfigBuilder);
@@ -68,13 +70,16 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .map(dtoSerializer::dtoFromEntity).collect(Collectors.toList());
     }
 
+
+
     /**
      * Parses sort parameters strings and adds that sorts to filter configuration
      *
      * @param sortTypes           List of sort parameters strings
      * @param filterConfigBuilder {@link GiftCertificatesFilterConfig} builder
      */
-    private void addSortsToConfig(Optional<List<String>> sortTypes, GiftCertificatesFilterConfig.Builder filterConfigBuilder) {
+    private void addSortsToConfig(Optional<List<String>> sortTypes,
+                                  GiftCertificatesFilterConfig.Builder filterConfigBuilder) {
         if (sortTypes.isPresent()) {
             List<String> sorts = sortTypes.get();
             sorts.forEach(s -> {
