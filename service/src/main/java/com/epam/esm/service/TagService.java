@@ -33,14 +33,6 @@ public interface TagService {
     TagDto fetchTagById(Long id);
 
     /**
-     * Fetches tag by name.
-     *
-     * @param name Name of tag to fetch
-     * @return Found tag entity
-     */
-    TagDto fetchTagByName(String name);
-
-    /**
      * Fetches certificates associated with tag.
      *
      * @param id ID of gift certificate to find tags for
