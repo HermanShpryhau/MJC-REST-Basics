@@ -11,6 +11,4 @@ public interface UserService {
     UserDto fetchUserById(Long id);
 
     List<OrderDto> fetchUserOrders(Long id, int page, int size);
-
-    OrderDto placeOrder(OrderDto order);
 }

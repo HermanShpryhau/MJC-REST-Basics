@@ -58,9 +58,4 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
         return orders;
     }
-
-    @Override
-    public OrderDto placeOrder(OrderDto order) {
-        return null;
-    }
 }
