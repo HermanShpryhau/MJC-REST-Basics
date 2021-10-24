@@ -63,11 +63,15 @@ public class TagController {
      * Gets certificates associated with tag.
      *
      * @param id ID of gift certificate to find tags for
+     * @param page Index of page
+     * @param size Size of page
      * @return List of associated tags
      */
     @GetMapping("/{id}/certificates")
-    public List<GiftCertificateDto> getAssociatedCertificates(@PathVariable Long id) {
-        return tagService.fetchAssociatedCertificates(id);
+    public List<GiftCertificateDto> getAssociatedCertificates(@PathVariable Long id,
+                                                              @RequestParam(name = "page", defaultValue = "1") Integer page,
+                                                              @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return tagService.fetchAssociatedCertificates(id, page, size);
     }
 
     /**

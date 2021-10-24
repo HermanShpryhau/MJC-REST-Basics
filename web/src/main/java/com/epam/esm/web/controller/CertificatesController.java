@@ -1,7 +1,7 @@
 package com.epam.esm.web.controller;
 
-import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.domain.dto.TagDto;
 import com.epam.esm.domain.validation.PatchDto;
 import com.epam.esm.domain.validation.SaveDto;
 import com.epam.esm.service.GiftCertificateService;
@@ -30,7 +30,8 @@ public class CertificatesController {
      * Gets gift certificate DTOs matching supplied filtering parameters.
      *
      * @param tagNames      List of tag names to search certificates by
-     * @param sortTypes     Names of parameters ond sort directions to sort by. String must follow the patter {@code [parameter name]-[asc|desc]}
+     * @param sortTypes     Names of parameters ond sort directions to sort by. String must follow the patter {@code
+     *                      [parameter name]-[asc|desc]}
      * @param searchPattern String to search for in name or description of the certificate
      * @param page          Index of page
      * @param size          Size of page
@@ -61,12 +62,16 @@ public class CertificatesController {
     /**
      * Gets tags associated with gift certificate.
      *
-     * @param id ID of gift certificate to find associated tags for
+     * @param id   ID of gift certificate to find associated tags for
+     * @param page Index of page
+     * @param size Size of page
      * @return List of associated tags
      */
     @GetMapping("/{id}/tags")
-    public List<Tag> getAssociatedTags(@PathVariable long id) {
-        return certificateService.fetchAssociatedTags(id);
+    public List<TagDto> getAssociatedTags(@PathVariable long id,
+                                          @RequestParam(name = "page", defaultValue = "1") Integer page,
+                                          @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return certificateService.fetchAssociatedTags(id, page, size);
     }
 
     /**
@@ -83,7 +88,8 @@ public class CertificatesController {
     /**
      * Updates gift certificate in data source with data supplied DTO.
      *
-     * @param certificate DTO containing updated data. Only the supplied data will be updated. The rest will remain unchanged.
+     * @param certificate DTO containing updated data. Only the supplied data will be updated. The rest will remain
+     *                    unchanged.
      * @return Updated gift certificate DTO
      */
     @PatchMapping

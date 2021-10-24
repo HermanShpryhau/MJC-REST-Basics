@@ -64,10 +64,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<GiftCertificateDto> fetchAssociatedCertificates(Long id) {
+    public List<GiftCertificateDto> fetchAssociatedCertificates(Long id, int page, int size) {
         Tag tag = Optional.ofNullable(tagRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
-        return tagRepository.findAssociatedGiftCertificates(tag.getId()).stream()
+        List<GiftCertificate> associatedGiftCertificates = tagRepository.findAssociatedGiftCertificates(tag.getId());
+        page = PaginationUtil.correctPage(page, size, associatedGiftCertificates::size);
+        return associatedGiftCertificates.stream()
+                .skip((page - 1) * size)
+                .limit(size)
                 .map(certificateDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
     }

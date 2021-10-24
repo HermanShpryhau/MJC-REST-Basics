@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.domain.dto.TagDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,9 +45,9 @@ public interface GiftCertificateService {
      * Fetches all tags associated with gift certificate.
      *
      * @param certificateId ID of gift certificate to find associated tags for
-     * @return List of associated tags
+     * @return List of associated tags DTOS
      */
-    List<Tag> fetchAssociatedTags(long certificateId);
+    List<TagDto> fetchAssociatedTags(long certificateId, int page, int size);
 
     /**
      * Updates gift certificate entity in data source with data supplied DTO.

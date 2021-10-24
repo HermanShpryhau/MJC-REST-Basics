@@ -46,7 +46,7 @@ public interface TagService {
      * @param id ID of gift certificate to find tags for
      * @return List of associated tags
      */
-    List<GiftCertificateDto> fetchAssociatedCertificates(Long id);
+    List<GiftCertificateDto> fetchAssociatedCertificates(Long id, int page, int size);
 
     /**
      * Deletes tag from data source

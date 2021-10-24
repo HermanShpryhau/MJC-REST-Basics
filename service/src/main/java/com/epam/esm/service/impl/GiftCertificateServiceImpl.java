@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.domain.dto.TagDto;
 import com.epam.esm.domain.dto.serialization.DtoSerializer;
 import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
@@ -27,15 +28,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository certificateRepository;
     private final TagRepository tagRepository;
     private final DtoSerializer<GiftCertificateDto, GiftCertificate> dtoSerializer;
+    private final DtoSerializer<TagDto, Tag> tagDtoSerializer;
 
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateRepository certificateRepository,
                                       TagRepository tagRepository,
                                       @Qualifier("giftCertificateDtoSerializer") DtoSerializer<GiftCertificateDto,
-                                              GiftCertificate> dtoSerializer) {
+                                              GiftCertificate> dtoSerializer,
+                                      @Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer) {
         this.certificateRepository = certificateRepository;
         this.tagRepository = tagRepository;
         this.dtoSerializer = dtoSerializer;
+        this.tagDtoSerializer = tagDtoSerializer;
     }
 
     @Override
@@ -99,11 +103,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<Tag> fetchAssociatedTags(long certificateId) {
+    public List<TagDto> fetchAssociatedTags(long certificateId, int page, int size) {
         if (certificateRepository.findById(certificateId) == null) {
             throw new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, certificateId);
         }
-        return certificateRepository.findAssociatedTags(certificateId);
+        List<Tag> associatedTags = certificateRepository.findAssociatedTags(certificateId);
+        page = PaginationUtil.correctPage(page, size, associatedTags::size);
+        return associatedTags.stream()
+                .skip((page - 1) * size)
+                .limit(size)
+                .map(tagDtoSerializer::dtoFromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
