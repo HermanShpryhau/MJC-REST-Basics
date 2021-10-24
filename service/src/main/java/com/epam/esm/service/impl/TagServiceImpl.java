@@ -64,6 +64,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional
     public List<GiftCertificateDto> fetchAssociatedCertificates(Long id, int page, int size) {
         Tag tag = Optional.ofNullable(tagRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
