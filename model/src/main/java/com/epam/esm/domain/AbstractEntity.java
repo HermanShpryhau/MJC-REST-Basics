@@ -4,6 +4,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.util.Objects;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
@@ -29,11 +30,11 @@ public abstract class AbstractEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || o.getClass() != getClass()) return false;
+        if (!(o instanceof AbstractEntity)) return false;
 
-        AbstractEntity other = (AbstractEntity) o;
+        AbstractEntity that = (AbstractEntity) o;
 
-        return id.equals(other.id);
+        return id.equals(that.id);
     }
 
     @Override

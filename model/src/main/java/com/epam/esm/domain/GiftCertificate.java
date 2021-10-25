@@ -56,7 +56,7 @@ public class GiftCertificate extends AbstractEntity {
     }
 
     public GiftCertificate(Long id, String name, String description, int price, int duration, LocalDateTime createDate,
-                           LocalDateTime lastUpdateDate) {
+                           LocalDateTime lastUpdateDate, List<Tag> associatedTags) {
         super(id);
         this.name = name;
         this.description = description;
@@ -64,6 +64,7 @@ public class GiftCertificate extends AbstractEntity {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
+        this.associatedTags = associatedTags;
     }
 
     public String getName() {

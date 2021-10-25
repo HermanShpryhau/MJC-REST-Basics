@@ -45,7 +45,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto addCertificate(GiftCertificateDto dto) {
-        dto.setId(null);
+        dto.setId(-1L);
         GiftCertificate certificateEntity = dtoSerializer.dtoToEntity(dto);
         certificateEntity.setAssociatedTags(fetchRelatedTagEntities(certificateEntity.getAssociatedTags()));
         GiftCertificate savedCertificate = certificateRepository.save(certificateEntity);
