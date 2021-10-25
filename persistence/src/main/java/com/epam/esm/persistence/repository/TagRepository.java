@@ -23,5 +23,10 @@ public interface TagRepository extends CrudRepository<Tag> {
      */
     Tag findByName(String name);
 
+    /**
+     * Finds most widely used tag(s) of a user with the highest cost of all orders.
+     *
+     * @return List of tags found
+     */
     List<Tag> findMostPopularTag();
 }

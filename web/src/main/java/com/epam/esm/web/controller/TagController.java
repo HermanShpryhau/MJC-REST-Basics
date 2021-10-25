@@ -52,7 +52,7 @@ public class TagController {
      * Gets tag by ID.
      *
      * @param id ID of tag to fetch
-     * @return Found tag entity
+     * @return Found tag
      */
     @GetMapping("/{id}")
     public TagDto getTagById(@PathVariable Long id) {
@@ -65,7 +65,7 @@ public class TagController {
      * @param id ID of gift certificate to find tags for
      * @param page Index of page
      * @param size Size of page
-     * @return List of associated tags
+     * @return List of associated certificates
      */
     @GetMapping("/{id}/certificates")
     public List<GiftCertificateDto> getAssociatedCertificates(@PathVariable Long id,
@@ -74,6 +74,11 @@ public class TagController {
         return tagService.fetchAssociatedCertificates(id, page, size);
     }
 
+    /**
+     * Gets most widely used tag(s) of a user with the highest cost of all orders.
+     *
+     * @return List of tags matching criteria
+     */
     @GetMapping("/most-popular")
     public List<TagDto> getMostPopularTag() {
         return tagService.fetchMostPopularTag();

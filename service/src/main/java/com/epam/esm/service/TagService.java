@@ -32,6 +32,11 @@ public interface TagService {
      */
     TagDto fetchTagById(Long id);
 
+    /**
+     * Fetches most widely used tag(s) of a user with the highest cost of all orders.
+     *
+     * @return List of tags matching criteria.
+     */
     List<TagDto> fetchMostPopularTag();
 
     /**

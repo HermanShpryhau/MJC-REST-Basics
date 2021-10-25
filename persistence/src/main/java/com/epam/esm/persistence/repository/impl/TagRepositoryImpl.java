@@ -11,13 +11,16 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 public class TagRepositoryImpl implements TagRepository {
     private static final String SELECT_ALL_QUERY = "SELECT tag FROM Tag tag";
     private static final String SELECT_BY_NAME_QUERY = "SELECT tag FROM Tag tag WHERE tag.name=:tagName";
     private static final String COUNT_ALL_QUERY = "SELECT COUNT(tag) FROM Tag tag";
+
+    /**
+     * Query to select most widely used tag(s) of a user with the highest cost of all orders.
+     */
     private static final String MOST_POPULAR_QUERY = "SELECT Tag.id, Tag.name FROM Tag\n" +
             "JOIN Gift_certificate_has_Tag GchT on Tag.id = GchT.tag AND GchT.certificate IN (SELECT Gift_certificate" +
             ".id FROM Gift_certificate\n" +
