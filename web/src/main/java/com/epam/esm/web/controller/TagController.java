@@ -74,6 +74,11 @@ public class TagController {
         return tagService.fetchAssociatedCertificates(id, page, size);
     }
 
+    @GetMapping("/most-popular")
+    public List<TagDto> getMostPopularTag() {
+        return tagService.fetchMostPopularTag();
+    }
+
     /**
      * Deletes tag from data source
      *

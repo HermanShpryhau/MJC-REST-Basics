@@ -22,4 +22,6 @@ public interface TagRepository extends CrudRepository<Tag> {
      * @return Found tag or {@code null}
      */
     Tag findByName(String name);
+
+    List<Tag> findMostPopularTag();
 }

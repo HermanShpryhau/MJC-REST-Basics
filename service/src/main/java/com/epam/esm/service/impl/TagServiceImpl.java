@@ -28,7 +28,8 @@ public class TagServiceImpl implements TagService {
     @Autowired
     public TagServiceImpl(TagRepository tagRepository,
                           @Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer,
-                          @Qualifier("giftCertificateDtoSerializer")DtoSerializer<GiftCertificateDto, GiftCertificate> certificateDtoSerializer) {
+                          @Qualifier("giftCertificateDtoSerializer") DtoSerializer<GiftCertificateDto,
+                                  GiftCertificate> certificateDtoSerializer) {
         this.tagRepository = tagRepository;
         this.tagDtoSerializer = tagDtoSerializer;
         this.certificateDtoSerializer = certificateDtoSerializer;
@@ -54,6 +55,13 @@ public class TagServiceImpl implements TagService {
         Tag tag = Optional.ofNullable(tagRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
         return tagDtoSerializer.dtoFromEntity(tag);
+    }
+
+    @Override
+    public List<TagDto> fetchMostPopularTag() {
+        return tagRepository.findMostPopularTag().stream()
+                .map(tagDtoSerializer::dtoFromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override

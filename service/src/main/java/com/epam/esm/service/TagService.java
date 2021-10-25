@@ -32,6 +32,8 @@ public interface TagService {
      */
     TagDto fetchTagById(Long id);
 
+    List<TagDto> fetchMostPopularTag();
+
     /**
      * Fetches certificates associated with tag.
      *
