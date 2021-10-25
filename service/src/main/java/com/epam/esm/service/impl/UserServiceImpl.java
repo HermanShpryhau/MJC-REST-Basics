@@ -46,7 +46,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto fetchUserById(Long id) {
-        return userDtoSerializer.dtoFromEntity(userRepository.findById(id));
+        User user = Optional.ofNullable(userRepository.findById(id))
+                .orElseThrow(() -> new ServiceException(ErrorCode.USER_NOT_FOUND, id));
+        return userDtoSerializer.dtoFromEntity(user);
     }
 
     @Override
@@ -54,11 +56,10 @@ public class UserServiceImpl implements UserService {
         User user = Optional.ofNullable(userRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.USER_NOT_FOUND, id));
         page = PaginationUtil.correctPage(page, size, user.getOrders()::size);
-        List<OrderDto> orders = user.getOrders().stream()
-                .skip((page - 1) * size)
+        return user.getOrders().stream()
+                .skip((long) (page - 1) * size)
                 .limit(size)
                 .map(orderDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
-        return orders;
     }
 }

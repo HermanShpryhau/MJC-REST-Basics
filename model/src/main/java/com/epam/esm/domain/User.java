@@ -3,6 +3,7 @@ package com.epam.esm.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,7 +15,7 @@ public class User extends AbstractEntity {
     private String name;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
-    private List<Order> orders;
+    private List<Order> orders = new ArrayList<>();
 
     public User() {}
 
