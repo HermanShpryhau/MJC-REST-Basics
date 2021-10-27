@@ -1,12 +1,12 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Order;
-import com.epam.esm.domain.User;
-import com.epam.esm.domain.dto.GiftCertificateDto;
-import com.epam.esm.domain.dto.OrderDto;
-import com.epam.esm.domain.dto.UserDto;
-import com.epam.esm.domain.dto.serialization.OrderDtoSerializer;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Order;
+import com.epam.esm.model.User;
+import com.epam.esm.model.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.OrderDto;
+import com.epam.esm.model.dto.UserDto;
+import com.epam.esm.model.dto.serialization.OrderDtoSerializer;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.OrderRepository;
@@ -24,8 +24,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {

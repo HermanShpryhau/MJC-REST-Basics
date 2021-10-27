@@ -1,4 +1,4 @@
-package com.epam.esm.domain.dto;
+package com.epam.esm.model.dto;
 
 public class UserDto {
     private Long id;

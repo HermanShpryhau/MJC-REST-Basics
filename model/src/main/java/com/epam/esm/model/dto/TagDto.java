@@ -1,6 +1,6 @@
-package com.epam.esm.domain.dto;
+package com.epam.esm.model.dto;
 
-import com.epam.esm.domain.validation.ValidationErrorCode;
+import com.epam.esm.model.validation.ValidationErrorCode;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

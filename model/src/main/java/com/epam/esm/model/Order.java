@@ -1,4 +1,4 @@
-package com.epam.esm.domain;
+package com.epam.esm.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.epam.esm.domain.validation;
+package com.epam.esm.model.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

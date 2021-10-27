@@ -1,7 +1,7 @@
 package com.epam.esm.persistence.repository;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Tag;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Tag;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package com.epam.esm.domain.validation;
+package com.epam.esm.model.validation;
 
-import com.epam.esm.domain.dto.TagDto;
+import com.epam.esm.model.dto.TagDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

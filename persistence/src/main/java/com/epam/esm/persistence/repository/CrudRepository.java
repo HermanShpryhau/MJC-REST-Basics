@@ -1,6 +1,6 @@
 package com.epam.esm.persistence.repository;
 
-import com.epam.esm.domain.AbstractEntity;
+import com.epam.esm.model.AbstractEntity;
 
 import java.util.List;
 

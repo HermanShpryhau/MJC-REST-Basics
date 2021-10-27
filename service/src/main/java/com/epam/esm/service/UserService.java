@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
-import com.epam.esm.domain.dto.OrderDto;
-import com.epam.esm.domain.dto.UserDto;
+import com.epam.esm.model.dto.OrderDto;
+import com.epam.esm.model.dto.UserDto;
 
 import java.util.List;
 

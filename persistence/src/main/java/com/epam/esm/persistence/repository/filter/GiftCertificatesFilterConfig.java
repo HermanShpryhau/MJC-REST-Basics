@@ -1,7 +1,7 @@
 package com.epam.esm.persistence.repository.filter;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Tag;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Tag;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;

@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS Orders;
-DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS Gift_certificate_has_Tag;
 DROP TABLE IF EXISTS Gift_certificate;
 DROP TABLE IF EXISTS Tag;
@@ -11,14 +9,14 @@ create table Gift_certificate
     description      varchar(300) not null,
     price            int          not null,
     duration         int          not null,
-    create_date      timestamp    not null default CURRENT_TIMESTAMP ,
-    last_update_date timestamp    not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    create_date      timestamp             default CURRENT_TIMESTAMP not null,
+    last_update_date timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table Tag
 (
     id   bigint auto_increment primary key,
-    name varchar(45) not null
+    name varchar(45) not null unique
 );
 
 create table Gift_certificate_has_Tag
@@ -29,7 +27,7 @@ create table Gift_certificate_has_Tag
     constraint fk_Gift_certificate_has_Tag_Gift_certificate
         foreign key (certificate) references Gift_certificate (id) on delete cascade,
     constraint fk_Gift_certificate_has_Tag_Tag1
-        foreign key (tag) references Tag (id) on delete cascade
+        foreign key (tag) references Tag (id) on delete restrict
 );
 
 create table User
@@ -55,6 +53,6 @@ create table Orders
             on delete restrict,
     constraint Order_User_id_fk
         foreign key (user_id) references User (id)
-            on delete cascade
+            on delete restrict
 );
 

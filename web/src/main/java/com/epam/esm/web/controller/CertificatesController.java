@@ -1,9 +1,9 @@
 package com.epam.esm.web.controller;
 
-import com.epam.esm.domain.dto.GiftCertificateDto;
-import com.epam.esm.domain.dto.TagDto;
-import com.epam.esm.domain.validation.PatchDto;
-import com.epam.esm.domain.validation.SaveDto;
+import com.epam.esm.model.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.TagDto;
+import com.epam.esm.model.validation.PatchDto;
+import com.epam.esm.model.validation.SaveDto;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

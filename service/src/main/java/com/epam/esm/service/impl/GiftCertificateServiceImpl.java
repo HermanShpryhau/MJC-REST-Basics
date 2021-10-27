@@ -1,10 +1,10 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Tag;
-import com.epam.esm.domain.dto.GiftCertificateDto;
-import com.epam.esm.domain.dto.TagDto;
-import com.epam.esm.domain.dto.serialization.DtoSerializer;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Tag;
+import com.epam.esm.model.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.TagDto;
+import com.epam.esm.model.dto.serialization.DtoSerializer;
 import com.epam.esm.exception.ErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
@@ -108,7 +108,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<Tag> associatedTags = certificateRepository.findAssociatedTags(certificateId);
         page = PaginationUtil.correctPage(page, size, associatedTags::size);
         return associatedTags.stream()
-                .skip((page - 1) * size)
+                .skip((long) (page - 1) * size)
                 .limit(size)
                 .map(tagDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());

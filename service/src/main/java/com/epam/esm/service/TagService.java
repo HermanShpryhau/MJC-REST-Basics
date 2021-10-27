@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
-import com.epam.esm.domain.dto.GiftCertificateDto;
-import com.epam.esm.domain.dto.TagDto;
+import com.epam.esm.model.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.TagDto;
 
 import java.util.List;
 

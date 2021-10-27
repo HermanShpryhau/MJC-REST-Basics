@@ -1,9 +1,9 @@
 package com.epam.esm.persistence.repository.impl;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Tag;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Tag;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
-import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
+import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,14 +74,14 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void findWithFilters() {
-        QueryFiltersConfig config = QueryFiltersConfig.builder().withSearchPattern("2").build();
+        GiftCertificatesFilterConfig config = GiftCertificatesFilterConfig.builder().withSearchPattern("2").build();
         GiftCertificate certificate = repository.findWithFilters(config, 1, 10).get(0);
         Assertions.assertEquals(IN_DB_CERTIFICATES.get(1), certificate);
     }
 
     @Test
     void findWithFiltersNoMatchingCertificates() {
-        QueryFiltersConfig config = QueryFiltersConfig.builder().withTags(Collections.singletonList("Tag 123")).build();
+        GiftCertificatesFilterConfig config = GiftCertificatesFilterConfig.builder().withTags(Collections.singletonList("Tag 123")).build();
         List<GiftCertificate> certificates = repository.findWithFilters(config, 1, 10);
         Assertions.assertEquals(Collections.emptyList(), certificates);
     }

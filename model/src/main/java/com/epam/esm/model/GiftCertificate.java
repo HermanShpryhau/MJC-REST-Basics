@@ -1,9 +1,9 @@
-package com.epam.esm.domain;
+package com.epam.esm.model;
 
-import com.epam.esm.domain.validation.DtoTag;
-import com.epam.esm.domain.validation.PatchDto;
-import com.epam.esm.domain.validation.SaveDto;
-import com.epam.esm.domain.validation.ValidationErrorCode;
+import com.epam.esm.model.validation.DtoTag;
+import com.epam.esm.model.validation.PatchDto;
+import com.epam.esm.model.validation.SaveDto;
+import com.epam.esm.model.validation.ValidationErrorCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

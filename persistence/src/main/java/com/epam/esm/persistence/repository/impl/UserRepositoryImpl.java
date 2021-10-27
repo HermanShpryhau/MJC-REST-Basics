@@ -1,6 +1,6 @@
 package com.epam.esm.persistence.repository.impl;
 
-import com.epam.esm.domain.User;
+import com.epam.esm.model.User;
 import com.epam.esm.persistence.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 

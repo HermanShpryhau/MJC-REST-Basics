@@ -1,8 +1,8 @@
 package com.epam.esm.persistence.repository.impl;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Order;
-import com.epam.esm.domain.Tag;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Order;
+import com.epam.esm.model.Tag;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.RepositoryErrorCode;
 import com.epam.esm.persistence.repository.RepositoryException;

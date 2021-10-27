@@ -1,11 +1,11 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Tag;
-import com.epam.esm.domain.dto.GiftCertificateDto;
-import com.epam.esm.domain.dto.TagDto;
-import com.epam.esm.domain.dto.serialization.GiftCertificateDtoSerializer;
-import com.epam.esm.domain.dto.serialization.TagDtoSerializer;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Tag;
+import com.epam.esm.model.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.TagDto;
+import com.epam.esm.model.dto.serialization.GiftCertificateDtoSerializer;
+import com.epam.esm.model.dto.serialization.TagDtoSerializer;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;

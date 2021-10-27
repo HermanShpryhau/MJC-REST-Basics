@@ -1,6 +1,6 @@
-package com.epam.esm.domain.dto;
+package com.epam.esm.model.dto;
 
-import com.epam.esm.domain.validation.ValidationErrorCode;
+import com.epam.esm.model.validation.ValidationErrorCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.validation.constraints.NotNull;

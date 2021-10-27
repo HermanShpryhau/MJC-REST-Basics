@@ -1,6 +1,6 @@
 package com.epam.esm.persistence.repository.impl;
 
-import com.epam.esm.domain.Order;
+import com.epam.esm.model.Order;
 import com.epam.esm.persistence.repository.OrderRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {

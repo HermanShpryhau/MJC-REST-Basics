@@ -1,7 +1,7 @@
-package com.epam.esm.domain.dto.serialization;
+package com.epam.esm.model.dto.serialization;
 
-import com.epam.esm.domain.User;
-import com.epam.esm.domain.dto.UserDto;
+import com.epam.esm.model.User;
+import com.epam.esm.model.dto.UserDto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 

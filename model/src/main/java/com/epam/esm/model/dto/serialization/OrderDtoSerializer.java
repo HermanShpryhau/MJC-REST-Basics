@@ -1,11 +1,11 @@
-package com.epam.esm.domain.dto.serialization;
+package com.epam.esm.model.dto.serialization;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Order;
-import com.epam.esm.domain.User;
-import com.epam.esm.domain.dto.GiftCertificateDto;
-import com.epam.esm.domain.dto.OrderDto;
-import com.epam.esm.domain.dto.UserDto;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Order;
+import com.epam.esm.model.User;
+import com.epam.esm.model.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.OrderDto;
+import com.epam.esm.model.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

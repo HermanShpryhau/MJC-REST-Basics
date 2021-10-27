@@ -1,6 +1,6 @@
-package com.epam.esm.domain.dto.serialization;
+package com.epam.esm.model.dto.serialization;
 
-import com.epam.esm.domain.AbstractEntity;
+import com.epam.esm.model.AbstractEntity;
 
 /**
  * Class serializes DTO to persisted entities and vice versa.

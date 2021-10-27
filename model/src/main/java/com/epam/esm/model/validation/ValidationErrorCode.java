@@ -1,4 +1,4 @@
-package com.epam.esm.domain.validation;
+package com.epam.esm.model.validation;
 
 public final class ValidationErrorCode {
     public static final String CERTIFICATE_NAME_NOT_NULL = "40001";
