@@ -64,7 +64,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                                                  Optional<List<String>> sortTypes,
                                                                  Optional<String> searchPattern,
                                                                  int page, int size) {
-        page = PaginationUtil.correctPage(page, size, certificateRepository::countAll);
+        page = PaginationUtil.correctPageIndex(page, size, certificateRepository::countAll);
         GiftCertificatesFilterConfig.Builder filterConfigBuilder = GiftCertificatesFilterConfig.builder();
         tagNames.ifPresent(filterConfigBuilder::withTags);
         addSortsToConfig(sortTypes, filterConfigBuilder);
@@ -106,7 +106,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, certificateId);
         }
         List<Tag> associatedTags = certificateRepository.findAssociatedTags(certificateId);
-        page = PaginationUtil.correctPage(page, size, associatedTags::size);
+        page = PaginationUtil.correctPageIndex(page, size, associatedTags::size);
         return associatedTags.stream()
                 .skip((long) (page - 1) * size)
                 .limit(size)

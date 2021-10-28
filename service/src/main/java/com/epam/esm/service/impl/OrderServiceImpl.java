@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> fetchAllOrders(int page, int size) {
-        page = PaginationUtil.correctPage(page, size, orderRepository::countAll);
+        page = PaginationUtil.correctPageIndex(page, size, orderRepository::countAll);
         return orderRepository.findAll(page, size).stream()
                 .map(orderDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());

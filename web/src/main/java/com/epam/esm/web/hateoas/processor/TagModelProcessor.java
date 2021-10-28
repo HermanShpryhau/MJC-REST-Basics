@@ -1,5 +1,6 @@
 package com.epam.esm.web.hateoas.processor;
 
+import com.epam.esm.service.util.PaginationUtil;
 import com.epam.esm.web.controller.CertificatesController;
 import com.epam.esm.web.controller.TagController;
 import com.epam.esm.web.hateoas.model.TagModel;
@@ -13,22 +14,20 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class TagModelProcessor implements RepresentationModelProcessor<TagModel> {
-    private static final int FIRST_PAGE = 1;
-    private static final int LAST_PAGE = -1;
 
     public CollectionModel<TagModel> process(int page, int size, CollectionModel<TagModel> collectionModel) {
-        int nextPage = page + 1;
-        int previousPage = page - 1;
+        int nextPage = PaginationUtil.nextPage(page, size, collectionModel.getContent()::size);
+        int previousPage = PaginationUtil.previousPage(page, size, collectionModel.getContent()::size);
         Link previousPageLink = linkTo(getAllTagsMethod(previousPage, size))
                 .withRel("prev")
                 .expand();
         Link nextPageLink = linkTo(getAllTagsMethod(nextPage, size))
                 .withRel("next")
                 .expand();
-        Link firstPageLink = linkTo(getAllTagsMethod(FIRST_PAGE, size))
+        Link firstPageLink = linkTo(getAllTagsMethod(PaginationUtil.FIRST_PAGE, size))
                 .withRel("first")
                 .expand();
-        Link lastPageLink = linkTo(getAllTagsMethod(LAST_PAGE, size))
+        Link lastPageLink = linkTo(getAllTagsMethod(PaginationUtil.LAST_PAGE, size))
                 .withRel("last")
                 .expand();
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
@@ -39,18 +38,18 @@ public class TagModelProcessor implements RepresentationModelProcessor<TagModel>
     }
 
     public CollectionModel<TagModel> process(long certificateId, int page, int size, CollectionModel<TagModel> collectionModel) {
-        int nextPage = page + 1;
-        int previousPage = page - 1;
+        int nextPage = PaginationUtil.nextPage(page, size, collectionModel.getContent()::size);
+        int previousPage = PaginationUtil.previousPage(page, size, collectionModel.getContent()::size);
         Link previousPageLink = linkTo(getAssociatedTagsMethod(certificateId, previousPage, size))
                 .withRel("prev")
                 .expand();
         Link nextPageLink = linkTo(getAssociatedTagsMethod(certificateId, nextPage, size))
                 .withRel("next")
                 .expand();
-        Link firstPageLink = linkTo(getAssociatedTagsMethod(certificateId, FIRST_PAGE, size))
+        Link firstPageLink = linkTo(getAssociatedTagsMethod(certificateId, PaginationUtil.FIRST_PAGE, size))
                 .withRel("first")
                 .expand();
-        Link lastPageLink = linkTo(getAssociatedTagsMethod(certificateId, LAST_PAGE, size))
+        Link lastPageLink = linkTo(getAssociatedTagsMethod(certificateId, PaginationUtil.LAST_PAGE, size))
                 .withRel("last")
                 .expand();
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);

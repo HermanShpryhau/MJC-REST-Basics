@@ -44,7 +44,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDto> fetchAllTags(int page, int size) {
-        page = PaginationUtil.correctPage(page, size, tagRepository::countAll);
+        page = PaginationUtil.correctPageIndex(page, size, tagRepository::countAll);
         return tagRepository.findAll(page, size).stream()
                 .map(tagDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
@@ -70,7 +70,7 @@ public class TagServiceImpl implements TagService {
         Tag tag = Optional.ofNullable(tagRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
         List<GiftCertificate> associatedGiftCertificates = tagRepository.findAssociatedGiftCertificates(tag.getId());
-        page = PaginationUtil.correctPage(page, size, associatedGiftCertificates::size);
+        page = PaginationUtil.correctPageIndex(page, size, associatedGiftCertificates::size);
         return associatedGiftCertificates.stream()
                 .skip((long) (page - 1) * size)
                 .limit(size)

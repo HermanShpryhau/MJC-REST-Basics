@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> fetchAllUsers(int page, int size) {
-        page = PaginationUtil.correctPage(page, size, userRepository::countAll);
+        page = PaginationUtil.correctPageIndex(page, size, userRepository::countAll);
         return userRepository.findAll(page, size).stream()
                 .map(userDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     public List<OrderDto> fetchUserOrders(Long id, int page, int size) {
         User user = Optional.ofNullable(userRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ErrorCode.USER_NOT_FOUND, id));
-        page = PaginationUtil.correctPage(page, size, user.getOrders()::size);
+        page = PaginationUtil.correctPageIndex(page, size, user.getOrders()::size);
         return user.getOrders().stream()
                 .skip((long) (page - 1) * size)
                 .limit(size)

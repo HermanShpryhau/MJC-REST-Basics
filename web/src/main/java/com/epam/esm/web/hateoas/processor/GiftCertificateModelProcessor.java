@@ -1,5 +1,6 @@
 package com.epam.esm.web.hateoas.processor;
 
+import com.epam.esm.service.util.PaginationUtil;
 import com.epam.esm.web.controller.CertificatesController;
 import com.epam.esm.web.controller.TagController;
 import com.epam.esm.web.hateoas.model.GiftCertificateModel;
@@ -16,8 +17,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class GiftCertificateModelProcessor implements RepresentationModelProcessor<GiftCertificateModel> {
-    private static final int FIRST_PAGE = 1;
-    private static final int LAST_PAGE = -1;
 
     public CollectionModel<GiftCertificateModel> process(
             Optional<List<String>> tagNames,
@@ -27,18 +26,18 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
             Integer size,
             CollectionModel<GiftCertificateModel> collectionModel
     ) {
-        int nextPage = page + 1;
-        int previousPage = page - 1;
+        int nextPage = PaginationUtil.nextPage(page, size, collectionModel.getContent()::size);
+        int previousPage = PaginationUtil.previousPage(page, size, collectionModel.getContent()::size);
         Link previousPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, previousPage))
                 .withRel("prev")
                 .expand();
         Link nextPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, nextPage))
                 .withRel("next")
                 .expand();
-        Link firstPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, FIRST_PAGE))
+        Link firstPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, PaginationUtil.FIRST_PAGE))
                 .withRel("first")
                 .expand();
-        Link lastPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, LAST_PAGE))
+        Link lastPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, PaginationUtil.LAST_PAGE))
                 .withRel("last")
                 .expand();
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
@@ -55,18 +54,18 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
 
     public CollectionModel<GiftCertificateModel> process(Long tagId, Integer page, Integer size,
                                                          CollectionModel<GiftCertificateModel> collectionModel) {
-        int nextPage = page + 1;
-        int previousPage = page - 1;
+        int nextPage = PaginationUtil.nextPage(page, size, collectionModel.getContent()::size);
+        int previousPage = PaginationUtil.previousPage(page, size, collectionModel.getContent()::size);
         Link previousPageLink = linkTo(getAssociatedCertificatesMethod(tagId, previousPage, size))
                 .withRel("prev")
                 .expand();
         Link nextPageLink = linkTo(getAssociatedCertificatesMethod(tagId, nextPage, size))
                 .withRel("next")
                 .expand();
-        Link firstPageLink = linkTo(getAssociatedCertificatesMethod(tagId, FIRST_PAGE, size))
+        Link firstPageLink = linkTo(getAssociatedCertificatesMethod(tagId, PaginationUtil.FIRST_PAGE, size))
                 .withRel("first")
                 .expand();
-        Link lastPageLink = linkTo(getAssociatedCertificatesMethod(tagId, LAST_PAGE, size))
+        Link lastPageLink = linkTo(getAssociatedCertificatesMethod(tagId, PaginationUtil.LAST_PAGE, size))
                 .withRel("last")
                 .expand();
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
