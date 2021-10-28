@@ -4,19 +4,23 @@ DROP TABLE IF EXISTS Tag;
 
 create table Gift_certificate
 (
-    id               bigint auto_increment primary key,
-    name             varchar(45)  not null,
-    description      varchar(300) not null,
-    price            int          not null,
-    duration         int          not null,
-    create_date      timestamp             default CURRENT_TIMESTAMP not null,
-    last_update_date timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    id                  bigint auto_increment primary key,
+    name                varchar(45)  not null,
+    description         varchar(300) not null,
+    price               int          not null,
+    duration            int          not null,
+    create_date         timestamp             default CURRENT_TIMESTAMP not null,
+    last_update_date    timestamp    not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+    operation           varchar(10),
+    operation_timestamp timestamp
 );
 
 create table Tag
 (
-    id   bigint auto_increment primary key,
-    name varchar(45) not null unique
+    id                  bigint auto_increment primary key,
+    name                varchar(45) not null unique,
+    operation           varchar(10),
+    operation_timestamp timestamp
 );
 
 create table Gift_certificate_has_Tag
@@ -32,20 +36,24 @@ create table Gift_certificate_has_Tag
 
 create table User
 (
-    id   bigint auto_increment primary key,
-    name varchar(50) not null,
+    id                  bigint auto_increment primary key,
+    name                varchar(50) not null,
+    operation           varchar(10),
+    operation_timestamp timestamp,
     constraint User_id_uindex
         unique (id)
 );
 
 create table Orders
 (
-    id              bigint auto_increment primary key,
-    user_id         bigint                              not null,
-    certificate_id  bigint                              not null,
-    quantity        int                                 not null,
-    total_price     int                                 not null,
-    submission_date timestamp default CURRENT_TIMESTAMP not null,
+    id                  bigint auto_increment primary key,
+    user_id             bigint                              not null,
+    certificate_id      bigint                              not null,
+    quantity            int                                 not null,
+    total_price         int                                 not null,
+    submission_date     timestamp default CURRENT_TIMESTAMP not null,
+    operation           varchar(10),
+    operation_timestamp timestamp,
     constraint Order_id_uindex
         unique (id),
     constraint Order_Gift_certificate_id_fk
