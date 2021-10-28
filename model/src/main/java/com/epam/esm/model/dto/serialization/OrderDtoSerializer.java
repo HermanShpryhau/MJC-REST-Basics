@@ -41,7 +41,6 @@ public class OrderDtoSerializer implements DtoSerializer<OrderDto, Order> {
 
     @Override
     public Order dtoToEntity(OrderDto dto) {
-        // TODO Check if it's needed
         return null;
     }
 }

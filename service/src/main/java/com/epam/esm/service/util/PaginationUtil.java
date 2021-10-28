@@ -1,6 +1,6 @@
 package com.epam.esm.service.util;
 
-import java.util.function.Supplier;
+import java.util.function.IntSupplier;
 
 /**
  * Utility class with methods to help with pagination implementation.
@@ -17,6 +17,8 @@ public class PaginationUtil {
      */
     public static final int LAST_PAGE = -1;
 
+    private PaginationUtil() {}
+
     /**
      * Corrects page number to be consistent with total elements count.
      *
@@ -26,8 +28,8 @@ public class PaginationUtil {
      * @return First page index if provided page index is less than 1. Last page index if provided one exceeds maximum
      * elements count. Provided page index otherwise.
      */
-    public static int correctPageIndex(int page, int size, Supplier<Integer> elementCountSupplier) {
-        int maxPage = elementCountSupplier.get() / size;
+    public static int correctPageIndex(int page, int size, IntSupplier elementCountSupplier) {
+        int maxPage = elementCountSupplier.getAsInt() / size;
         maxPage = maxPage == 0 ? 1 : maxPage;
         int correctedPage = page;
         if (correctedPage - 1 > maxPage) {
@@ -38,11 +40,29 @@ public class PaginationUtil {
         return correctedPage;
     }
 
-    public static int nextPage(int currentPage, int size, Supplier<Integer> elementCountSupplier) {
+    /**
+     * Calculates index of next page.
+     *
+     * @param currentPage Index of current page
+     * @param size Size of page
+     * @param elementCountSupplier Supplier of elements' count
+     * @return First page index if next page index is less than 1. Last page index if next index exceeds maximum
+     * elements count. Provided page index increased by one otherwise.
+     */
+    public static int nextPage(int currentPage, int size, IntSupplier elementCountSupplier) {
         return correctPageIndex(currentPage + 1, size, elementCountSupplier);
     }
 
-    public static int previousPage(int currentPage, int size, Supplier<Integer> elementCountSupplier) {
+    /**
+     * Calculates index of previous page.
+     *
+     * @param currentPage Index of current page
+     * @param size Size of page
+     * @param elementCountSupplier Supplier of elements' count
+     * @return First page index if previous page index is less than 1. Last page index if previous index exceeds maximum
+     * elements count. Provided page index decreased by one otherwise.
+     */
+    public static int previousPage(int currentPage, int size, IntSupplier elementCountSupplier) {
         return correctPageIndex(currentPage - 1, size, elementCountSupplier);
     }
 }

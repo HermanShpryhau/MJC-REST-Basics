@@ -21,7 +21,6 @@ public class UserDtoSerializer implements DtoSerializer<UserDto, User> {
 
     @Override
     public User dtoToEntity(UserDto dto) {
-        // TODO Check if it's needed
         return null;
     }
 }

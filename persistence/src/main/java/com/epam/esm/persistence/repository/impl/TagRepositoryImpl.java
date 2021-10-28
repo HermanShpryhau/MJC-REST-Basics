@@ -70,8 +70,8 @@ public class TagRepositoryImpl implements TagRepository {
         Query nativeQuery = entityManager.createNativeQuery(MOST_POPULAR_QUERY, Tag.class);
         List<Tag> result = new ArrayList<>();
         nativeQuery.getResultStream()
-                .filter(obj -> obj instanceof Tag)
-                .forEach((obj) -> result.add((Tag) obj));
+                .filter(Tag.class::isInstance)
+                .forEach(obj -> result.add((Tag) obj));
         return result;
     }
 
