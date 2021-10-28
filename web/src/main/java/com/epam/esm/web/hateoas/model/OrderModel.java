@@ -58,4 +58,41 @@ public class OrderModel extends RepresentationModel<OrderModel> {
     public void setSubmissionDate(LocalDateTime submissionDate) {
         this.submissionDate = submissionDate;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || o.getClass() != getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        OrderModel model = (OrderModel) o;
+
+        if (!id.equals(model.id)) return false;
+        if (!userId.equals(model.userId)) return false;
+        if (!certificateId.equals(model.certificateId)) return false;
+        if (!totalPrice.equals(model.totalPrice)) return false;
+        return submissionDate.equals(model.submissionDate);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id.hashCode();
+        result = 31 * result + userId.hashCode();
+        result = 31 * result + certificateId.hashCode();
+        result = 31 * result + totalPrice.hashCode();
+        result = 31 * result + submissionDate.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderModel{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", certificateId=" + certificateId +
+                ", totalPrice=" + totalPrice +
+                ", submissionDate=" + submissionDate +
+                '}';
+    }
 }
