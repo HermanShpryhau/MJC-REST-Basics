@@ -5,7 +5,14 @@ import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.model.validation.PatchDto;
 import com.epam.esm.model.validation.SaveDto;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.web.hateoas.assembler.GiftCertificateModelAssembler;
+import com.epam.esm.web.hateoas.assembler.TagModelAssembler;
+import com.epam.esm.web.hateoas.model.GiftCertificateModel;
+import com.epam.esm.web.hateoas.model.TagModel;
+import com.epam.esm.web.hateoas.processor.GiftCertificateModelProcessor;
+import com.epam.esm.web.hateoas.processor.TagModelProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +26,22 @@ import java.util.Optional;
 @RequestMapping("/certificates")
 public class CertificatesController {
     private final GiftCertificateService certificateService;
+    private final GiftCertificateModelAssembler certificateModelAssembler;
+    private final GiftCertificateModelProcessor certificateModelProcessor;
+    private final TagModelAssembler tagModelAssembler;
+    private final TagModelProcessor tagModelProcessor;
 
     @Autowired
-    public CertificatesController(GiftCertificateService certificateService) {
+    public CertificatesController(GiftCertificateService certificateService,
+                                  GiftCertificateModelAssembler certificateModelAssembler,
+                                  GiftCertificateModelProcessor certificateModelProcessor,
+                                  TagModelAssembler tagModelAssembler,
+                                  TagModelProcessor tagModelProcessor) {
         this.certificateService = certificateService;
+        this.certificateModelAssembler = certificateModelAssembler;
+        this.certificateModelProcessor = certificateModelProcessor;
+        this.tagModelAssembler = tagModelAssembler;
+        this.tagModelProcessor = tagModelProcessor;
     }
 
     /**
@@ -37,14 +56,18 @@ public class CertificatesController {
      * @return List of matching gift certificate DTOs
      */
     @GetMapping
-    public List<GiftCertificateDto> getAllCertificatesWithFilters(
+    public CollectionModel<GiftCertificateModel> getAllCertificatesWithFilters(
             @RequestParam("tag") Optional<List<String>> tagNames,
             @RequestParam("sort") Optional<List<String>> sortTypes,
             @RequestParam("search") Optional<String> searchPattern,
             @RequestParam(name = "page", defaultValue = "1") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size
     ) {
-        return certificateService.fetchCertificatesWithFilters(tagNames, sortTypes, searchPattern, page, size);
+        List<GiftCertificateDto> giftCertificates = certificateService.fetchCertificatesWithFilters(tagNames, sortTypes,
+                searchPattern, page, size);
+        CollectionModel<GiftCertificateModel> collectionModel = certificateModelAssembler.toCollectionModel(giftCertificates);
+
+        return certificateModelProcessor.process(tagNames, sortTypes, searchPattern, page, size, collectionModel);
     }
 
     /**
@@ -54,8 +77,9 @@ public class CertificatesController {
      * @return Gift certificate DTO derived from gift certificate entity with corresponding ID
      */
     @GetMapping("/{id}")
-    public GiftCertificateDto getById(@PathVariable long id) {
-        return certificateService.fetchCertificateById(id);
+    public GiftCertificateModel getById(@PathVariable long id) {
+        GiftCertificateDto certificateDto = certificateService.fetchCertificateById(id);
+        return certificateModelAssembler.toModel(certificateDto);
     }
 
     /**
@@ -67,10 +91,12 @@ public class CertificatesController {
      * @return List of associated tags
      */
     @GetMapping("/{id}/tags")
-    public List<TagDto> getAssociatedTags(@PathVariable long id,
-                                          @RequestParam(name = "page", defaultValue = "1") Integer page,
-                                          @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return certificateService.fetchAssociatedTags(id, page, size);
+    public CollectionModel<TagModel> getAssociatedTags(@PathVariable long id,
+                                                       @RequestParam(name = "page", defaultValue = "1") Integer page,
+                                                       @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        List<TagDto> tagDtos = certificateService.fetchAssociatedTags(id, page, size);
+        CollectionModel<TagModel> collectionModel = tagModelAssembler.toCollectionModel(tagDtos);
+        return tagModelProcessor.process(id, page, size, collectionModel);
     }
 
     /**
@@ -80,8 +106,9 @@ public class CertificatesController {
      * @return DTO derived from saved entity
      */
     @PostMapping
-    public GiftCertificateDto addCertificate(@Validated(SaveDto.class) @RequestBody GiftCertificateDto certificate) {
-        return certificateService.addCertificate(certificate);
+    public GiftCertificateModel addCertificate(@Validated(SaveDto.class) @RequestBody GiftCertificateDto certificate) {
+        GiftCertificateDto certificateDto = certificateService.addCertificate(certificate);
+        return certificateModelAssembler.toModel(certificateDto);
     }
 
     /**
@@ -92,8 +119,9 @@ public class CertificatesController {
      * @return Updated gift certificate DTO
      */
     @PatchMapping
-    public GiftCertificateDto updateCertificate(@Validated(PatchDto.class) @RequestBody GiftCertificateDto certificate) {
-        return certificateService.updateCertificate(certificate);
+    public GiftCertificateModel updateCertificate(@Validated(PatchDto.class) @RequestBody GiftCertificateDto certificate) {
+        GiftCertificateDto certificateDto = certificateService.updateCertificate(certificate);
+        return certificateModelAssembler.toModel(certificateDto);
     }
 
     /**
