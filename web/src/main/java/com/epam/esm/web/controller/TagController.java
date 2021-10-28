@@ -3,7 +3,14 @@ package com.epam.esm.web.controller;
 import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.service.TagService;
+import com.epam.esm.web.hateoas.assembler.GiftCertificateModelAssembler;
+import com.epam.esm.web.hateoas.assembler.TagModelAssembler;
+import com.epam.esm.web.hateoas.model.GiftCertificateModel;
+import com.epam.esm.web.hateoas.model.TagModel;
+import com.epam.esm.web.hateoas.processor.GiftCertificateModelProcessor;
+import com.epam.esm.web.hateoas.processor.TagModelProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +20,26 @@ import java.util.List;
 /**
  * Controller of tags resource.
  */
-
 @RestController
 @RequestMapping("/tags")
 public class TagController {
     private final TagService tagService;
+    private final TagModelAssembler tagModelAssembler;
+    private final TagModelProcessor tagModelProcessor;
+    private final GiftCertificateModelAssembler certificateModelAssembler;
+    private final GiftCertificateModelProcessor certificateModelProcessor;
 
     @Autowired
-    public TagController(TagService tagService) {
+    public TagController(TagService tagService,
+                         TagModelAssembler tagModelAssembler,
+                         TagModelProcessor tagModelProcessor,
+                         GiftCertificateModelAssembler certificateModelAssembler,
+                         GiftCertificateModelProcessor certificateModelProcessor) {
         this.tagService = tagService;
+        this.tagModelAssembler = tagModelAssembler;
+        this.tagModelProcessor = tagModelProcessor;
+        this.certificateModelAssembler = certificateModelAssembler;
+        this.certificateModelProcessor = certificateModelProcessor;
     }
 
     /**
@@ -31,8 +49,9 @@ public class TagController {
      * @return Saved tag
      */
     @PostMapping
-    public TagDto addTag(@Validated @RequestBody TagDto tag) {
-        return tagService.addTag(tag);
+    public TagModel addTag(@Validated @RequestBody TagDto tag) {
+        TagDto tagDto = tagService.addTag(tag);
+        return tagModelAssembler.toModel(tagDto);
     }
 
     /**
@@ -43,9 +62,11 @@ public class TagController {
      * @return List of found tags
      */
     @GetMapping
-    public List<TagDto> getAllTags(@RequestParam(name = "page", defaultValue = "1") Integer page,
-                                   @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return tagService.fetchAllTags(page, size);
+    public CollectionModel<TagModel> getAllTags(@RequestParam(name = "page", defaultValue = "1") Integer page,
+                                                @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        List<TagDto> tagDtos = tagService.fetchAllTags(page, size);
+        CollectionModel<TagModel> collectionModel = tagModelAssembler.toCollectionModel(tagDtos);
+        return tagModelProcessor.process(page, size, collectionModel);
     }
 
     /**
@@ -68,10 +89,12 @@ public class TagController {
      * @return List of associated certificates
      */
     @GetMapping("/{id}/certificates")
-    public List<GiftCertificateDto> getAssociatedCertificates(@PathVariable Long id,
-                                                              @RequestParam(name = "page", defaultValue = "1") Integer page,
-                                                              @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return tagService.fetchAssociatedCertificates(id, page, size);
+    public CollectionModel<GiftCertificateModel> getAssociatedCertificates(@PathVariable Long id,
+                                                                           @RequestParam(name = "page", defaultValue = "1") Integer page,
+                                                                           @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        List<GiftCertificateDto> giftCertificateDtos = tagService.fetchAssociatedCertificates(id, page, size);
+        CollectionModel<GiftCertificateModel> collectionModel = certificateModelAssembler.toCollectionModel(giftCertificateDtos);
+        return certificateModelProcessor.process(id, page, size, collectionModel);
     }
 
     /**
@@ -80,8 +103,9 @@ public class TagController {
      * @return List of tags matching criteria
      */
     @GetMapping("/most-popular")
-    public List<TagDto> getMostPopularTag() {
-        return tagService.fetchMostPopularTag();
+    public CollectionModel<TagModel> getMostPopularTag() {
+        List<TagDto> tagDtos = tagService.fetchMostPopularTag();
+        return tagModelAssembler.toCollectionModel(tagDtos);
     }
 
     /**
