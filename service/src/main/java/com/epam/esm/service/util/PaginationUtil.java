@@ -17,6 +17,7 @@ public class PaginationUtil {
      */
     public static int correctPage(int page, int size, Supplier<Integer> elementCountSupplier) {
         int maxPage = elementCountSupplier.get() / size;
+        maxPage = maxPage == 0 ? 1 : maxPage;
         int correctedPage = page;
         if (correctedPage - 1 > maxPage) {
             correctedPage = 1;
