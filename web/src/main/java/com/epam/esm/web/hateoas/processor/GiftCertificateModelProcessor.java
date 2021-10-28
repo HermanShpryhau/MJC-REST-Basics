@@ -34,10 +34,12 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
         Link nextPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, nextPage))
                 .withRel("next")
                 .expand();
-        Link firstPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, PaginationUtil.FIRST_PAGE))
+        Link firstPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size,
+                PaginationUtil.FIRST_PAGE))
                 .withRel("first")
                 .expand();
-        Link lastPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, PaginationUtil.LAST_PAGE))
+        Link lastPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size,
+                PaginationUtil.LAST_PAGE))
                 .withRel("last")
                 .expand();
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
@@ -71,7 +73,8 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
     }
 
-    private CollectionModel<GiftCertificateModel> getAssociatedCertificatesMethod(Long tagId, Integer page, Integer size) {
+    private CollectionModel<GiftCertificateModel> getAssociatedCertificatesMethod(Long tagId, Integer page,
+                                                                                  Integer size) {
         return methodOn(TagController.class).getAssociatedCertificates(tagId, page, size);
     }
 

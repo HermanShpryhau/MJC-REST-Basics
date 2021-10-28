@@ -30,7 +30,7 @@ public interface UserService {
     /**
      * Fetches user's orders on page.
      *
-     * @param id User ID
+     * @param id   User ID
      * @param page Index of page
      * @param size Size of page
      * @return List of user's orders DTOs on page

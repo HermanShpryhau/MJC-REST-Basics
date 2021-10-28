@@ -12,8 +12,8 @@ public interface GiftCertificateRepository extends CrudRepository<GiftCertificat
      * Finds gift certificates according to filtering parameters supplied with {@link GiftCertificatesFilterConfig}.
      *
      * @param config Filter configuration
-     * @param page Index of page
-     * @param size Size of page
+     * @param page   Index of page
+     * @param size   Size of page
      * @return List of found gift certificates
      */
     List<GiftCertificate> findWithFilters(GiftCertificatesFilterConfig config, int page, int size);

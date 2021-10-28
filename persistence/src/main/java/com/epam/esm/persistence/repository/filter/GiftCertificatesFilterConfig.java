@@ -14,7 +14,8 @@ public class GiftCertificatesFilterConfig {
     private final Map<SortAttribute, SortDirection> sortParameters;
     private final String searchPattern;
 
-    private GiftCertificatesFilterConfig(List<String> tags, Map<SortAttribute, SortDirection> sortParameters, String searchPattern) {
+    private GiftCertificatesFilterConfig(List<String> tags, Map<SortAttribute, SortDirection> sortParameters,
+                                         String searchPattern) {
         this.tags = tags;
         this.sortParameters = sortParameters;
         this.searchPattern = searchPattern;

@@ -20,8 +20,8 @@ public class PaginationUtil {
     /**
      * Corrects page number to be consistent with total elements count.
      *
-     * @param page Index of page
-     * @param size Size of page
+     * @param page                 Index of page
+     * @param size                 Size of page
      * @param elementCountSupplier Supplier of elements' count.
      * @return First page index if provided page index is less than 1. Last page index if provided one exceeds maximum
      * elements count. Provided page index otherwise.

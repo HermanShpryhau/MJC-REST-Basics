@@ -29,9 +29,9 @@ public interface OrderService {
     /**
      * Places a new order on gift certificate
      *
-     * @param userId ID of user
+     * @param userId        ID of user
      * @param certificateId ID of gift certificate
-     * @param quantity Quantity of certificates
+     * @param quantity      Quantity of certificates
      * @return Placed order DTO
      */
     OrderDto placeOrder(Long userId, Long certificateId, int quantity);

@@ -4,7 +4,8 @@ public class UserDto {
     private Long id;
     private String name;
 
-    public UserDto() {}
+    public UserDto() {
+    }
 
     public UserDto(Long id, String name) {
         this.id = id;

@@ -21,7 +21,7 @@ public interface GiftCertificateService {
      *
      * @param tagNames      List of tag names to search gift certificates by
      * @param sortTypes     Names of parameters ond sort directions to sort by. String must follow the pattern {@code
-     * [parameter name]-[asc|desc]}
+     *                      [parameter name]-[asc|desc]}
      * @param searchPattern String to search for in name or description of the certificate
      * @param page          Index of page
      * @param size          Size of page

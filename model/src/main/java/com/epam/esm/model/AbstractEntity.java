@@ -10,7 +10,7 @@ public abstract class AbstractEntity {
     protected static final String UPDATE_OPERATION = "UPDATE";
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "operation")

@@ -17,7 +17,8 @@ public class User extends AbstractEntity {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
     private List<Order> orders = new ArrayList<>();
 
-    public User() {}
+    public User() {
+    }
 
     public User(String name) {
         this.name = name;

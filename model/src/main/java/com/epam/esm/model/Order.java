@@ -29,7 +29,8 @@ public class Order extends AbstractEntity {
     @Column(name = "submission_date")
     private LocalDateTime submissionDate;
 
-    public Order() {}
+    public Order() {
+    }
 
     public Order(User user, GiftCertificate giftCertificate, Integer quantity, Integer totalPrice,
                  LocalDateTime submissionDate) {

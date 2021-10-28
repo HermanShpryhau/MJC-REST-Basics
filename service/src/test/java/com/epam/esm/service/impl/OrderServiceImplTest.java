@@ -1,5 +1,6 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.exception.ServiceException;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
 import com.epam.esm.model.User;
@@ -7,7 +8,6 @@ import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.OrderDto;
 import com.epam.esm.model.dto.UserDto;
 import com.epam.esm.model.dto.serialization.OrderDtoSerializer;
-import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.OrderRepository;
 import com.epam.esm.persistence.repository.UserRepository;
@@ -56,13 +56,13 @@ class OrderServiceImplTest {
     };
 
     private static final Order[] TEST_ORDERS = {
-        new Order(1L, TEST_USERS[0], TEST_CERTIFICATES[0],2, 2, LocalDateTime.now()),
-        new Order(2L, TEST_USERS[1], TEST_CERTIFICATES[1],2, 1, LocalDateTime.now())
+            new Order(1L, TEST_USERS[0], TEST_CERTIFICATES[0], 2, 2, LocalDateTime.now()),
+            new Order(2L, TEST_USERS[1], TEST_CERTIFICATES[1], 2, 1, LocalDateTime.now())
     };
 
     private static final OrderDto[] TEST_ORDER_DTOS = {
-            new OrderDto(1L, TEST_USER_DTOS[0], TEST_CERTIFICATE_DTOS[0],1, 2, TEST_ORDERS[0].getSubmissionDate()),
-            new OrderDto(2L, TEST_USER_DTOS[1], TEST_CERTIFICATE_DTOS[1],2, 1, TEST_ORDERS[1].getSubmissionDate())
+            new OrderDto(1L, TEST_USER_DTOS[0], TEST_CERTIFICATE_DTOS[0], 1, 2, TEST_ORDERS[0].getSubmissionDate()),
+            new OrderDto(2L, TEST_USER_DTOS[1], TEST_CERTIFICATE_DTOS[1], 2, 1, TEST_ORDERS[1].getSubmissionDate())
     };
 
     @Mock
@@ -81,7 +81,8 @@ class OrderServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        service = new OrderServiceImpl(mockOrderRepository, mockUserRepository, mockCertificateRepository, orderDtoSerializer);
+        service = new OrderServiceImpl(mockOrderRepository, mockUserRepository, mockCertificateRepository,
+                orderDtoSerializer);
     }
 
     @Test

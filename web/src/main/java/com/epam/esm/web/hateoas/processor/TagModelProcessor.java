@@ -37,7 +37,8 @@ public class TagModelProcessor implements RepresentationModelProcessor<TagModel>
         return methodOn(TagController.class).getAllTags(page, size);
     }
 
-    public CollectionModel<TagModel> process(long certificateId, int page, int size, CollectionModel<TagModel> collectionModel) {
+    public CollectionModel<TagModel> process(long certificateId, int page, int size,
+                                             CollectionModel<TagModel> collectionModel) {
         int nextPage = PaginationUtil.nextPage(page, size, collectionModel.getContent()::size);
         int previousPage = PaginationUtil.previousPage(page, size, collectionModel.getContent()::size);
         Link previousPageLink = linkTo(getAssociatedTagsMethod(certificateId, previousPage, size))

@@ -21,7 +21,8 @@ public class OrderDtoSerializer implements DtoSerializer<OrderDto, Order> {
 
     @Autowired
     public OrderDtoSerializer(@Qualifier("userDtoSerializer") DtoSerializer<UserDto, User> userDtoSerializer,
-                              @Qualifier("giftCertificateDtoSerializer") DtoSerializer<GiftCertificateDto, GiftCertificate> certificateDtoSerializer) {
+                              @Qualifier("giftCertificateDtoSerializer") DtoSerializer<GiftCertificateDto,
+                                      GiftCertificate> certificateDtoSerializer) {
         this.userDtoSerializer = userDtoSerializer;
         this.certificateDtoSerializer = certificateDtoSerializer;
     }

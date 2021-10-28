@@ -1,12 +1,10 @@
 package com.epam.esm.web.hateoas.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Relation(itemRelation = "certificate", collectionRelation = "certificates")
 public class GiftCertificateModel extends RepresentationModel<GiftCertificateModel> {

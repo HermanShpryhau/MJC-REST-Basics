@@ -38,7 +38,7 @@ public class UserModelProcessor implements RepresentationModelProcessor<UserMode
         return methodOn(UsersController.class).getAllUsers(page, size);
     }
 
-        @Override
+    @Override
     public UserModel process(UserModel model) {
         return model;
     }

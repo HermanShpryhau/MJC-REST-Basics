@@ -65,7 +65,8 @@ public class CertificatesController {
     ) {
         List<GiftCertificateDto> giftCertificates = certificateService.fetchCertificatesWithFilters(tagNames, sortTypes,
                 searchPattern, page, size);
-        CollectionModel<GiftCertificateModel> collectionModel = certificateModelAssembler.toCollectionModel(giftCertificates);
+        CollectionModel<GiftCertificateModel> collectionModel =
+                certificateModelAssembler.toCollectionModel(giftCertificates);
 
         return certificateModelProcessor.process(tagNames, sortTypes, searchPattern, page, size, collectionModel);
     }

@@ -1,12 +1,12 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.exception.ErrorCode;
+import com.epam.esm.exception.ServiceException;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.model.dto.serialization.DtoSerializer;
-import com.epam.esm.exception.ErrorCode;
-import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
@@ -55,7 +55,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private List<Tag> fetchRelatedTagEntities(List<Tag> dtoTags) {
         return dtoTags.stream()
                 .map(tag -> Optional.ofNullable(tagRepository.findByName(tag.getName()))
-                                .orElseGet(() -> tagRepository.save(tag)))
+                        .orElseGet(() -> tagRepository.save(tag)))
                 .collect(Collectors.toList());
     }
 

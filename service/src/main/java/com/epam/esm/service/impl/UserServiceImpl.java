@@ -1,12 +1,12 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.exception.ErrorCode;
+import com.epam.esm.exception.ServiceException;
 import com.epam.esm.model.Order;
 import com.epam.esm.model.User;
 import com.epam.esm.model.dto.OrderDto;
 import com.epam.esm.model.dto.UserDto;
 import com.epam.esm.model.dto.serialization.DtoSerializer;
-import com.epam.esm.exception.ErrorCode;
-import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.UserRepository;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.util.PaginationUtil;

@@ -25,7 +25,8 @@ public class OrderDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime submissionDate;
 
-    public OrderDto() {}
+    public OrderDto() {
+    }
 
     public OrderDto(Long id, UserDto user, GiftCertificateDto giftCertificate, Integer quantity, Integer totalPrice,
                     LocalDateTime submissionDate) {

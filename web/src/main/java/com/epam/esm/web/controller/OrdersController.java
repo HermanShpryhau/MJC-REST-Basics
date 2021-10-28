@@ -67,8 +67,8 @@ public class OrdersController {
      */
     @PostMapping
     public OrderModel placeOrder(@RequestParam("user") Long userId,
-                        @RequestParam("certificate") Long certificateId,
-                        @RequestParam("quantity") Integer quantity) {
+                                 @RequestParam("certificate") Long certificateId,
+                                 @RequestParam("quantity") Integer quantity) {
         OrderDto orderDto = orderService.placeOrder(userId, certificateId, quantity);
         return orderModelAssembler.toModel(orderDto);
     }

@@ -46,9 +46,9 @@ public class GiftCertificate extends AbstractEntity {
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
-        name = "Gift_certificate_has_Tag",
-        joinColumns = @JoinColumn(name = "certificate"),
-        inverseJoinColumns = @JoinColumn(name = "tag")
+            name = "Gift_certificate_has_Tag",
+            joinColumns = @JoinColumn(name = "certificate"),
+            inverseJoinColumns = @JoinColumn(name = "tag")
     )
     private List<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> associatedTags = new ArrayList<>();
 

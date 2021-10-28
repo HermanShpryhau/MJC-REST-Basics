@@ -15,7 +15,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class GiftCertificateModelAssembler extends RepresentationModelAssemblerSupport<GiftCertificateDto, GiftCertificateModel> {
+public class GiftCertificateModelAssembler extends RepresentationModelAssemblerSupport<GiftCertificateDto,
+        GiftCertificateModel> {
 
     public GiftCertificateModelAssembler() {
         super(CertificatesController.class, GiftCertificateModel.class);

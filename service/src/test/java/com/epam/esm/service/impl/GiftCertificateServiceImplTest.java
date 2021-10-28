@@ -1,12 +1,12 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.exception.ServiceException;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.model.dto.serialization.GiftCertificateDtoSerializer;
 import com.epam.esm.model.dto.serialization.TagDtoSerializer;
-import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
@@ -20,7 +20,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
@@ -68,7 +71,8 @@ class GiftCertificateServiceImplTest {
 
     private final TagDtoSerializer tagDtoSerializer = new TagDtoSerializer();
 
-    private final GiftCertificateDtoSerializer certificateDtoSerializer = new GiftCertificateDtoSerializer(tagDtoSerializer);
+    private final GiftCertificateDtoSerializer certificateDtoSerializer =
+            new GiftCertificateDtoSerializer(tagDtoSerializer);
 
     private GiftCertificateService service;
 
@@ -81,9 +85,11 @@ class GiftCertificateServiceImplTest {
     @Test
     void addCertificateTest() {
         GiftCertificate entityCopy = new GiftCertificate(1L, "Certificate 1", "Description 1", 1, 1,
-                TEST_CERTIFICATE_DTOS[0].getCreateDate(), TEST_CERTIFICATE_DTOS[0].getLastUpdateDate(), CERTIFICATE_1_TAGS);
+                TEST_CERTIFICATE_DTOS[0].getCreateDate(), TEST_CERTIFICATE_DTOS[0].getLastUpdateDate(),
+                CERTIFICATE_1_TAGS);
         GiftCertificateDto dtoCopy = new GiftCertificateDto(1L, "Certificate 1", "Description 1", 1, 1,
-                TEST_CERTIFICATE_DTOS[0].getCreateDate(), TEST_CERTIFICATE_DTOS[0].getLastUpdateDate(), CERTIFICATE_1_TAG_DTOS);
+                TEST_CERTIFICATE_DTOS[0].getCreateDate(), TEST_CERTIFICATE_DTOS[0].getLastUpdateDate(),
+                CERTIFICATE_1_TAG_DTOS);
         Mockito.when(mockCertificateRepository.save(Mockito.any(GiftCertificate.class))).thenReturn(entityCopy);
         Mockito.when(mockTagRepository.findByName(TEST_TAGS[0].getName())).thenReturn(TEST_TAGS[0]);
         Mockito.when(mockTagRepository.findByName(TEST_TAGS[1].getName())).thenReturn(TEST_TAGS[1]);

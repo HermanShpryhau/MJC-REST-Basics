@@ -6,5 +6,6 @@ public final class ErrorCode {
     public static final String USER_NOT_FOUND = "40403";
     public static final String ORDER_NOT_FOUND = "40404";
 
-    private ErrorCode() {}
+    private ErrorCode() {
+    }
 }

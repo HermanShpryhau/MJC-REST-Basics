@@ -1,12 +1,12 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.exception.ErrorCode;
+import com.epam.esm.exception.ServiceException;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
 import com.epam.esm.model.User;
 import com.epam.esm.model.dto.OrderDto;
 import com.epam.esm.model.dto.serialization.DtoSerializer;
-import com.epam.esm.exception.ErrorCode;
-import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.OrderRepository;
 import com.epam.esm.persistence.repository.UserRepository;
@@ -74,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Calculates total price of order.
      *
-     * @param quantity Quantity of certificates in order
+     * @param quantity    Quantity of certificates in order
      * @param certificate Gift certificate entity
      * @return Total price of order.
      */

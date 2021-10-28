@@ -1,12 +1,12 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.exception.ServiceException;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.model.dto.serialization.GiftCertificateDtoSerializer;
 import com.epam.esm.model.dto.serialization.TagDtoSerializer;
-import com.epam.esm.exception.ServiceException;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.service.TagService;
 import org.junit.jupiter.api.Assertions;
@@ -54,7 +54,8 @@ class TagServiceImplTest {
 
     private final TagDtoSerializer tagDtoSerializer = new TagDtoSerializer();
 
-    private final GiftCertificateDtoSerializer certificateDtoSerializer = new GiftCertificateDtoSerializer(tagDtoSerializer);
+    private final GiftCertificateDtoSerializer certificateDtoSerializer =
+            new GiftCertificateDtoSerializer(tagDtoSerializer);
 
     private TagService service;
 

@@ -12,7 +12,8 @@ public class TagDto {
     @Size(min = 1, max = 45, message = ValidationErrorCode.INVALID_TAG_NAME)
     private String name;
 
-    public TagDto() {}
+    public TagDto() {
+    }
 
     public TagDto(String name) {
         this.name = name;
