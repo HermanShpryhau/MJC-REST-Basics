@@ -18,27 +18,21 @@ public interface CrudRepository<T extends AbstractEntity> {
     }
 
     /**
-     * Finds all entities of type {@code T} in data source. Default implementation throws {@link RepositoryException}
-     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
+     * Finds all entities of type {@code T} in data source.
      *
      * @param page Index of page
      * @param size Size of page
      * @return List of found entities
      */
-    default List<T> findAll(int page, int size) {
-        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "FIND ALL");
-    }
+    List<T> findAll(int page, int size);
 
     /**
-     * Finds entity of type {@code T} by id in data source. Default implementation throws {@link RepositoryException}
-     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
+     * Finds entity of type {@code T} by id in data source.
      *
      * @param id ID of entity
      * @return Entity if it was found, {@code null} otherwise
      */
-    default T findById(Long id) {
-        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "FIND BY ID");
-    }
+    T findById(Long id);
 
     /**
      * Updates entity of type {@code T} in data source. Default implementation throws {@link RepositoryException}
