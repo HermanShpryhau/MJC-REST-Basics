@@ -2,7 +2,6 @@ package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Order;
-import com.epam.esm.model.Tag;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.RepositoryErrorCode;
 import com.epam.esm.persistence.repository.RepositoryException;
@@ -14,7 +13,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -31,6 +29,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public GiftCertificate save(GiftCertificate entity) {
+        entity.setId(0L);
         return entityManager.merge(entity);
     }
 
