@@ -3,6 +3,7 @@ package com.epam.esm.persistence.repository.impl;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
+import com.epam.esm.persistence.repository.RepositoryException;
 import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,9 +13,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.epam.esm.persistence.repository.test.matchers.SameGiftCertificate.sameGiftCertificate;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @Transactional
@@ -27,14 +33,18 @@ class GiftCertificateRepositoryImplTest {
             new Tag(3L, "Tag 3")
     );
 
+    private static final List<Tag> CERTIFICATE_1_TAGS = IN_DB_TAGS.subList(0, 2);
+    private static GiftCertificate testCertificate = new GiftCertificate(3L, "test", "test", 1, 1,
+            LocalDateTime.parse("2021-09-28T18:13:56"), LocalDateTime.parse("2021-09-28T18:13:56"), CERTIFICATE_1_TAGS);
     private static final List<Tag> CERTIFICATE_2_TAGS = IN_DB_TAGS.subList(1, 3);
-
     private static final List<GiftCertificate> IN_DB_CERTIFICATES = Arrays.asList(
-            new GiftCertificate(),
-            new GiftCertificate()
+            new GiftCertificate(1L, "Certificate 1", "Description 1", 119, 25,
+                    LocalDateTime.parse("2021-09-28T18:13:56"), LocalDateTime.parse("2021-09-28T18:13:56"),
+                    CERTIFICATE_1_TAGS),
+            new GiftCertificate(2L, "Certificate 2", "Description 2", 191, 28,
+                    LocalDateTime.parse("2021-09-27T18:13:56"), LocalDateTime.parse("2021-09-27T18:13:56"),
+                    CERTIFICATE_2_TAGS)
     );
-
-    private static final GiftCertificate TEST_CERTIFICATE = new GiftCertificate();
     private final GiftCertificateRepository repository;
 
     @Autowired
@@ -44,36 +54,41 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void save() {
-        GiftCertificate saved = repository.save(TEST_CERTIFICATE);
-        TEST_CERTIFICATE.setId(saved.getId());
-        TEST_CERTIFICATE.setCreateDate(saved.getCreateDate());
-        TEST_CERTIFICATE.setLastUpdateDate(saved.getLastUpdateDate());
-        Assertions.assertEquals(TEST_CERTIFICATE, saved);
+        GiftCertificate saved = repository.save(testCertificate);
+        testCertificate.setId(saved.getId());
+        testCertificate.setCreateDate(saved.getCreateDate());
+        testCertificate.setLastUpdateDate(saved.getLastUpdateDate());
+        assertThat(saved, is(sameGiftCertificate(testCertificate)));
     }
 
     @Test
     void findAll() {
         List<GiftCertificate> certificates = repository.findAll(1, 10);
-        Assertions.assertEquals(IN_DB_CERTIFICATES, certificates);
+        assertThat(certificates,
+                containsInAnyOrder(
+                        sameGiftCertificate(IN_DB_CERTIFICATES.get(0)),
+                        sameGiftCertificate(IN_DB_CERTIFICATES.get(1))
+                )
+        );
     }
 
     @Test
     void findById() {
         GiftCertificate certificate = repository.findById(2L);
-        Assertions.assertEquals(IN_DB_CERTIFICATES.get(1), certificate);
+        assertThat(certificate, sameGiftCertificate(IN_DB_CERTIFICATES.get(1)));
     }
 
     @Test
     void findNonExistingCertificateById() {
         GiftCertificate certificate = repository.findById(100L);
-        Assertions.assertNull(certificate);
+        assertThat(certificate, is(nullValue()));
     }
 
     @Test
     void findWithFilters() {
         GiftCertificatesFilterConfig config = GiftCertificatesFilterConfig.builder().withSearchPattern("2").build();
-        GiftCertificate certificate = repository.findWithFilters(config, 1, 10).get(0);
-        Assertions.assertEquals(IN_DB_CERTIFICATES.get(1), certificate);
+        List<GiftCertificate> certificate = repository.findWithFilters(config, 1, 10);
+        assertThat(certificate, containsInAnyOrder(sameGiftCertificate(IN_DB_CERTIFICATES.get(1))));
     }
 
     @Test
@@ -81,22 +96,32 @@ class GiftCertificateRepositoryImplTest {
         GiftCertificatesFilterConfig config =
                 GiftCertificatesFilterConfig.builder().withTags(Collections.singletonList("Tag 123")).build();
         List<GiftCertificate> certificates = repository.findWithFilters(config, 1, 10);
-        Assertions.assertEquals(Collections.emptyList(), certificates);
+        assertThat(certificates, is(empty()));
     }
 
     @Test
     void update() {
-        GiftCertificate updatedCertificate = repository.update(TEST_CERTIFICATE);
-        Assertions.assertEquals(TEST_CERTIFICATE, updatedCertificate);
+        testCertificate.setId(1L);
+        GiftCertificate updatedCertificate = repository.update(testCertificate);
+        assertThat(updatedCertificate, is(sameGiftCertificate(testCertificate)));
     }
 
     @Test
-    void deleteExistingCertificate() {
-        Assertions.assertTrue(repository.delete(1L));
+    void deleteExistingBoundCertificate() {
+        Assertions.assertThrows(RepositoryException.class, () -> repository.delete(1L));
+    }
+
+    @Test
+    void deleteExistingUnboundCertificate() {
+        GiftCertificate saved = repository.save(testCertificate);
+        boolean isDeleted = repository.delete(saved.getId());
+        assertThat(isDeleted, is(true));
+        assertThat(repository.findById(saved.getId()), is(nullValue()));
     }
 
     @Test
     void deleteNonExistingCertificate() {
-        Assertions.assertFalse(repository.delete(123L));
+        boolean isDeleted = repository.delete(123L);
+        assertThat(isDeleted, is(false));
     }
 }
