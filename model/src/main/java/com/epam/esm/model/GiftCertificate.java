@@ -157,4 +157,18 @@ public class GiftCertificate extends AbstractEntity {
         result = 31 * result + associatedTags.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "GiftCertificate{" +
+                "id=" + getId() +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", duration=" + duration +
+                ", createDate=" + createDate +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", associatedTags=" + associatedTags.toString() +
+                '}';
+    }
 }
