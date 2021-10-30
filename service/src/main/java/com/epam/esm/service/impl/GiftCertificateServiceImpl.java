@@ -102,10 +102,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public List<TagDto> fetchAssociatedTags(long certificateId, int page, int size) {
-        if (certificateRepository.findById(certificateId) == null) {
-            throw new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, certificateId);
-        }
-        List<Tag> associatedTags = certificateRepository.findAssociatedTags(certificateId);
+        GiftCertificate certificate = Optional.ofNullable(certificateRepository.findById(certificateId))
+                .orElseThrow(() ->  new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, certificateId));
+        List<Tag> associatedTags = certificate.getAssociatedTags();
         page = PaginationUtil.correctPageIndex(page, size, associatedTags::size);
         return associatedTags.stream()
                 .skip((long) (page - 1) * size)

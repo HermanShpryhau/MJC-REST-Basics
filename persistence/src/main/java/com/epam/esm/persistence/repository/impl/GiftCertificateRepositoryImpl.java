@@ -91,11 +91,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public List<Tag> findAssociatedTags(Long certificateId) {
-        return new ArrayList<>(entityManager.find(GiftCertificate.class, certificateId).getAssociatedTags());
-    }
-
-    @Override
     public int countAll() {
         TypedQuery<Long> query = entityManager.createQuery(COUNT_ALL_QUERY, Long.class);
         return query.getSingleResult().intValue();
