@@ -1,7 +1,6 @@
 package com.epam.esm.model;
 
 import com.epam.esm.model.validation.ValidationErrorCode;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +20,6 @@ public class Tag extends AbstractEntity {
     private String name;
 
     @ManyToMany(mappedBy = "associatedTags")
-    @JsonIgnore
     private List<GiftCertificate> associatedCertificates = new ArrayList<>();
 
     public Tag() {
