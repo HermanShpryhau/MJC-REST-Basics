@@ -25,7 +25,6 @@ import static org.hamcrest.Matchers.*;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("dev")
-@ComponentScan(basePackages = "com.epam.esm")
 class GiftCertificateRepositoryImplTest {
     private static final List<Tag> IN_DB_TAGS = Arrays.asList(
             new Tag(1L, "Tag 1"),
