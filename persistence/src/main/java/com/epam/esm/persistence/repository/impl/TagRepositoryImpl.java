@@ -2,6 +2,8 @@ package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
+import com.epam.esm.persistence.repository.RepositoryErrorCode;
+import com.epam.esm.persistence.repository.RepositoryException;
 import com.epam.esm.persistence.repository.TagRepository;
 import org.springframework.stereotype.Repository;
 
@@ -71,6 +73,11 @@ public class TagRepositoryImpl implements TagRepository {
                 .filter(Tag.class::isInstance)
                 .forEach(obj -> result.add((Tag) obj));
         return result;
+    }
+
+    @Override
+    public Tag update(Tag entity) {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "UPDATE");
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.model.User;
+import com.epam.esm.persistence.repository.RepositoryErrorCode;
+import com.epam.esm.persistence.repository.RepositoryException;
 import com.epam.esm.persistence.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +36,20 @@ public class UserRepositoryImpl implements UserRepository {
     public int countAll() {
         TypedQuery<Long> query = entityManager.createQuery(COUNT_ALL_QUERY, Long.class);
         return query.getSingleResult().intValue();
+    }
+
+    @Override
+    public User save(User entity) {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "SAVE");
+    }
+
+    @Override
+    public User update(User entity) {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "UPDATE");
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "DELETE");
     }
 }

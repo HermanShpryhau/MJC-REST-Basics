@@ -7,15 +7,12 @@ import java.util.List;
 public interface CrudRepository<T extends AbstractEntity> {
 
     /**
-     * Saves entity of type {@code T} to data source. Default implementation throws {@link RepositoryException}
-     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
+     * Saves entity of type {@code T} to data source.
      *
      * @param entity Entity object to save
      * @return Saved entity object from datasource
      */
-    default T save(T entity) {
-        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "SAVE");
-    }
+    T save(T entity);
 
     /**
      * Finds all entities of type {@code T} in data source.
@@ -35,34 +32,25 @@ public interface CrudRepository<T extends AbstractEntity> {
     T findById(Long id);
 
     /**
-     * Updates entity of type {@code T} in data source. Default implementation throws {@link RepositoryException}
-     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
+     * Updates entity of type {@code T} in data source.
      *
      * @param entity Entity's new state
      * @return Updated entity
      */
-    default T update(T entity) {
-        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "UPDATE");
-    }
+    T update(T entity);
 
     /**
-     * Deletes entity of type {@code T} from data source. Default implementation throws {@link RepositoryException}
-     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
+     * Deletes entity of type {@code T} from data source.
      *
      * @param id ID of entity to delete
      * @return True if entity was deleted, false otherwise
      */
-    default boolean delete(Long id) {
-        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "DELETE");
-    }
+    boolean delete(Long id);
 
     /**
-     * Counts all entities in repository. Default implementation throws {@link RepositoryException}
-     * with {@link  RepositoryErrorCode}{@code .OPERATION_NOT_SUPPORTED} error code.
+     * Counts all entities in repository.
      *
      * @return Number of entities in repository.
      */
-    default int countAll() {
-        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "COUNT ALL");
-    }
+    int countAll();
 }
