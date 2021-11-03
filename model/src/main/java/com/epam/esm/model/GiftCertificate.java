@@ -1,5 +1,6 @@
 package com.epam.esm.model;
 
+import com.epam.esm.model.audit.GiftCertificateAuditingListener;
 import com.epam.esm.model.validation.DtoTag;
 import com.epam.esm.model.validation.PatchDto;
 import com.epam.esm.model.validation.SaveDto;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Gift_certificate")
+@EntityListeners(GiftCertificateAuditingListener.class)
 public class GiftCertificate extends AbstractEntity {
     @Column(name = "name")
     @NotNull(groups = SaveDto.class, message = ValidationErrorCode.CERTIFICATE_NAME_NOT_NULL)
