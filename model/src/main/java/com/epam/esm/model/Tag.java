@@ -1,11 +1,9 @@
 package com.epam.esm.model;
 
+import com.epam.esm.model.audit.TagAuditingListener;
 import com.epam.esm.model.validation.ValidationErrorCode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -13,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Tag")
+@EntityListeners(TagAuditingListener.class)
 public class Tag extends AbstractEntity {
     @Column(name = "name")
     @NotNull(message = ValidationErrorCode.TAG_NAME_NOT_NULL)
