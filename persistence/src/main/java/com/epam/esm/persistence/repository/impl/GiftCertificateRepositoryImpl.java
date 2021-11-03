@@ -5,7 +5,6 @@ import com.epam.esm.model.Order;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.RepositoryErrorCode;
 import com.epam.esm.persistence.repository.RepositoryException;
-import com.epam.esm.persistence.repository.audit.Audited;
 import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private EntityManager entityManager;
 
     @Override
-    @Audited(table = "Gift_certificate", operation = "CREATED")
     public GiftCertificate save(GiftCertificate entity) {
         entity.setId(0L);
         return entityManager.merge(entity);
