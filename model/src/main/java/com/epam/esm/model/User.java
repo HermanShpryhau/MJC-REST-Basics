@@ -1,5 +1,7 @@
 package com.epam.esm.model;
 
+import com.epam.esm.model.audit.UserAuditingListener;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -8,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "User")
+@EntityListeners(UserAuditingListener.class)
 public class User extends AbstractEntity {
     @Column(name = "name")
     @NotNull
