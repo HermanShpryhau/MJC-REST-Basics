@@ -1,5 +1,7 @@
 package com.epam.esm.model;
 
+import com.epam.esm.model.audit.OrderAuditingListener;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -7,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Orders")
+@EntityListeners(OrderAuditingListener.class)
 public class Order extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
