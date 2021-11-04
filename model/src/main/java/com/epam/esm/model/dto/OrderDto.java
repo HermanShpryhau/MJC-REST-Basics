@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
-public class OrderDto {
+public class OrderDto implements DataTransferObject {
     private Long id;
 
     @NotNull(message = ValidationErrorCode.ORDER_USER_NOT_NULL)

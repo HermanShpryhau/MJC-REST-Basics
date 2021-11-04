@@ -5,6 +5,7 @@ import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.model.validation.PatchDto;
 import com.epam.esm.model.validation.SaveDto;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.service.pagination.Page;
 import com.epam.esm.web.hateoas.assembler.GiftCertificateModelAssembler;
 import com.epam.esm.web.hateoas.assembler.TagModelAssembler;
 import com.epam.esm.web.hateoas.model.GiftCertificateModel;
@@ -48,7 +49,7 @@ public class CertificatesController {
      * Gets gift certificate DTOs matching supplied filtering parameters.
      *
      * @param tagNames      List of tag names to search certificates by
-     * @param sortTypes     Names of parameters ond sort directions to sort by. String must follow the patter {@code
+     * @param sortTypes     Names of parameters ond sort directions to sort by. String must follow the pattern {@code
      *                      [parameter name]-[asc|desc]}
      * @param searchPattern String to search for in name or description of the certificate
      * @param page          Index of page
@@ -63,12 +64,11 @@ public class CertificatesController {
             @RequestParam(name = "page", defaultValue = "1") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size
     ) {
-        List<GiftCertificateDto> giftCertificates = certificateService.fetchCertificatesWithFilters(tagNames, sortTypes,
+        Page<GiftCertificateDto> giftCertificatesPage = certificateService.fetchCertificatesWithFilters(tagNames, sortTypes,
                 searchPattern, page, size);
         CollectionModel<GiftCertificateModel> collectionModel =
-                certificateModelAssembler.toCollectionModel(giftCertificates);
-
-        return certificateModelProcessor.process(tagNames, sortTypes, searchPattern, page, size, collectionModel);
+                certificateModelAssembler.toCollectionModel(giftCertificatesPage.getContent());
+        return certificateModelProcessor.process(tagNames, sortTypes, searchPattern, size, giftCertificatesPage, collectionModel);
     }
 
     /**
@@ -95,9 +95,9 @@ public class CertificatesController {
     public CollectionModel<TagModel> getAssociatedTags(@PathVariable long id,
                                                        @RequestParam(name = "page", defaultValue = "1") Integer page,
                                                        @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        List<TagDto> tagDtos = certificateService.fetchAssociatedTags(id, page, size);
-        CollectionModel<TagModel> collectionModel = tagModelAssembler.toCollectionModel(tagDtos);
-        return tagModelProcessor.process(id, page, size, collectionModel);
+        Page<TagDto> tagDtoPage = certificateService.fetchAssociatedTags(id, page, size);
+        CollectionModel<TagModel> collectionModel = tagModelAssembler.toCollectionModel(tagDtoPage.getContent());
+        return tagModelProcessor.process(id, tagDtoPage, size, collectionModel);
     }
 
     /**

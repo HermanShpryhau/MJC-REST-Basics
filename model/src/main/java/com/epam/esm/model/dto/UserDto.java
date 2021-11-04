@@ -1,6 +1,6 @@
 package com.epam.esm.model.dto;
 
-public class UserDto {
+public class UserDto implements DataTransferObject {
     private Long id;
     private String name;
 

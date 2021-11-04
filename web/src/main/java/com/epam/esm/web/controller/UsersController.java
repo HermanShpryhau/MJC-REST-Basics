@@ -3,6 +3,7 @@ package com.epam.esm.web.controller;
 import com.epam.esm.model.dto.OrderDto;
 import com.epam.esm.model.dto.UserDto;
 import com.epam.esm.service.UserService;
+import com.epam.esm.service.pagination.Page;
 import com.epam.esm.web.hateoas.assembler.OrderModelAssembler;
 import com.epam.esm.web.hateoas.assembler.UserModelAssembler;
 import com.epam.esm.web.hateoas.model.OrderModel;
@@ -12,8 +13,6 @@ import com.epam.esm.web.hateoas.processor.UserModelProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Controller of users resource.
@@ -50,9 +49,9 @@ public class UsersController {
     @GetMapping
     public CollectionModel<UserModel> getAllUsers(@RequestParam(name = "page", defaultValue = "1") Integer page,
                                                   @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        List<UserDto> userDtos = userService.fetchAllUsers(page, size);
-        CollectionModel<UserModel> collectionModel = userModelAssembler.toCollectionModel(userDtos);
-        return userModelProcessor.process(page, size, collectionModel);
+        Page<UserDto> userDtos = userService.fetchAllUsers(page, size);
+        CollectionModel<UserModel> collectionModel = userModelAssembler.toCollectionModel(userDtos.getContent());
+        return userModelProcessor.process(userDtos, size, collectionModel);
     }
 
     /**
@@ -79,8 +78,8 @@ public class UsersController {
     public CollectionModel<OrderModel> getUserOrders(@PathVariable Long id,
                                                      @RequestParam(name = "page", defaultValue = "1") Integer page,
                                                      @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        List<OrderDto> orderDtos = userService.fetchUserOrders(id, page, size);
-        CollectionModel<OrderModel> collectionModel = orderModelAssembler.toCollectionModel(orderDtos);
-        return orderModelProcessor.process(id, page, size, collectionModel);
+        Page<OrderDto> orderDtos = userService.fetchUserOrders(id, page, size);
+        CollectionModel<OrderModel> collectionModel = orderModelAssembler.toCollectionModel(orderDtos.getContent());
+        return orderModelProcessor.process(id, orderDtos, size, collectionModel);
     }
 }

@@ -9,7 +9,8 @@ import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.model.dto.serialization.DtoSerializer;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.util.PaginationUtil;
+import com.epam.esm.service.pagination.Page;
+import com.epam.esm.service.pagination.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -43,11 +44,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDto> fetchAllTags(int page, int size) {
+    public Page<TagDto> fetchAllTags(int page, int size) {
         page = PaginationUtil.correctPageIndex(page, size, tagRepository::countAll);
-        return tagRepository.findAll(page, size).stream()
+        List<TagDto> tagDtos = tagRepository.findAll(page, size).stream()
                 .map(tagDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
+        return new Page<>(page, size, tagRepository.countAll(), tagDtos);
     }
 
     @Override
@@ -58,24 +60,27 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDto> fetchMostPopularTag() {
-        return tagRepository.findMostPopularTag().stream()
+    public Page<TagDto> fetchMostPopularTag() {
+        List<TagDto> tagDtos = tagRepository.findMostPopularTag().stream()
                 .map(tagDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
+        return new Page<>(Page.FIRST_PAGE, tagDtos.size(), tagDtos.size(), tagDtos);
     }
 
     @Override
     @Transactional
-    public List<GiftCertificateDto> fetchAssociatedCertificates(Long id, int page, int size) {
+    public Page<GiftCertificateDto> fetchAssociatedCertificates(Long id, int page, int size) {
         Tag tag = Optional.ofNullable(tagRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ServiceErrorCode.TAG_NOT_FOUND, id));
         List<GiftCertificate> associatedGiftCertificates = tagRepository.findAssociatedGiftCertificates(tag.getId());
         page = PaginationUtil.correctPageIndex(page, size, associatedGiftCertificates::size);
-        return associatedGiftCertificates.stream()
+        int entitiesCount = associatedGiftCertificates.size();
+        List<GiftCertificateDto> associatedCertificatesDtos = associatedGiftCertificates.stream()
                 .skip((long) (page - 1) * size)
                 .limit(size)
                 .map(certificateDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
+        return new Page<>(page, size, entitiesCount, associatedCertificatesDtos);
     }
 
     @Override

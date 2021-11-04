@@ -2,8 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.TagDto;
-
-import java.util.List;
+import com.epam.esm.service.pagination.Page;
 
 public interface TagService {
 
@@ -22,7 +21,7 @@ public interface TagService {
      * @param size Size of page
      * @return List of found tags
      */
-    List<TagDto> fetchAllTags(int page, int size);
+    Page<TagDto> fetchAllTags(int page, int size);
 
     /**
      * Fetches tag by ID.
@@ -37,7 +36,7 @@ public interface TagService {
      *
      * @return List of tags matching criteria.
      */
-    List<TagDto> fetchMostPopularTag();
+    Page<TagDto> fetchMostPopularTag();
 
     /**
      * Fetches certificates associated with tag.
@@ -45,7 +44,7 @@ public interface TagService {
      * @param id ID of gift certificate to find tags for
      * @return List of associated tags
      */
-    List<GiftCertificateDto> fetchAssociatedCertificates(Long id, int page, int size);
+    Page<GiftCertificateDto> fetchAssociatedCertificates(Long id, int page, int size);
 
     /**
      * Deletes tag from data source
