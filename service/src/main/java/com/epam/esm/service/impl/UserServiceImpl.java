@@ -9,6 +9,7 @@ import com.epam.esm.model.dto.UserDto;
 import com.epam.esm.model.dto.serialization.DtoSerializer;
 import com.epam.esm.persistence.repository.UserRepository;
 import com.epam.esm.service.UserService;
+import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.pagination.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,11 +38,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> fetchAllUsers(int page, int size) {
+    public Page<UserDto> fetchAllUsers(int page, int size) {
         page = PaginationUtil.correctPageIndex(page, size, userRepository::countAll);
-        return userRepository.findAll(page, size).stream()
+        List<UserDto> userDtos = userRepository.findAll(page, size).stream()
                 .map(userDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
+        return new Page<>(page, size, userRepository.countAll(), userDtos);
     }
 
     @Override
@@ -52,14 +54,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<OrderDto> fetchUserOrders(Long id, int page, int size) {
+    public Page<OrderDto> fetchUserOrders(Long id, int page, int size) {
         User user = Optional.ofNullable(userRepository.findById(id))
                 .orElseThrow(() -> new ServiceException(ServiceErrorCode.USER_NOT_FOUND, id));
-        page = PaginationUtil.correctPageIndex(page, size, user.getOrders()::size);
-        return user.getOrders().stream()
+        List<Order> orders = user.getOrders();
+        page = PaginationUtil.correctPageIndex(page, size, orders::size);
+        List<OrderDto> orderDtos = user.getOrders().stream()
                 .skip((long) (page - 1) * size)
                 .limit(size)
                 .map(orderDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
+        return new Page<>(page, size, orders.size(), orderDtos);
     }
 }
