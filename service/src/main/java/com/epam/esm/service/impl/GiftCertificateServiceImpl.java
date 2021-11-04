@@ -64,7 +64,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                                                  Optional<List<String>> sortTypes,
                                                                  Optional<String> searchPattern,
                                                                  int page, int size) {
-        page = PaginationUtil.correctPageIndex(page, size, certificateRepository::countAll);
         GiftCertificatesFilterConfig.Builder filterConfigBuilder = GiftCertificatesFilterConfig.builder();
         tagNames.ifPresent(filterConfigBuilder::withTags);
         addSortsToConfig(sortTypes, filterConfigBuilder);

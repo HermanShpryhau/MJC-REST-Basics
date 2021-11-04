@@ -83,9 +83,22 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     public List<GiftCertificate> findWithFilters(GiftCertificatesFilterConfig config, int page, int size) {
         CriteriaQuery<GiftCertificate> criteriaQuery = config.asCriteriaQuery(entityManager.getCriteriaBuilder());
         TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(criteriaQuery);
+        page = correctPageIndex(page, size, typedQuery.getResultList().size());
         typedQuery.setFirstResult((page - 1) * size);
         typedQuery.setMaxResults(size);
         return typedQuery.getResultList();
+    }
+
+    private int correctPageIndex(int page, int size, int elementsCount) {
+        int maxPage = elementsCount / size;
+        maxPage = maxPage == 0 ? 1 : maxPage;
+        int correctedPage = page;
+        if (correctedPage - 1 > maxPage) {
+            correctedPage = 1;
+        } else if (correctedPage < 1) {
+            correctedPage = maxPage;
+        }
+        return correctedPage;
     }
 
     @Override
