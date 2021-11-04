@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,19 +30,19 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(ServiceException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public HttpErrorResponse handleServiceException(ServiceException e) {
+    public ResponseEntity<HttpErrorResponse> handleServiceException(ServiceException e) {
         String message = messageSource.getMessage(e.getErrorCode(), e.getArguments(), Locale.ENGLISH);
-        return new HttpErrorResponse(e.getErrorCode(), message);
+        HttpErrorResponse errorResponse = new HttpErrorResponse(e.getErrorCode(), message);
+        return new ResponseEntity<>(errorResponse, errorResponse.httpStatus());
     }
 
     @ExceptionHandler(RepositoryException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
-    public HttpErrorResponse handleRepositoryException(RepositoryException e) {
+    public ResponseEntity<HttpErrorResponse> handleRepositoryException(RepositoryException e) {
         String message = messageSource.getMessage(e.getErrorCode(), e.getArguments(), Locale.ENGLISH);
-        return new HttpErrorResponse(e.getErrorCode(), message);
+        HttpErrorResponse errorResponse = new HttpErrorResponse(e.getErrorCode(), message);
+        return new ResponseEntity<>(errorResponse, errorResponse.httpStatus());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
