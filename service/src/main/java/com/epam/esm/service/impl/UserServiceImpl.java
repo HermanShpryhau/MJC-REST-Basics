@@ -9,7 +9,7 @@ import com.epam.esm.model.dto.UserDto;
 import com.epam.esm.model.dto.serialization.DtoSerializer;
 import com.epam.esm.persistence.repository.UserRepository;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.util.PaginationUtil;
+import com.epam.esm.service.pagination.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

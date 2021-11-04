@@ -1,4 +1,4 @@
-package com.epam.esm.service.util;
+package com.epam.esm.service.pagination;
 
 import java.util.function.IntSupplier;
 

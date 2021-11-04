@@ -11,7 +11,7 @@ import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.OrderRepository;
 import com.epam.esm.persistence.repository.UserRepository;
 import com.epam.esm.service.OrderService;
-import com.epam.esm.service.util.PaginationUtil;
+import com.epam.esm.service.pagination.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

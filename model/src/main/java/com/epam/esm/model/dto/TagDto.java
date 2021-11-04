@@ -5,7 +5,7 @@ import com.epam.esm.model.validation.ValidationErrorCode;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class TagDto {
+public class TagDto implements DataTransferObject {
     private Long id;
 
     @NotNull(message = ValidationErrorCode.TAG_NAME_NOT_NULL)

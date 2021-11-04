@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class GiftCertificateDto {
+public class GiftCertificateDto implements DataTransferObject {
     private Long id;
 
     @NotNull(groups = SaveDto.class, message = ValidationErrorCode.CERTIFICATE_NAME_NOT_NULL)

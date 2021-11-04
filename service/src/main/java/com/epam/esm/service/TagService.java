@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.TagDto;
+import com.epam.esm.service.pagination.Page;
 
 import java.util.List;
 
