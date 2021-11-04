@@ -133,6 +133,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         Optional.ofNullable(dto.getDescription()).ifPresent(certificateToUpdate::setDescription);
         Optional.ofNullable(dto.getPrice()).ifPresent(certificateToUpdate::setPrice);
         Optional.ofNullable(dto.getDuration()).ifPresent(certificateToUpdate::setDuration);
+        Optional.ofNullable(dto.getTags())
+                .ifPresent((tagDtos -> certificateToUpdate.setAssociatedTags(buildTagListFromDtos(tagDtos))));
+    }
+
+    /**
+     * Builds a list of tag entites from supplied DTOs list. Creates new tag entity if it is not present.
+     *
+     * @param dtoTags List of tag DTOs.
+     * @return List of tag entities.
+     */
+    private List<Tag> buildTagListFromDtos(List<TagDto> dtoTags) {
+        return dtoTags.stream()
+                .map(tagDto -> Optional.ofNullable(tagRepository.findByName(tagDto.getName()))
+                        .orElseGet(() -> tagRepository.save(tagDtoSerializer.dtoToEntity(tagDto))))
+                .collect(Collectors.toList());
     }
 
     @Override
