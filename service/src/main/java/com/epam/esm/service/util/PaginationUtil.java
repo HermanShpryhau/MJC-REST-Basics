@@ -15,7 +15,7 @@ public class PaginationUtil {
     /**
      * Index of last page
      */
-    public static final int LAST_PAGE = -1;
+    public static final int LAST_PAGE = 0;
 
     private PaginationUtil() {}
 
