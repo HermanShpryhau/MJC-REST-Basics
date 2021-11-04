@@ -76,7 +76,7 @@ class TagServiceImplTest {
     void fetchAllTagsTest() {
         Mockito.when(mockTagRepository.findAll(1, 10)).thenReturn(Arrays.asList(TEST_TAGS));
 
-        List<TagDto> result = service.fetchAllTags(1, 10);
+        List<TagDto> result = service.fetchAllTags(1, 10).getContent();
         Assertions.assertEquals(Arrays.asList(TEST_TAG_DTOS), result);
     }
 
@@ -84,7 +84,7 @@ class TagServiceImplTest {
     void fetchEmptyListIfNoTagsInDBTest() {
         Mockito.when(mockTagRepository.findAll(1, 10)).thenReturn(Collections.emptyList());
 
-        List<TagDto> result = service.fetchAllTags(1, 10);
+        List<TagDto> result = service.fetchAllTags(1, 10).getContent();
         Assertions.assertEquals(Collections.emptyList(), result);
     }
 
@@ -108,7 +108,7 @@ class TagServiceImplTest {
         Mockito.when(mockTagRepository.findById(1L)).thenReturn(TEST_TAGS[0]);
         Mockito.when(mockTagRepository.findAssociatedGiftCertificates(1L)).thenReturn(Collections.singletonList(TEST_CERTIFICATE));
 
-        List<GiftCertificateDto> result = service.fetchAssociatedCertificates(1L, 1, 10);
+        List<GiftCertificateDto> result = service.fetchAssociatedCertificates(1L, 1, 10).getContent();
         Assertions.assertEquals(Collections.singletonList(TEST_CERTIFICATE_DTO), result);
     }
 

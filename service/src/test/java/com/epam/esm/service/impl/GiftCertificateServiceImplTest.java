@@ -105,7 +105,7 @@ class GiftCertificateServiceImplTest {
                 .thenReturn(Collections.singletonList(TEST_CERTIFICATES[0]));
 
         List<GiftCertificateDto> certificate = service.fetchCertificatesWithFilters(Optional.empty(),
-                Optional.empty(), Optional.empty(), 1, 10);
+                Optional.empty(), Optional.empty(), 1, 10).getContent();
         Assertions.assertEquals(Collections.singletonList(TEST_CERTIFICATE_DTOS[0]), certificate);
     }
 
@@ -127,9 +127,8 @@ class GiftCertificateServiceImplTest {
     @Test
     void fetchAssociatedTagsTest() {
         Mockito.when(mockCertificateRepository.findById(1L)).thenReturn(TEST_CERTIFICATES[0]);
-        Mockito.when(mockCertificateRepository.findAssociatedTags(1L)).thenReturn(CERTIFICATE_1_TAGS);
 
-        List<TagDto> result = service.fetchAssociatedTags(1L, 1, 10);
+        List<TagDto> result = service.fetchAssociatedTags(1L, 1, 10).getContent();
         Assertions.assertEquals(CERTIFICATE_1_TAG_DTOS, result);
     }
 
@@ -144,6 +143,8 @@ class GiftCertificateServiceImplTest {
     void updateCertificateTest() {
         Mockito.when(mockCertificateRepository.findById(1L)).thenReturn(TEST_CERTIFICATES[0]);
         Mockito.when(mockCertificateRepository.update(TEST_CERTIFICATES[0])).thenReturn(TEST_CERTIFICATES[0]);
+        Mockito.when(mockTagRepository.findByName(TEST_TAGS[0].getName())).thenReturn(TEST_TAGS[0]);
+        Mockito.when(mockTagRepository.findByName(TEST_TAGS[1].getName())).thenReturn(TEST_TAGS[1]);
 
         GiftCertificateDto updatedCertificate = service.updateCertificate(TEST_CERTIFICATE_DTOS[0]);
         Assertions.assertEquals(TEST_CERTIFICATE_DTOS[0], updatedCertificate);

@@ -91,7 +91,7 @@ class OrderServiceImplTest {
         Mockito.when(orderDtoSerializer.dtoFromEntity(TEST_ORDERS[0])).thenReturn(TEST_ORDER_DTOS[0]);
         Mockito.when(orderDtoSerializer.dtoFromEntity(TEST_ORDERS[1])).thenReturn(TEST_ORDER_DTOS[1]);
 
-        List<OrderDto> orders = service.fetchAllOrders(1, 10);
+        List<OrderDto> orders = service.fetchAllOrders(1, 10).getContent();
         Assertions.assertEquals(Arrays.asList(TEST_ORDER_DTOS), orders);
     }
 

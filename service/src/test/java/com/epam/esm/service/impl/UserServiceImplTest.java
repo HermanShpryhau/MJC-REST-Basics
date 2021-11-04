@@ -55,7 +55,7 @@ class UserServiceImplTest {
     void fetchAllUsers() {
         Mockito.when(mockUserRepository.findAll(1, 10)).thenReturn(Arrays.asList(TEST_USERS));
 
-        List<UserDto> tags = service.fetchAllUsers(1, 10);
+        List<UserDto> tags = service.fetchAllUsers(1, 10).getContent();
         Assertions.assertEquals(Arrays.asList(TEST_USER_DTOS), tags);
     }
 
@@ -87,7 +87,7 @@ class UserServiceImplTest {
         Mockito.when(mockUserRepository.findById(1L)).thenReturn(userWithOrders);
         Mockito.when(orderDtoSerializer.dtoFromEntity(order)).thenReturn(orderDto);
 
-        List<OrderDto> orders = service.fetchUserOrders(1L, 1, 10);
+        List<OrderDto> orders = service.fetchUserOrders(1L, 1, 10).getContent();
         Assertions.assertEquals(Collections.singletonList(orderDto), orders);
     }
 
