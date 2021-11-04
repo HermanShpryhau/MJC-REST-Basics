@@ -15,4 +15,6 @@ public interface GiftCertificateRepository extends CrudRepository<GiftCertificat
      * @return List of found gift certificates
      */
     List<GiftCertificate> findWithFilters(GiftCertificatesFilterConfig config, int page, int size);
+
+    int countEntitiesWithFilter(GiftCertificatesFilterConfig config);
 }

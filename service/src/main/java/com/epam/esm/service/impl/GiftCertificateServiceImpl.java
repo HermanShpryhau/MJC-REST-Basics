@@ -61,7 +61,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<List<String>> tagNames,
+    @Transactional
+    public Page<GiftCertificateDto> fetchCertificatesWithFilters(Optional<List<String>> tagNames,
                                                                  Optional<List<String>> sortTypes,
                                                                  Optional<String> searchPattern,
                                                                  int page, int size) {
@@ -70,8 +71,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         addSortsToConfig(sortTypes, filterConfigBuilder);
         searchPattern.ifPresent(filterConfigBuilder::withSearchPattern);
         GiftCertificatesFilterConfig config = filterConfigBuilder.build();
-        return certificateRepository.findWithFilters(config, page, size).stream()
+        int entitiesCount = certificateRepository.countEntitiesWithFilter(config);
+        page = PaginationUtil.correctPageIndex(page, size, () -> entitiesCount);
+        List<GiftCertificateDto> dtos = certificateRepository.findWithFilters(config, page, size).stream()
                 .map(dtoSerializer::dtoFromEntity).collect(Collectors.toList());
+        return new Page<>(page, size, entitiesCount, dtos);
     }
 
     /**
@@ -101,16 +105,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<TagDto> fetchAssociatedTags(long certificateId, int page, int size) {
+    public Page<TagDto> fetchAssociatedTags(long certificateId, int page, int size) {
         GiftCertificate certificate = Optional.ofNullable(certificateRepository.findById(certificateId))
                 .orElseThrow(() ->  new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, certificateId));
         List<Tag> associatedTags = certificate.getAssociatedTags();
         page = PaginationUtil.correctPageIndex(page, size, associatedTags::size);
-        return associatedTags.stream()
+        int entitiesCount = associatedTags.size();
+        List<TagDto> tagDtos = associatedTags.stream()
                 .skip((long) (page - 1) * size)
                 .limit(size)
                 .map(tagDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
+        return new Page<>(page, size, entitiesCount, tagDtos);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.TagDto;
+import com.epam.esm.service.pagination.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,7 @@ public interface GiftCertificateService {
      * @param size          Size of page
      * @return List of certificate that confirm to supplied filtering parameters
      */
-    List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<List<String>> tagNames,
+    Page<GiftCertificateDto> fetchCertificatesWithFilters(Optional<List<String>> tagNames,
                                                           Optional<List<String>> sortTypes,
                                                           Optional<String> searchPattern,
                                                           int page, int size);
@@ -46,7 +47,7 @@ public interface GiftCertificateService {
      * @param certificateId ID of gift certificate to find associated tags for
      * @return List of associated tags DTOS
      */
-    List<TagDto> fetchAssociatedTags(long certificateId, int page, int size);
+    Page<TagDto> fetchAssociatedTags(long certificateId, int page, int size);
 
     /**
      * Updates gift certificate entity in data source with data supplied DTO.
