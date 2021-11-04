@@ -2,12 +2,15 @@ package com.epam.esm.persistence.repository.impl;
 
 import com.epam.esm.model.Order;
 import com.epam.esm.persistence.repository.OrderRepository;
+import com.epam.esm.persistence.repository.RepositoryErrorCode;
+import com.epam.esm.persistence.repository.RepositoryException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
@@ -42,10 +45,8 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public boolean delete(Long id) {
-        Order order = entityManager.find(Order.class, id);
-        if (order == null) {
-            return false;
-        }
+        Order order = Optional.ofNullable(entityManager.find(Order.class, id))
+                .orElseThrow(() -> new RepositoryException(RepositoryErrorCode.ORDER_NOT_FOUND, id));
         entityManager.remove(order);
         return true;
     }

@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
@@ -55,10 +56,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     @Override
     @Transactional
     public boolean delete(Long id) {
-        GiftCertificate certificate = entityManager.find(GiftCertificate.class, id);
-        if (certificate == null) {
-            return false;
-        }
+        GiftCertificate certificate = Optional.ofNullable(entityManager.find(GiftCertificate.class, id))
+                .orElseThrow(() -> new RepositoryException(RepositoryErrorCode.CERTIFICATE_NOT_FOUND, id));
         if (hasAssociatedOrders(certificate)) {
             throw new RepositoryException(RepositoryErrorCode.DELETION_FORBIDDEN, GIFT_CERTIFICATE_ENTITY_NAME, id,
                     ORDER_ENTITY_NAME);

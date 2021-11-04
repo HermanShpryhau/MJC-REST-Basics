@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.exception.ErrorCode;
+import com.epam.esm.exception.ServiceErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.model.Order;
 import com.epam.esm.model.User;
@@ -47,14 +47,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto fetchUserById(Long id) {
         User user = Optional.ofNullable(userRepository.findById(id))
-                .orElseThrow(() -> new ServiceException(ErrorCode.USER_NOT_FOUND, id));
+                .orElseThrow(() -> new ServiceException(ServiceErrorCode.USER_NOT_FOUND, id));
         return userDtoSerializer.dtoFromEntity(user);
     }
 
     @Override
     public List<OrderDto> fetchUserOrders(Long id, int page, int size) {
         User user = Optional.ofNullable(userRepository.findById(id))
-                .orElseThrow(() -> new ServiceException(ErrorCode.USER_NOT_FOUND, id));
+                .orElseThrow(() -> new ServiceException(ServiceErrorCode.USER_NOT_FOUND, id));
         page = PaginationUtil.correctPageIndex(page, size, user.getOrders()::size);
         return user.getOrders().stream()
                 .skip((long) (page - 1) * size)

@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.exception.ErrorCode;
+import com.epam.esm.exception.ServiceErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
@@ -97,13 +97,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto fetchCertificateById(Long id) {
         Optional<GiftCertificate> certificateOptional = Optional.ofNullable(certificateRepository.findById(id));
         return certificateOptional.map(dtoSerializer::dtoFromEntity)
-                .orElseThrow(() -> new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, id));
+                .orElseThrow(() -> new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, id));
     }
 
     @Override
     public List<TagDto> fetchAssociatedTags(long certificateId, int page, int size) {
         GiftCertificate certificate = Optional.ofNullable(certificateRepository.findById(certificateId))
-                .orElseThrow(() ->  new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, certificateId));
+                .orElseThrow(() ->  new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, certificateId));
         List<Tag> associatedTags = certificate.getAssociatedTags();
         page = PaginationUtil.correctPageIndex(page, size, associatedTags::size);
         return associatedTags.stream()
@@ -117,7 +117,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto updateCertificate(GiftCertificateDto dto) {
         GiftCertificate certificateToUpdate = Optional.ofNullable(certificateRepository.findById(dto.getId()))
-                .orElseThrow(() -> new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, dto.getId()));
+                .orElseThrow(() -> new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, dto.getId()));
         updateSpecifiedParameters(dto, certificateToUpdate);
         GiftCertificate updatedCertificate = certificateRepository.update(certificateToUpdate);
         return dtoSerializer.dtoFromEntity(updatedCertificate);
@@ -140,7 +140,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public void deleteCertificate(long id) {
         boolean isDeleted = certificateRepository.delete(id);
         if (!isDeleted) {
-            throw new ServiceException(ErrorCode.CERTIFICATE_NOT_FOUND, id);
+            throw new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, id);
         }
     }
 }

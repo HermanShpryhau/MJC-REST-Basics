@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.exception.ErrorCode;
+import com.epam.esm.exception.ServiceErrorCode;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
@@ -53,7 +53,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto fetchTagById(Long id) {
         Tag tag = Optional.ofNullable(tagRepository.findById(id))
-                .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
+                .orElseThrow(() -> new ServiceException(ServiceErrorCode.TAG_NOT_FOUND, id));
         return tagDtoSerializer.dtoFromEntity(tag);
     }
 
@@ -68,7 +68,7 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public List<GiftCertificateDto> fetchAssociatedCertificates(Long id, int page, int size) {
         Tag tag = Optional.ofNullable(tagRepository.findById(id))
-                .orElseThrow(() -> new ServiceException(ErrorCode.TAG_NOT_FOUND, id));
+                .orElseThrow(() -> new ServiceException(ServiceErrorCode.TAG_NOT_FOUND, id));
         List<GiftCertificate> associatedGiftCertificates = tagRepository.findAssociatedGiftCertificates(tag.getId());
         page = PaginationUtil.correctPageIndex(page, size, associatedGiftCertificates::size);
         return associatedGiftCertificates.stream()
@@ -82,7 +82,7 @@ public class TagServiceImpl implements TagService {
     public void deleteTag(Long id) {
         boolean isDeleted = tagRepository.delete(id);
         if (!isDeleted) {
-            throw new ServiceException(ErrorCode.TAG_NOT_FOUND, id);
+            throw new ServiceException(ServiceErrorCode.TAG_NOT_FOUND, id);
         }
     }
 }

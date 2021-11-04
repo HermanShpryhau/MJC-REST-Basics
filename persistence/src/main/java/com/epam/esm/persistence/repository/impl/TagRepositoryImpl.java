@@ -13,17 +13,20 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TagRepositoryImpl implements TagRepository {
     private static final String SELECT_ALL_QUERY = "SELECT tag FROM Tag tag";
     private static final String SELECT_BY_NAME_QUERY = "SELECT tag FROM Tag tag WHERE tag.name=:tagName";
     private static final String COUNT_ALL_QUERY = "SELECT COUNT(tag) FROM Tag tag";
+    private static final String TAG_ENTITY_NAME = "Tag";
+    private static final String GIFT_CERTIFICATE_ENTITY_NAME = "Gift certificate";
 
     /**
      * Query to select most widely used tag(s) of a user with the highest cost of all orders.
      */
-    private static final String MOST_POPULAR_QUERY = "SELECT Tag.id, Tag.name, Tag.operation, Tag.operation_timestamp FROM Tag\n" +
+    private static final String MOST_POPULAR_QUERY = "SELECT Tag.id, Tag.name FROM Tag\n" +
             "JOIN Gift_certificate_has_Tag GchT on Tag.id = GchT.tag AND GchT.certificate IN (SELECT Gift_certificate" +
             ".id FROM Gift_certificate\n" +
             "JOIN Orders O on Gift_certificate.id = O.certificate_id AND O.user_id = (\n" +
@@ -82,12 +85,18 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public boolean delete(Long id) {
-        Tag tag = entityManager.find(Tag.class, id);
-        if (tag == null) {
-            return false;
+        Tag tag = Optional.ofNullable(entityManager.find(Tag.class, id))
+                .orElseThrow(() -> new RepositoryException(RepositoryErrorCode.TAG_NOT_FOUND, id));
+        if (hasAssociatedTags(tag)) {
+            throw new RepositoryException(RepositoryErrorCode.DELETION_FORBIDDEN, TAG_ENTITY_NAME, id,
+                    GIFT_CERTIFICATE_ENTITY_NAME);
         }
         entityManager.remove(tag);
         return true;
+    }
+
+    private boolean hasAssociatedTags(Tag tag) {
+        return !tag.getAssociatedCertificates().isEmpty();
     }
 
     @Override
