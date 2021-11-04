@@ -14,8 +14,8 @@ import java.util.Optional;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
-    private static final String SELECT_ALL_QUERY = "SELECT order FROM Order order";
-    private static final String COUNT_ALL_QUERY = "SELECT COUNT(order) FROM Order order";
+    private static final String SELECT_ALL_QUERY = "SELECT anOrder FROM Order anOrder";
+    private static final String COUNT_ALL_QUERY = "SELECT COUNT(anOrder) FROM Order anOrder";
 
     @PersistenceContext
     private EntityManager entityManager;

@@ -2,14 +2,13 @@ package com.epam.esm.web.controller;
 
 import com.epam.esm.model.dto.OrderDto;
 import com.epam.esm.service.OrderService;
+import com.epam.esm.service.pagination.Page;
 import com.epam.esm.web.hateoas.assembler.OrderModelAssembler;
 import com.epam.esm.web.hateoas.model.OrderModel;
 import com.epam.esm.web.hateoas.processor.OrderModelProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Controller of orders resource.
@@ -40,9 +39,9 @@ public class OrdersController {
     @GetMapping
     public CollectionModel<OrderModel> getAllOrders(@RequestParam(name = "page", defaultValue = "1") Integer page,
                                                     @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        List<OrderDto> orderDtos = orderService.fetchAllOrders(page, size);
-        CollectionModel<OrderModel> collectionModel = orderModelAssembler.toCollectionModel(orderDtos);
-        return orderModelProcessor.process(page, size, collectionModel);
+        Page<OrderDto> orderDtos = orderService.fetchAllOrders(page, size);
+        CollectionModel<OrderModel> collectionModel = orderModelAssembler.toCollectionModel(orderDtos.getContent());
+        return orderModelProcessor.process(orderDtos, size, collectionModel);
     }
 
     /**

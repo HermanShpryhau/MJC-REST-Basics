@@ -1,8 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.model.dto.OrderDto;
-
-import java.util.List;
+import com.epam.esm.service.pagination.Page;
 
 /**
  * {@code OrderService} is an interface that contains all operations available for orders resource of the API.
@@ -16,7 +15,7 @@ public interface OrderService {
      * @param size Size of page
      * @return List of order DTOs on page
      */
-    List<OrderDto> fetchAllOrders(int page, int size);
+    Page<OrderDto> fetchAllOrders(int page, int size);
 
     /**
      * Fetches order by ID.
