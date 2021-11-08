@@ -86,6 +86,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
+    @Transactional
     public boolean delete(Long id) {
         Tag tag = Optional.ofNullable(entityManager.find(Tag.class, id))
                 .orElseThrow(() -> new RepositoryException(RepositoryErrorCode.TAG_NOT_FOUND, id));
