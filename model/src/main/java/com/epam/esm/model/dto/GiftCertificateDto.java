@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class GiftCertificateDto implements DataTransferObject {
+    @NotNull(groups = PatchDto.class, message = ValidationErrorCode.PATCH_CERTIFICATE_ID_NOT_NULL)
     private Long id;
 
     @NotNull(groups = SaveDto.class, message = ValidationErrorCode.CERTIFICATE_NAME_NOT_NULL)
