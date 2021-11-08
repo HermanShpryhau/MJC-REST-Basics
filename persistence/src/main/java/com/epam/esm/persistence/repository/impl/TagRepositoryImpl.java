@@ -6,6 +6,7 @@ import com.epam.esm.persistence.repository.RepositoryErrorCode;
 import com.epam.esm.persistence.repository.RepositoryException;
 import com.epam.esm.persistence.repository.TagRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -44,6 +45,7 @@ public class TagRepositoryImpl implements TagRepository {
     private EntityManager entityManager;
 
     @Override
+    @Transactional
     public Tag save(Tag entity) {
         return entityManager.merge(entity);
     }
