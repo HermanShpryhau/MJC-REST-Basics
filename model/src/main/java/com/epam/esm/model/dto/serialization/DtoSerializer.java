@@ -1,6 +1,6 @@
 package com.epam.esm.model.dto.serialization;
 
-import com.epam.esm.model.AbstractEntity;
+import com.epam.esm.model.JpaEntity;
 
 /**
  * Class serializes DTO to persisted entities and vice versa.
@@ -8,7 +8,7 @@ import com.epam.esm.model.AbstractEntity;
  * @param <D> Type of DTO
  * @param <E> Type of entity
  */
-public interface DtoSerializer<D, E extends AbstractEntity> {
+public interface DtoSerializer<D, E extends JpaEntity> {
     /**
      * Serializes a DTO.
      *

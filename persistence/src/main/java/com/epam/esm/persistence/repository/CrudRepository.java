@@ -1,10 +1,10 @@
 package com.epam.esm.persistence.repository;
 
-import com.epam.esm.model.AbstractEntity;
+import com.epam.esm.model.JpaEntity;
 
 import java.util.List;
 
-public interface CrudRepository<T extends AbstractEntity> {
+public interface CrudRepository<T extends JpaEntity> {
 
     /**
      * Saves entity of type {@code T} to data source.

@@ -1,6 +1,6 @@
 package com.epam.esm.persistence.repository.audit;
 
-import com.epam.esm.model.AbstractEntity;
+import com.epam.esm.model.JpaEntity;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -35,9 +35,9 @@ public class AuditedAspect {
     @Pointcut("@annotation(audited)")
     public void auditedOperation(Audited audited) {}
 
-    @AfterReturning(value = "persistenceMethod() && args(com.epam.esm.model.AbstractEntity,..) && auditedOperation(audited)",
+    @AfterReturning(value = "persistenceMethod() && args(com.epam.esm.model.JpaEntity,..) && auditedOperation(audited)",
             returning = "returnedEntity", argNames = "audited,returnedEntity")
-    public void beforeDataAccessOperationOnEntity(Audited audited, AbstractEntity returnedEntity) {
+    public void beforeDataAccessOperationOnEntity(Audited audited, JpaEntity returnedEntity) {
         Map<String, Object> parameters = buildParametersMap(returnedEntity.getId(), audited);
         insert.execute(parameters);
     }
