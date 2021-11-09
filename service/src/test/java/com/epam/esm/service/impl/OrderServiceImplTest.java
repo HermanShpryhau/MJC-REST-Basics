@@ -39,9 +39,9 @@ class OrderServiceImplTest {
 
     private static final GiftCertificate[] TEST_CERTIFICATES = {
             new GiftCertificate(1L, "Certificate 1", "Description 1", 1, 1,
-                    LocalDateTime.now(), LocalDateTime.now(), Collections.emptyList()),
+                    LocalDateTime.now(), LocalDateTime.now(), Collections.emptySet()),
             new GiftCertificate(2L, "Certificate 2", "Description 2", 2, 2,
-                    LocalDateTime.now(), LocalDateTime.now(), Collections.emptyList())
+                    LocalDateTime.now(), LocalDateTime.now(), Collections.emptySet())
     };
 
     private static final GiftCertificateDto[] TEST_CERTIFICATE_DTOS = {

@@ -20,10 +20,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
@@ -39,8 +36,8 @@ class GiftCertificateServiceImplTest {
             new TagDto(3L, "Tag 3")
     };
 
-    private static final List<Tag> CERTIFICATE_1_TAGS = Arrays.asList(TEST_TAGS[0], TEST_TAGS[1]);
-    private static final List<Tag> CERTIFICATE_2_TAGS = Arrays.asList(TEST_TAGS[1], TEST_TAGS[2]);
+    private static final Set<Tag> CERTIFICATE_1_TAGS = new HashSet<>(Arrays.asList(TEST_TAGS[0], TEST_TAGS[1]));
+    private static final Set<Tag> CERTIFICATE_2_TAGS = new HashSet<>(Arrays.asList(TEST_TAGS[1], TEST_TAGS[2]));
 
     private static final List<TagDto> CERTIFICATE_1_TAG_DTOS = Arrays.asList(TEST_TAG_DTOS[0], TEST_TAG_DTOS[1]);
     private static final List<TagDto> CERTIFICATE_2_TAG_DTOS = Arrays.asList(TEST_TAG_DTOS[1], TEST_TAG_DTOS[2]);

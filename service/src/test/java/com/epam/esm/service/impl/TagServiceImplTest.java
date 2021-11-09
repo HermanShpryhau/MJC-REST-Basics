@@ -9,6 +9,8 @@ import com.epam.esm.model.dto.serialization.GiftCertificateDtoSerializer;
 import com.epam.esm.model.dto.serialization.TagDtoSerializer;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.service.TagService;
+import com.epam.esm.service.test.matcher.SameGiftCertificateDto;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,9 +20,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.epam.esm.service.test.matcher.SameGiftCertificateDto.sameGiftCertificateDto;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
@@ -36,7 +41,7 @@ class TagServiceImplTest {
             new TagDto(3L, "Tag 3")
     };
 
-    private static final List<Tag> CERTIFICATE_1_TAGS = Arrays.asList(TEST_TAGS[0], TEST_TAGS[1]);
+    private static final Set<Tag> CERTIFICATE_1_TAGS = new HashSet<>(Arrays.asList(TEST_TAGS[0], TEST_TAGS[1]));
     private static final List<TagDto> CERTIFICATE_1_TAG_DTOS = Arrays.asList(TEST_TAG_DTOS[0], TEST_TAG_DTOS[1]);
 
     private static final GiftCertificate TEST_CERTIFICATE =
@@ -109,7 +114,7 @@ class TagServiceImplTest {
         Mockito.when(mockTagRepository.findAssociatedGiftCertificates(1L)).thenReturn(Collections.singletonList(TEST_CERTIFICATE));
 
         List<GiftCertificateDto> result = service.fetchAssociatedCertificates(1L, 1, 10).getContent();
-        Assertions.assertEquals(Collections.singletonList(TEST_CERTIFICATE_DTO), result);
+        assertThat(TEST_CERTIFICATE_DTO, sameGiftCertificateDto(result.get(0)));
     }
 
     @Test

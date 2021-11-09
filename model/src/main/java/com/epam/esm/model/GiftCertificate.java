@@ -13,9 +13,12 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "Gift_certificate")
 @EntityListeners(GiftCertificateAuditingListener.class)
@@ -60,5 +63,5 @@ public class GiftCertificate implements JpaEntity {
             joinColumns = @JoinColumn(name = "certificate"),
             inverseJoinColumns = @JoinColumn(name = "tag")
     )
-    private List<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> associatedTags = new ArrayList<>();
+    private Set<@DtoTag(groups = {SaveDto.class, PatchDto.class}) Tag> associatedTags = new HashSet<>();
 }

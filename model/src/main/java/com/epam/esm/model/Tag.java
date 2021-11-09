@@ -2,17 +2,18 @@ package com.epam.esm.model;
 
 import com.epam.esm.model.audit.TagAuditingListener;
 import com.epam.esm.model.validation.ValidationErrorCode;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -29,7 +30,7 @@ public class Tag implements JpaEntity {
     private String name;
 
     @ManyToMany(mappedBy = "associatedTags")
-    private List<GiftCertificate> associatedCertificates = new ArrayList<>();
+    private Set<GiftCertificate> associatedCertificates = new HashSet<>();
 
     public Tag(String name) {
         this.name = name;

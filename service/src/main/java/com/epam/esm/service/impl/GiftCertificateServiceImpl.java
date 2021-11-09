@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,11 +54,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return dtoSerializer.dtoFromEntity(savedCertificate);
     }
 
-    private List<Tag> fetchRelatedTagEntities(List<Tag> dtoTags) {
+    private Set<Tag> fetchRelatedTagEntities(Set<Tag> dtoTags) {
         return dtoTags.stream()
                 .map(tag -> Optional.ofNullable(tagRepository.findByName(tag.getName()))
                         .orElseGet(() -> tagRepository.save(tag)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -108,7 +109,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public Page<TagDto> fetchAssociatedTags(long certificateId, int page, int size) {
         GiftCertificate certificate = Optional.ofNullable(certificateRepository.findById(certificateId))
                 .orElseThrow(() ->  new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, certificateId));
-        List<Tag> associatedTags = certificate.getAssociatedTags();
+        Set<Tag> associatedTags = certificate.getAssociatedTags();
         page = PaginationUtil.correctPageIndex(page, size, associatedTags::size);
         int entitiesCount = associatedTags.size();
         List<TagDto> tagDtos = associatedTags.stream()
@@ -150,11 +151,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * @param dtoTags List of tag DTOs.
      * @return List of tag entities.
      */
-    private List<Tag> buildTagListFromDtos(List<TagDto> dtoTags) {
+    private Set<Tag> buildTagListFromDtos(List<TagDto> dtoTags) {
         return dtoTags.stream()
                 .map(tagDto -> Optional.ofNullable(tagRepository.findByName(tagDto.getName()))
                         .orElseGet(() -> tagRepository.save(tagDtoSerializer.dtoToEntity(tagDto))))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override

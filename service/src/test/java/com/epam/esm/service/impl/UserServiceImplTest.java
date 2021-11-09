@@ -77,7 +77,7 @@ class UserServiceImplTest {
     @Test
     void fetchUserOrders() {
         GiftCertificate certificate = new GiftCertificate(1L, "Certificate 1", "Description 1", 1, 1,
-                LocalDateTime.now(), LocalDateTime.now(), Collections.emptyList());
+                LocalDateTime.now(), LocalDateTime.now(), Collections.emptySet());
         GiftCertificateDto certificateDto = new GiftCertificateDto(1L, "Certificate 1", "Description 1", 1, 1,
                 certificate.getCreateDate(), certificate.getLastUpdateDate(), Collections.emptyList());
         Order order = new Order(1L, TEST_USERS[0], certificate, 1, 1, LocalDateTime.now());
