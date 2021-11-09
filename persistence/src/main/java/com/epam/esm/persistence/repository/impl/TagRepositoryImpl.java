@@ -1,88 +1,115 @@
 package com.epam.esm.persistence.repository.impl;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Tag;
-import com.epam.esm.persistence.repository.ColumnName;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Tag;
+import com.epam.esm.persistence.repository.RepositoryErrorCode;
 import com.epam.esm.persistence.repository.RepositoryException;
 import com.epam.esm.persistence.repository.TagRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class TagRepositoryImpl implements TagRepository {
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM Tag";
-    private static final String SELECT_BY_ID_QUERY = "SELECT * FROM Tag WHERE id=?";
-    private static final String SELECT_BY_NAME_QUERY = "SELECT * FROM Tag WHERE name=?";
-    private static final String DELETE_QUERY = "DELETE FROM Tag WHERE id=?";
-    private static final String SELECT_ASSOCIATED_CERTIFICATES =
-            "SELECT * FROM Gift_certificate\n" +
-                    "JOIN Gift_certificate_has_Tag GchT on Gift_certificate.id = GchT.certificate\n" +
-                    "WHERE GchT.tag=?";
-    private static final int MIN_AFFECTED_ROWS = 1;
+    private static final String SELECT_ALL_QUERY = "SELECT tag FROM Tag tag";
+    private static final String SELECT_BY_NAME_QUERY = "SELECT tag FROM Tag tag WHERE tag.name=:tagName";
+    private static final String COUNT_ALL_QUERY = "SELECT COUNT(tag) FROM Tag tag";
+    private static final String TAG_ENTITY_NAME = "Tag";
+    private static final String GIFT_CERTIFICATE_ENTITY_NAME = "Gift certificate";
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Tag> tagRowMapper;
-    private final RowMapper<GiftCertificate> certificateRowMapper;
-    private final SimpleJdbcInsert jdbcInsert;
+    /**
+     * Query to select most widely used tag(s) of a user with the highest cost of all orders.
+     */
+    private static final String MOST_POPULAR_QUERY = "SELECT Tag.id, Tag.name FROM Tag\n" +
+            "JOIN Gift_certificate_has_Tag GchT on Tag.id = GchT.tag AND GchT.certificate IN (SELECT Gift_certificate" +
+            ".id FROM Gift_certificate\n" +
+            "JOIN Orders O on Gift_certificate.id = O.certificate_id AND O.user_id = (\n" +
+            "        SELECT User.id FROM User\n" +
+            "        JOIN Orders O on User.id = O.user_id\n" +
+            "        JOIN Gift_certificate Gc on Gc.id = O.certificate_id\n" +
+            "        GROUP BY User.id\n" +
+            "        ORDER BY SUM(O.total_price) DESC\n" +
+            "        LIMIT 1\n" +
+            "    ))\n" +
+            "GROUP BY GchT.tag\n" +
+            "ORDER BY COUNT(GchT.certificate) DESC";
 
-    @Autowired
-    public TagRepositoryImpl(JdbcTemplate jdbcTemplate, RowMapper<Tag> tagRowMapper,
-                             RowMapper<GiftCertificate> certificateRowMapper,
-                             @Qualifier("TagJdbcInsert") SimpleJdbcInsert jdbcInsert) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.tagRowMapper = tagRowMapper;
-        this.certificateRowMapper = certificateRowMapper;
-        this.jdbcInsert = jdbcInsert;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
+    @Transactional
     public Tag save(Tag entity) {
-        Number id = jdbcInsert.executeAndReturnKey(buildParametersMap(entity));
-        entity.setId(id.longValue());
-        return entity;
-    }
-
-    private Map<String, Object> buildParametersMap(Tag entity) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(ColumnName.NAME_COLUMN, entity.getName());
-        return parameters;
+        return entityManager.merge(entity);
     }
 
     @Override
-    public List<Tag> findAll() {
-        return jdbcTemplate.query(SELECT_ALL_QUERY, tagRowMapper);
+    public List<Tag> findAll(int page, int size) {
+        return entityManager.createQuery(SELECT_ALL_QUERY, Tag.class)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size)
+                .getResultList();
     }
 
     @Override
     public Tag findById(Long id) {
-        return jdbcTemplate.query(SELECT_BY_ID_QUERY, tagRowMapper, id).stream().findAny().orElse(null);
+        return entityManager.find(Tag.class, id);
     }
 
     @Override
     public Tag findByName(String name) {
-        return jdbcTemplate.query(SELECT_BY_NAME_QUERY, tagRowMapper, name).stream().findAny().orElse(null);
+        TypedQuery<Tag> query = entityManager.createQuery(SELECT_BY_NAME_QUERY, Tag.class);
+        query.setParameter("tagName", name);
+        return query.getResultStream().findFirst().orElse(null);
     }
 
     @Override
-    public Tag update(Long id, Tag entity) throws RepositoryException {
-        throw new RepositoryException("Unsupported operation.");
+    public List<Tag> findMostPopularTag() {
+        Query nativeQuery = entityManager.createNativeQuery(MOST_POPULAR_QUERY, Tag.class);
+        List<Tag> result = new ArrayList<>();
+        nativeQuery.getResultStream()
+                .filter(Tag.class::isInstance)
+                .forEach(obj -> result.add((Tag) obj));
+        return result;
     }
 
     @Override
+    public Tag update(Tag entity) {
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "UPDATE");
+    }
+
+    @Override
+    @Transactional
     public boolean delete(Long id) {
-        return jdbcTemplate.update(DELETE_QUERY, id) == MIN_AFFECTED_ROWS;
+        Tag tag = Optional.ofNullable(entityManager.find(Tag.class, id))
+                .orElseThrow(() -> new RepositoryException(RepositoryErrorCode.TAG_NOT_FOUND, id));
+        if (hasAssociatedTags(tag)) {
+            throw new RepositoryException(RepositoryErrorCode.DELETION_FORBIDDEN, TAG_ENTITY_NAME, id,
+                    GIFT_CERTIFICATE_ENTITY_NAME);
+        }
+        entityManager.remove(tag);
+        return true;
+    }
+
+    private boolean hasAssociatedTags(Tag tag) {
+        return !tag.getAssociatedCertificates().isEmpty();
     }
 
     @Override
     public List<GiftCertificate> findAssociatedGiftCertificates(Long tagId) {
-        return jdbcTemplate.query(SELECT_ASSOCIATED_CERTIFICATES, certificateRowMapper, tagId);
+        return new ArrayList<>(entityManager.find(Tag.class, tagId).getAssociatedCertificates());
+    }
+
+    @Override
+    public int countAll() {
+        TypedQuery<Long> query = entityManager.createQuery(COUNT_ALL_QUERY, Long.class);
+        return query.getSingleResult().intValue();
     }
 }

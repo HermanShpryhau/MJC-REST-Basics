@@ -1,9 +1,8 @@
 package com.epam.esm.service;
 
-import com.epam.esm.domain.Tag;
-import com.epam.esm.domain.dto.GiftCertificateDto;
-
-import java.util.List;
+import com.epam.esm.model.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.TagDto;
+import com.epam.esm.service.pagination.Page;
 
 /**
  * {@code TagService} is an interface that contains all operations available for tags resource of the API.
@@ -16,14 +15,16 @@ public interface TagService {
      * @param tag Tag entity to save
      * @return Saved tag entity
      */
-    Tag addTag(Tag tag);
+    TagDto addTag(TagDto tag);
 
     /**
      * Fetches all tags in data source.
      *
+     * @param page Index of page
+     * @param size Size of page
      * @return List of found tags
      */
-    List<Tag> fetchAllTags();
+    Page<TagDto> fetchAllTags(int page, int size);
 
     /**
      * Fetches tag by ID.
@@ -31,15 +32,14 @@ public interface TagService {
      * @param id ID of tag to fetch
      * @return Found tag entity
      */
-    Tag fetchTagById(Long id);
+    TagDto fetchTagById(Long id);
 
     /**
-     * Fetches tag by name.
+     * Fetches most widely used tag(s) of a user with the highest cost of all orders.
      *
-     * @param name Name of tag to fetch
-     * @return Found tag entity
+     * @return List of tags matching criteria.
      */
-    Tag fetchTagByName(String name);
+    Page<TagDto> fetchMostPopularTag();
 
     /**
      * Fetches certificates associated with tag.
@@ -47,7 +47,7 @@ public interface TagService {
      * @param id ID of gift certificate to find tags for
      * @return List of associated tags
      */
-    List<GiftCertificateDto> fetchAssociatedCertificates(Long id);
+    Page<GiftCertificateDto> fetchAssociatedCertificates(Long id, int page, int size);
 
     /**
      * Deletes tag from data source

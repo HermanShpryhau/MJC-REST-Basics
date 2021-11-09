@@ -1,7 +1,8 @@
 package com.epam.esm.service;
 
-import com.epam.esm.domain.Tag;
-import com.epam.esm.domain.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.GiftCertificateDto;
+import com.epam.esm.model.dto.TagDto;
+import com.epam.esm.service.pagination.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,15 +24,18 @@ public interface GiftCertificateService {
     /**
      * Fetches list of gift certificate DTOs filtered by supplied parameters.
      *
-     * @param tagName       Name of tag to search for in gift certificates
+     * @param tagNames      List of tag names to search gift certificates by
      * @param sortTypes     Names of parameters ond sort directions to sort by. String must follow the pattern {@code
-     * [parameter name]-[asc|desc]}
+     *                      [parameter name]-[asc|desc]}
      * @param searchPattern String to search for in name or description of the certificate
+     * @param page          Index of page
+     * @param size          Size of page
      * @return List of certificate that confirm to supplied filtering parameters
      */
-    List<GiftCertificateDto> fetchCertificatesWithFilters(Optional<String> tagName,
+    Page<GiftCertificateDto> fetchCertificatesWithFilters(Optional<List<String>> tagNames,
                                                           Optional<List<String>> sortTypes,
-                                                          Optional<String> searchPattern);
+                                                          Optional<String> searchPattern,
+                                                          int page, int size);
 
     /**
      * Fetches gift certificate DTO by ID.
@@ -45,9 +49,9 @@ public interface GiftCertificateService {
      * Fetches all tags associated with gift certificate.
      *
      * @param certificateId ID of gift certificate to find associated tags for
-     * @return List of associated tags
+     * @return List of associated tags DTOS
      */
-    List<Tag> fetchAssociatedTags(long certificateId);
+    Page<TagDto> fetchAssociatedTags(long certificateId, int page, int size);
 
     /**
      * Updates gift certificate entity in data source with data supplied DTO.

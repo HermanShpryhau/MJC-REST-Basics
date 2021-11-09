@@ -1,19 +1,19 @@
 package com.epam.esm.persistence.repository;
 
 public class RepositoryException extends RuntimeException {
-    public RepositoryException() {
-        super();
+    private final String errorCode;
+    private final transient Object[] arguments;
+
+    public RepositoryException(String errorCode, Object... arguments) {
+        this.errorCode = errorCode;
+        this.arguments = arguments;
     }
 
-    public RepositoryException(String message) {
-        super(message);
+    public String getErrorCode() {
+        return errorCode;
     }
 
-    public RepositoryException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public RepositoryException(Throwable cause) {
-        super(cause);
+    public Object[] getArguments() {
+        return arguments;
     }
 }

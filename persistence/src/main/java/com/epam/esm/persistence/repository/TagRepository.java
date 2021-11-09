@@ -1,7 +1,7 @@
 package com.epam.esm.persistence.repository;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Tag;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Tag;
 
 import java.util.List;
 
@@ -22,4 +22,11 @@ public interface TagRepository extends CrudRepository<Tag> {
      * @return Found tag or {@code null}
      */
     Tag findByName(String name);
+
+    /**
+     * Finds most widely used tag(s) of a user with the highest cost of all orders.
+     *
+     * @return List of tags found
+     */
+    List<Tag> findMostPopularTag();
 }

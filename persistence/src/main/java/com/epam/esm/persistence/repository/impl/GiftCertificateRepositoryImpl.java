@@ -1,120 +1,103 @@
 package com.epam.esm.persistence.repository.impl;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Tag;
-import com.epam.esm.persistence.repository.ColumnName;
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.model.Order;
 import com.epam.esm.persistence.repository.GiftCertificateRepository;
-import com.epam.esm.persistence.repository.filter.QueryFiltersConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import com.epam.esm.persistence.repository.RepositoryErrorCode;
+import com.epam.esm.persistence.repository.RepositoryException;
+import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
-    private static final String SELECT_ALL_CERTIFICATES_QUERY = "SELECT * FROM Gift_certificate";
-    private static final String SELECT_BY_ID_QUERY = "SELECT * FROM Gift_certificate WHERE id=?";
-    private static final String UPDATE_QUERY =
-            "UPDATE Gift_certificate SET " +
-                    "name=?, description=?, price=?, duration=? " +
-                    "WHERE id=?";
-    private static final String DELETE_BY_ID_QUERY = "DELETE FROM Gift_certificate WHERE id=?";
-    private static final String SELECT_ASSOCIATED_TAGS_QUERY =
-            "SELECT * FROM Tag\n" +
-                    "JOIN Gift_certificate_has_Tag GchT on Tag.id = GchT.tag\n" +
-                    "WHERE GchT.certificate=?";
-    private static final String ADD_TAG_ASSOCIATION_QUERY =
-            "INSERT INTO Gift_certificate_has_Tag (certificate, tag) VALUES(?, ?)";
-    private static final String REMOVE_TAG_ASSOCIATION_QUERY =
-            "DELETE FROM Gift_certificate_has_Tag WHERE certificate=? AND tag=?";
+    private static final String SELECT_ALL_QUERY = "SELECT giftCertificate from GiftCertificate giftCertificate";
+    private static final String SELECT_ASSOCIATED_ORDERS =
+            "SELECT order FROM Order order WHERE order.giftCertificate=:giftCertificate";
+    private static final String COUNT_ALL_QUERY = "SELECT COUNT(giftCertificate) FROM GiftCertificate giftCertificate";
+    private static final String GIFT_CERTIFICATE_ENTITY_NAME = "gift certificate";
+    private static final String ORDER_ENTITY_NAME = "order";
 
-    private static final int MIN_AFFECTED_ROWS = 1;
-
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<GiftCertificate> certificateRowMapper;
-    private final RowMapper<Tag> tagRowMapper;
-    private final SimpleJdbcInsert jdbcInsert;
-
-    @Autowired
-    public GiftCertificateRepositoryImpl(JdbcTemplate jdbcTemplate,
-                                         RowMapper<GiftCertificate> certificateRowMapper,
-                                         RowMapper<Tag> tagRowMapper,
-                                         @Qualifier("GiftCertificateJdbcInsert") SimpleJdbcInsert jdbcInsert) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.certificateRowMapper = certificateRowMapper;
-        this.tagRowMapper = tagRowMapper;
-        this.jdbcInsert = jdbcInsert;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public GiftCertificate save(GiftCertificate entity) {
-        Map<String, Object> parameters = buildParametersMap(entity);
-        Number id = jdbcInsert.executeAndReturnKey(parameters);
-        return findById(id.longValue());
-    }
-
-    private Map<String, Object> buildParametersMap(GiftCertificate entity) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(ColumnName.NAME_COLUMN, entity.getName());
-        parameters.put(ColumnName.DESCRIPTION_COLUMN, entity.getDescription());
-        parameters.put(ColumnName.PRICE_COLUMN, entity.getPrice());
-        parameters.put(ColumnName.DURATION_COLUMN, entity.getDuration());
-        return parameters;
+        entity.setId(0L);
+        return entityManager.merge(entity);
     }
 
     @Override
-    public List<GiftCertificate> findAll() {
-        return jdbcTemplate.query(SELECT_ALL_CERTIFICATES_QUERY, certificateRowMapper);
+    public List<GiftCertificate> findAll(int page, int size) {
+        return entityManager
+                .createQuery(SELECT_ALL_QUERY, GiftCertificate.class)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size)
+                .getResultList();
     }
 
     @Override
     public GiftCertificate findById(Long id) {
-        List<GiftCertificate> certificates = jdbcTemplate.query(SELECT_BY_ID_QUERY, certificateRowMapper, id);
-        return certificates.stream().findAny().orElse(null);
+        return entityManager.find(GiftCertificate.class, id);
     }
 
     @Override
-    public GiftCertificate update(Long id, GiftCertificate entity) {
-        jdbcTemplate.update(UPDATE_QUERY,
-                entity.getName(),
-                entity.getDescription(),
-                entity.getPrice(),
-                entity.getDuration(),
-                id
-        );
-        return entity;
+    public GiftCertificate update(GiftCertificate entity) {
+        return entityManager.merge(entity);
     }
 
     @Override
+    @Transactional
     public boolean delete(Long id) {
-        return jdbcTemplate.update(DELETE_BY_ID_QUERY, id) == MIN_AFFECTED_ROWS;
+        GiftCertificate certificate = Optional.ofNullable(entityManager.find(GiftCertificate.class, id))
+                .orElseThrow(() -> new RepositoryException(RepositoryErrorCode.CERTIFICATE_NOT_FOUND, id));
+        if (hasAssociatedOrders(certificate)) {
+            throw new RepositoryException(RepositoryErrorCode.DELETION_FORBIDDEN, GIFT_CERTIFICATE_ENTITY_NAME, id,
+                    ORDER_ENTITY_NAME);
+        }
+        entityManager.remove(certificate);
+        return true;
+    }
+
+    /**
+     * Checks if gift certificate has orders associated with it.
+     *
+     * @param certificate Gift certificate entity
+     * @return {@code true} if gift certificate has orders associated with it
+     */
+    private boolean hasAssociatedOrders(GiftCertificate certificate) {
+        TypedQuery<Order> query = entityManager.createQuery(SELECT_ASSOCIATED_ORDERS, Order.class);
+        query.setParameter("giftCertificate", certificate);
+        List<Order> resultList = query.getResultList();
+        return !resultList.isEmpty();
     }
 
     @Override
-    public List<GiftCertificate> findWithFilters(QueryFiltersConfig config) {
-        PreparedStatementCreator statementCreator = new GiftCertificatePreparedStatementCreator(config);
-        return jdbcTemplate.query(statementCreator, certificateRowMapper);
+    public List<GiftCertificate> findWithFilters(GiftCertificatesFilterConfig config, int page, int size) {
+        CriteriaQuery<GiftCertificate> criteriaQuery = config.asCriteriaQuery(entityManager.getCriteriaBuilder());
+        TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(criteriaQuery);
+        typedQuery.setFirstResult((page - 1) * size);
+        typedQuery.setMaxResults(size);
+        return typedQuery.getResultList();
     }
 
     @Override
-    public List<Tag> findAssociatedTags(Long certificateId) {
-        return jdbcTemplate.query(SELECT_ASSOCIATED_TAGS_QUERY, tagRowMapper, certificateId);
+    public int countEntitiesWithFilter(GiftCertificatesFilterConfig config) {
+        CriteriaQuery<GiftCertificate> criteriaQuery = config.asCriteriaQuery(entityManager.getCriteriaBuilder());
+        TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(criteriaQuery);
+        return typedQuery.getResultList().size();
     }
 
     @Override
-    public void addTagAssociation(Long certificateId, Long tagId) {
-        jdbcTemplate.update(ADD_TAG_ASSOCIATION_QUERY, certificateId, tagId);
-    }
-
-    @Override
-    public void removeTagAssociation(Long certificateId, Long tagId) {
-        jdbcTemplate.update(REMOVE_TAG_ASSOCIATION_QUERY, certificateId, tagId);
+    public int countAll() {
+        TypedQuery<Long> query = entityManager.createQuery(COUNT_ALL_QUERY, Long.class);
+        return query.getSingleResult().intValue();
     }
 }

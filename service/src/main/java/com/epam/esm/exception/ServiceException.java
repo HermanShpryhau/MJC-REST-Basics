@@ -2,7 +2,7 @@ package com.epam.esm.exception;
 
 public class ServiceException extends RuntimeException {
     private final String errorCode;
-    private final Object[] arguments;
+    private final transient Object[] arguments;
 
     public ServiceException(String errorCode, Object... arguments) {
         this.errorCode = errorCode;
