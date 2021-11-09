@@ -39,6 +39,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto addTag(TagDto tag) {
         Tag tagEntity = tagDtoSerializer.dtoToEntity(tag);
+        tagEntity.setId(null);
         Tag savedTag = tagRepository.save(tagEntity);
         return tagDtoSerializer.dtoFromEntity(savedTag);
     }

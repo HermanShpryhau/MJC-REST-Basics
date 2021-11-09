@@ -5,6 +5,7 @@ import com.epam.esm.persistence.repository.OrderRepository;
 import com.epam.esm.persistence.repository.RepositoryErrorCode;
 import com.epam.esm.persistence.repository.RepositoryException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,8 +22,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     private EntityManager entityManager;
 
     @Override
+    @Transactional
     public Order save(Order entity) {
-        return entityManager.merge(entity);
+        entityManager.persist(entity);
+        return entity;
     }
 
     @Override

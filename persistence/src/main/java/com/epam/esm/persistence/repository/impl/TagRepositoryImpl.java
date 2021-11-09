@@ -47,7 +47,8 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     @Transactional
     public Tag save(Tag entity) {
-        return entityManager.merge(entity);
+        entityManager.persist(entity);
+        return entity;
     }
 
     @Override

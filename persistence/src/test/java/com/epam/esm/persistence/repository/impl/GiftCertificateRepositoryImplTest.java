@@ -13,9 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.epam.esm.persistence.repository.test.matchers.SameGiftCertificate.sameGiftCertificate;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,10 +29,10 @@ class GiftCertificateRepositoryImplTest {
             new Tag(3L, "Tag 3")
     );
 
-    private static final List<Tag> CERTIFICATE_1_TAGS = IN_DB_TAGS.subList(0, 2);
+    private static final Set<Tag> CERTIFICATE_1_TAGS = new HashSet<>(IN_DB_TAGS.subList(0, 2));
     private static GiftCertificate testCertificate = new GiftCertificate(3L, "test", "test", 1, 1,
             LocalDateTime.parse("2021-09-28T18:13:56"), LocalDateTime.parse("2021-09-28T18:13:56"), CERTIFICATE_1_TAGS);
-    private static final List<Tag> CERTIFICATE_2_TAGS = IN_DB_TAGS.subList(1, 3);
+    private static final Set<Tag> CERTIFICATE_2_TAGS = new HashSet<>(IN_DB_TAGS.subList(1, 3));
     private static final List<GiftCertificate> IN_DB_CERTIFICATES = Arrays.asList(
             new GiftCertificate(1L, "Certificate 1", "Description 1", 119, 25,
                     LocalDateTime.parse("2021-09-28T18:13:56"), LocalDateTime.parse("2021-09-28T18:13:56"),

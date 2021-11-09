@@ -30,8 +30,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public GiftCertificate save(GiftCertificate entity) {
-        entity.setId(0L);
-        return entityManager.merge(entity);
+        entityManager.persist(entity);
+        return entity;
     }
 
     @Override

@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         int totalPrice = calculateTotalPrice(quantity, certificate);
-        Order order = orderRepository.save(new Order(user, certificate, quantity, totalPrice, LocalDateTime.now()));
+        Order order = orderRepository.save(new Order(null, user, certificate, quantity, totalPrice, LocalDateTime.now()));
         return orderDtoSerializer.dtoFromEntity(order);
     }
 
