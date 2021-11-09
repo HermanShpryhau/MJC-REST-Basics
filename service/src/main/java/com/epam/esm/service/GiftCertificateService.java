@@ -7,6 +7,10 @@ import com.epam.esm.service.pagination.Page;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * {@code GiftCertificateService} is an interface that contains all operations available for gift certificates
+ * resource of the API.
+ */
 public interface GiftCertificateService {
 
     /**

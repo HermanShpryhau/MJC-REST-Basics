@@ -4,6 +4,9 @@ import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.TagDto;
 import com.epam.esm.service.pagination.Page;
 
+/**
+ * {@code TagService} is an interface that contains all operations available for tags resource of the API.
+ */
 public interface TagService {
 
     /**
