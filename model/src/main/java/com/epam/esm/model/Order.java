@@ -1,9 +1,21 @@
 package com.epam.esm.model;
 
 import com.epam.esm.model.audit.OrderAuditingListener;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
@@ -48,31 +60,5 @@ public class Order implements JpaEntity {
         this.quantity = quantity;
         this.totalPrice = totalPrice;
         this.submissionDate = submissionDate;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Order)) return false;
-
-        Order order = (Order) o;
-
-        if (!id.equals(order.id)) return false;
-        if (!user.equals(order.user)) return false;
-        if (!giftCertificate.equals(order.giftCertificate)) return false;
-        if (!quantity.equals(order.quantity)) return false;
-        if (!totalPrice.equals(order.totalPrice)) return false;
-        return submissionDate.equals(order.submissionDate);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + user.hashCode();
-        result = 31 * result + giftCertificate.hashCode();
-        result = 31 * result + quantity.hashCode();
-        result = 31 * result + totalPrice.hashCode();
-        result = 31 * result + submissionDate.hashCode();
-        return result;
     }
 }
