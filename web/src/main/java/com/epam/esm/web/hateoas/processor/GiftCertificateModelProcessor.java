@@ -10,6 +10,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,24 +28,38 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
             Page<GiftCertificateDto> page,
             CollectionModel<GiftCertificateModel> collectionModel
     ) {
-        int nextPage = page.getNextPageIndex();
-        int previousPage = page.getPreviousPageIndex();
-        int lastPage = page.getTotalPages();
-        Link previousPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, previousPage))
-                .withRel("prev")
-                .expand();
-        Link nextPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, nextPage))
-                .withRel("next")
-                .expand();
+        List<Link> paginationLinks = new ArrayList<>();
+        if (page.hasPrevious()) {
+            int previousPage = page.getPreviousPageIndex();
+            Link previousPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size,
+                    previousPage))
+                    .withRel("prev")
+                    .expand();
+            paginationLinks.add(previousPageLink);
+        }
+
+        if (page.hasNext()) {
+            int nextPage = page.getNextPageIndex();
+            Link nextPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, nextPage))
+                    .withRel("next")
+                    .expand();
+            paginationLinks.add(nextPageLink);
+        }
+
         Link firstPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size,
                 Page.FIRST_PAGE))
                 .withRel("first")
                 .expand();
+        paginationLinks.add(firstPageLink);
+
+        int lastPage = page.getTotalPages();
         Link lastPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size,
                 lastPage))
                 .withRel("last")
                 .expand();
-        return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
+        paginationLinks.add(lastPageLink);
+
+        return collectionModel.add(paginationLinks);
     }
 
     private CollectionModel<GiftCertificateModel> getCertificatesMethod(Optional<List<String>> tagNames,
@@ -58,22 +73,36 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
 
     public CollectionModel<GiftCertificateModel> process(Long tagId, Integer size, Page<GiftCertificateDto> page,
                                                          CollectionModel<GiftCertificateModel> collectionModel) {
-        int nextPage = page.getNextPageIndex();
-        int previousPage = page.getPreviousPageIndex();
-        int lastPage = page.getTotalPages();
-        Link previousPageLink = linkTo(getAssociatedCertificatesMethod(tagId, previousPage, size))
-                .withRel("prev")
-                .expand();
-        Link nextPageLink = linkTo(getAssociatedCertificatesMethod(tagId, nextPage, size))
-                .withRel("next")
-                .expand();
+        List<Link> paginationLinks = new ArrayList<>();
+
+        if (page.hasPrevious()) {
+            int previousPage = page.getPreviousPageIndex();
+            Link previousPageLink = linkTo(getAssociatedCertificatesMethod(tagId, previousPage, size))
+                    .withRel("prev")
+                    .expand();
+            paginationLinks.add(previousPageLink);
+        }
+
+        if (page.hasNext()) {
+            int nextPage = page.getNextPageIndex();
+            Link nextPageLink = linkTo(getAssociatedCertificatesMethod(tagId, nextPage, size))
+                    .withRel("next")
+                    .expand();
+            paginationLinks.add(nextPageLink);
+        }
+
         Link firstPageLink = linkTo(getAssociatedCertificatesMethod(tagId, Page.FIRST_PAGE, size))
                 .withRel("first")
                 .expand();
+        paginationLinks.add(firstPageLink);
+
+        int lastPage = page.getTotalPages();
         Link lastPageLink = linkTo(getAssociatedCertificatesMethod(tagId, lastPage, size))
                 .withRel("last")
                 .expand();
-        return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
+        paginationLinks.add(lastPageLink);
+
+        return collectionModel.add(paginationLinks);
     }
 
     private CollectionModel<GiftCertificateModel> getAssociatedCertificatesMethod(Long tagId, Integer page,

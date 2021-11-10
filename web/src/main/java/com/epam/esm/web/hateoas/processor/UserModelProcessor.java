@@ -9,6 +9,9 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -17,23 +20,36 @@ public class UserModelProcessor implements RepresentationModelProcessor<UserMode
 
     public CollectionModel<UserModel> process(Page<UserDto> page, Integer size,
                                               CollectionModel<UserModel> collectionModel) {
+        List<Link> paginationLinks = new ArrayList<>();
 
-        int nextPage = page.getNextPageIndex();
-        int previousPage = page.getPreviousPageIndex();
-        int lastPage = page.getTotalPages();
-        Link previousPageLink = linkTo(getAllUsersMethod(previousPage, size))
-                .withRel("prev")
-                .expand();
-        Link nextPageLink = linkTo(getAllUsersMethod(nextPage, size))
-                .withRel("next")
-                .expand();
+        if (page.hasPrevious()) {
+            int previousPage = page.getPreviousPageIndex();
+            Link previousPageLink = linkTo(getAllUsersMethod(previousPage, size))
+                    .withRel("prev")
+                    .expand();
+            paginationLinks.add(previousPageLink);
+        }
+
+        if (page.hasNext()) {
+            int nextPage = page.getNextPageIndex();
+            Link nextPageLink = linkTo(getAllUsersMethod(nextPage, size))
+                    .withRel("next")
+                    .expand();
+            paginationLinks.add(nextPageLink);
+        }
+
         Link firstPageLink = linkTo(getAllUsersMethod(Page.FIRST_PAGE, size))
                 .withRel("first")
                 .expand();
+        paginationLinks.add(firstPageLink);
+
+        int lastPage = page.getTotalPages();
         Link lastPageLink = linkTo(getAllUsersMethod(lastPage, size))
                 .withRel("last")
                 .expand();
-        return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
+        paginationLinks.add(lastPageLink);
+
+        return collectionModel.add(paginationLinks);
     }
 
     private CollectionModel<UserModel> getAllUsersMethod(Integer page, Integer size) {

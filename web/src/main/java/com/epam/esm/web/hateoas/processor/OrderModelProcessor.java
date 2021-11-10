@@ -10,6 +10,9 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -18,22 +21,36 @@ public class OrderModelProcessor implements RepresentationModelProcessor<OrderMo
 
     public CollectionModel<OrderModel> process(Page<OrderDto> page, Integer size,
                                                CollectionModel<OrderModel> collectionModel) {
-        int nextPage = page.getNextPageIndex();
-        int previousPage = page.getPreviousPageIndex();
-        int lastPage = page.getTotalPages();
-        Link previousPageLink = linkTo(getAllOrdersMethod(previousPage, size))
-                .withRel("prev")
-                .expand();
-        Link nextPageLink = linkTo(getAllOrdersMethod(nextPage, size))
-                .withRel("next")
-                .expand();
+        List<Link> paginationLinks = new ArrayList<>();
+
+        if (page.hasPrevious()) {
+            int previousPage = page.getPreviousPageIndex();
+            Link previousPageLink = linkTo(getAllOrdersMethod(previousPage, size))
+                    .withRel("prev")
+                    .expand();
+            paginationLinks.add(previousPageLink);
+        }
+
+        if (page.hasNext()) {
+            int nextPage = page.getNextPageIndex();
+            Link nextPageLink = linkTo(getAllOrdersMethod(nextPage, size))
+                    .withRel("next")
+                    .expand();
+            paginationLinks.add(nextPageLink);
+        }
+
         Link firstPageLink = linkTo(getAllOrdersMethod(Page.FIRST_PAGE, size))
                 .withRel("first")
                 .expand();
+        paginationLinks.add(firstPageLink);
+
+        int lastPage = page.getTotalPages();
         Link lastPageLink = linkTo(getAllOrdersMethod(lastPage, size))
                 .withRel("last")
                 .expand();
-        return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
+        paginationLinks.add(lastPageLink);
+
+        return collectionModel.add(paginationLinks);
     }
 
     private CollectionModel<OrderModel> getAllOrdersMethod(Integer page, Integer size) {
@@ -42,22 +59,36 @@ public class OrderModelProcessor implements RepresentationModelProcessor<OrderMo
 
     public CollectionModel<OrderModel> process(Long userId, Page<OrderDto> page, Integer size,
                                                CollectionModel<OrderModel> collectionModel) {
-        int nextPage = page.getNextPageIndex();
-        int previousPage = page.getPreviousPageIndex();
-        int lastPage = page.getTotalPages();
-        Link previousPageLink = linkTo(getUserOrdersMethod(userId, previousPage, size))
-                .withRel("prev")
-                .expand();
-        Link nextPageLink = linkTo(getUserOrdersMethod(userId, nextPage, size))
-                .withRel("next")
-                .expand();
+        List<Link> paginationLinks = new ArrayList<>();
+
+        if (page.hasPrevious()) {
+            int previousPage = page.getPreviousPageIndex();
+            Link previousPageLink = linkTo(getUserOrdersMethod(userId, previousPage, size))
+                    .withRel("prev")
+                    .expand();
+            paginationLinks.add(previousPageLink);
+        }
+
+        if (page.hasNext()) {
+            int nextPage = page.getNextPageIndex();
+            Link nextPageLink = linkTo(getUserOrdersMethod(userId, nextPage, size))
+                    .withRel("next")
+                    .expand();
+            paginationLinks.add(nextPageLink);
+        }
+
         Link firstPageLink = linkTo(getUserOrdersMethod(userId, Page.FIRST_PAGE, size))
                 .withRel("first")
                 .expand();
+        paginationLinks.add(firstPageLink);
+
+        int lastPage = page.getTotalPages();
         Link lastPageLink = linkTo(getUserOrdersMethod(userId, lastPage, size))
                 .withRel("last")
                 .expand();
-        return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
+        paginationLinks.add(lastPageLink);
+
+        return collectionModel.add(paginationLinks);
     }
 
     private CollectionModel<OrderModel> getUserOrdersMethod(Long userId, Integer page, Integer size) {

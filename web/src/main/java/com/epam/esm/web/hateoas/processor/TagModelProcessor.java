@@ -10,6 +10,9 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -17,22 +20,36 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class TagModelProcessor implements RepresentationModelProcessor<TagModel> {
 
     public CollectionModel<TagModel> process(Page<TagDto> page, int size, CollectionModel<TagModel> collectionModel) {
-        int nextPage = page.getNextPageIndex();
-        int previousPage = page.getPreviousPageIndex();
-        int lastPage = page.getTotalPages();
-        Link previousPageLink = linkTo(getAllTagsMethod(previousPage, size))
-                .withRel("prev")
-                .expand();
-        Link nextPageLink = linkTo(getAllTagsMethod(nextPage, size))
-                .withRel("next")
-                .expand();
+        List<Link> paginationLinks = new ArrayList<>();
+
+        if (page.hasPrevious()) {
+            int previousPage = page.getPreviousPageIndex();
+            Link previousPageLink = linkTo(getAllTagsMethod(previousPage, size))
+                    .withRel("prev")
+                    .expand();
+            paginationLinks.add(previousPageLink);
+        }
+
+        if (page.hasNext()) {
+            int nextPage = page.getNextPageIndex();
+            Link nextPageLink = linkTo(getAllTagsMethod(nextPage, size))
+                    .withRel("next")
+                    .expand();
+            paginationLinks.add(nextPageLink);
+        }
+
         Link firstPageLink = linkTo(getAllTagsMethod(Page.FIRST_PAGE, size))
                 .withRel("first")
                 .expand();
+        paginationLinks.add(firstPageLink);
+
+        int lastPage = page.getTotalPages();
         Link lastPageLink = linkTo(getAllTagsMethod(lastPage, size))
                 .withRel("last")
                 .expand();
-        return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
+        paginationLinks.add(lastPageLink);
+
+        return collectionModel.add(paginationLinks);
     }
 
     private CollectionModel<TagModel> getAllTagsMethod(int page, int size) {
@@ -41,22 +58,36 @@ public class TagModelProcessor implements RepresentationModelProcessor<TagModel>
 
     public CollectionModel<TagModel> process(long certificateId, Page<TagDto> page, int size,
                                              CollectionModel<TagModel> collectionModel) {
-        int nextPage = page.getNextPageIndex();
-        int previousPage = page.getPreviousPageIndex();
-        int lastPage = page.getTotalPages();
-        Link previousPageLink = linkTo(getAssociatedTagsMethod(certificateId, previousPage, size))
-                .withRel("prev")
-                .expand();
-        Link nextPageLink = linkTo(getAssociatedTagsMethod(certificateId, nextPage, size))
-                .withRel("next")
-                .expand();
+        List<Link> paginationLinks = new ArrayList<>();
+
+        if (page.hasPrevious()) {
+            int previousPage = page.getPreviousPageIndex();
+            Link previousPageLink = linkTo(getAssociatedTagsMethod(certificateId, previousPage, size))
+                    .withRel("prev")
+                    .expand();
+            paginationLinks.add(previousPageLink);
+        }
+
+        if (page.hasNext()) {
+            int nextPage = page.getNextPageIndex();
+            Link nextPageLink = linkTo(getAssociatedTagsMethod(certificateId, nextPage, size))
+                    .withRel("next")
+                    .expand();
+            paginationLinks.add(nextPageLink);
+        }
+
         Link firstPageLink = linkTo(getAssociatedTagsMethod(certificateId, Page.FIRST_PAGE, size))
                 .withRel("first")
                 .expand();
+        paginationLinks.add(firstPageLink);
+
+        int lastPage = page.getTotalPages();
         Link lastPageLink = linkTo(getAssociatedTagsMethod(certificateId, lastPage, size))
                 .withRel("last")
                 .expand();
-        return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
+        paginationLinks.add(lastPageLink);
+
+        return collectionModel.add(paginationLinks);
     }
 
     private CollectionModel<TagModel> getAssociatedTagsMethod(long certificateId, int page, int size) {
