@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.model.dto.OrderDto;
-import com.epam.esm.service.pagination.Page;
+import org.springframework.data.domain.Page;
 
 /**
  * {@code OrderService} is an interface that contains all operations available for orders resource of the API.

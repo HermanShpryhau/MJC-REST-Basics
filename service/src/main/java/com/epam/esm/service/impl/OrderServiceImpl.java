@@ -11,17 +11,15 @@ import com.epam.esm.persistence.repository.GiftCertificateRepository;
 import com.epam.esm.persistence.repository.OrderRepository;
 import com.epam.esm.persistence.repository.UserRepository;
 import com.epam.esm.service.OrderService;
-import com.epam.esm.service.pagination.Page;
-import com.epam.esm.service.pagination.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link OrderService}.
@@ -46,16 +44,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<OrderDto> fetchAllOrders(int page, int size) {
-        page = PaginationUtil.correctPageIndex(page, size, orderRepository::countAll);
-        List<OrderDto> orderDtos = orderRepository.findAll(page, size).stream()
-                .map(orderDtoSerializer::dtoFromEntity)
-                .collect(Collectors.toList());
-        return new Page<>(page, size, orderRepository.countAll(), orderDtos);
+        return orderRepository.findAll(PageRequest.of(page, size, Sort.by("id")))
+                .map(orderDtoSerializer::dtoFromEntity);
     }
 
     @Override
     public OrderDto fetchOrderById(Long id) {
-        Order order = Optional.ofNullable(orderRepository.findById(id))
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ServiceException(ServiceErrorCode.ORDER_NOT_FOUND, id));
         return orderDtoSerializer.dtoFromEntity(order);
     }
@@ -63,9 +58,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDto placeOrder(Long userId, Long certificateId, int quantity) {
-        User user = Optional.ofNullable(userRepository.findById(userId))
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ServiceErrorCode.USER_NOT_FOUND, userId));
-        GiftCertificate certificate = Optional.ofNullable(certificateRepository.findById(certificateId))
+        GiftCertificate certificate = certificateRepository.findById(certificateId)
                 .orElseThrow(() -> new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, certificateId));
 
         if (quantity < 0) {

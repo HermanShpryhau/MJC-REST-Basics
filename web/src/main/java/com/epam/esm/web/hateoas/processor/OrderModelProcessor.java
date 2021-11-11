@@ -1,10 +1,10 @@
 package com.epam.esm.web.hateoas.processor;
 
 import com.epam.esm.model.dto.OrderDto;
-import com.epam.esm.service.pagination.Page;
 import com.epam.esm.web.controller.OrdersController;
 import com.epam.esm.web.controller.UsersController;
 import com.epam.esm.web.hateoas.model.OrderModel;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
@@ -24,7 +24,7 @@ public class OrderModelProcessor implements RepresentationModelProcessor<OrderMo
         List<Link> paginationLinks = new ArrayList<>();
 
         if (page.hasPrevious()) {
-            int previousPage = page.getPreviousPageIndex();
+            int previousPage = page.getNumber() - 1;
             Link previousPageLink = linkTo(getAllOrdersMethod(previousPage, size))
                     .withRel("prev")
                     .expand();
@@ -32,14 +32,14 @@ public class OrderModelProcessor implements RepresentationModelProcessor<OrderMo
         }
 
         if (page.hasNext()) {
-            int nextPage = page.getNextPageIndex();
+            int nextPage = page.getNumber() + 1;
             Link nextPageLink = linkTo(getAllOrdersMethod(nextPage, size))
                     .withRel("next")
                     .expand();
             paginationLinks.add(nextPageLink);
         }
 
-        Link firstPageLink = linkTo(getAllOrdersMethod(Page.FIRST_PAGE, size))
+        Link firstPageLink = linkTo(getAllOrdersMethod(0, size))
                 .withRel("first")
                 .expand();
         paginationLinks.add(firstPageLink);
@@ -62,7 +62,7 @@ public class OrderModelProcessor implements RepresentationModelProcessor<OrderMo
         List<Link> paginationLinks = new ArrayList<>();
 
         if (page.hasPrevious()) {
-            int previousPage = page.getPreviousPageIndex();
+            int previousPage = page.getNumber() - 1;
             Link previousPageLink = linkTo(getUserOrdersMethod(userId, previousPage, size))
                     .withRel("prev")
                     .expand();
@@ -70,14 +70,14 @@ public class OrderModelProcessor implements RepresentationModelProcessor<OrderMo
         }
 
         if (page.hasNext()) {
-            int nextPage = page.getNextPageIndex();
+            int nextPage = page.getNumber() + 1;
             Link nextPageLink = linkTo(getUserOrdersMethod(userId, nextPage, size))
                     .withRel("next")
                     .expand();
             paginationLinks.add(nextPageLink);
         }
 
-        Link firstPageLink = linkTo(getUserOrdersMethod(userId, Page.FIRST_PAGE, size))
+        Link firstPageLink = linkTo(getUserOrdersMethod(userId, 0, size))
                 .withRel("first")
                 .expand();
         paginationLinks.add(firstPageLink);

@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "Orders")
-@EntityListeners(OrderAuditingListener.class)
+//@EntityListeners(OrderAuditingListener.class)
 public class Order implements JpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
