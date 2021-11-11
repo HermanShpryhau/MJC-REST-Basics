@@ -9,14 +9,15 @@ import com.epam.esm.model.dto.UserDto;
 import com.epam.esm.model.dto.serialization.DtoSerializer;
 import com.epam.esm.persistence.repository.UserRepository;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.pagination.Page;
-import com.epam.esm.service.pagination.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -39,31 +40,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserDto> fetchAllUsers(int page, int size) {
-        page = PaginationUtil.correctPageIndex(page, size, userRepository::countAll);
-        List<UserDto> userDtos = userRepository.findAll(page, size).stream()
-                .map(userDtoSerializer::dtoFromEntity)
-                .collect(Collectors.toList());
-        return new Page<>(page, size, userRepository.countAll(), userDtos);
+        return userRepository.findAll(PageRequest.of(page, size))
+                .map(userDtoSerializer::dtoFromEntity);
     }
 
     @Override
     public UserDto fetchUserById(Long id) {
-        User user = Optional.ofNullable(userRepository.findById(id))
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ServiceException(ServiceErrorCode.USER_NOT_FOUND, id));
         return userDtoSerializer.dtoFromEntity(user);
     }
 
     @Override
+    @Transactional
     public Page<OrderDto> fetchUserOrders(Long id, int page, int size) {
-        User user = Optional.ofNullable(userRepository.findById(id))
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ServiceException(ServiceErrorCode.USER_NOT_FOUND, id));
         List<Order> orders = user.getOrders();
-        page = PaginationUtil.correctPageIndex(page, size, orders::size);
         List<OrderDto> orderDtos = user.getOrders().stream()
-                .skip((long) (page - 1) * size)
+                .skip((long) (page) * size)
                 .limit(size)
                 .map(orderDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
-        return new Page<>(page, size, orders.size(), orderDtos);
+        return new PageImpl<>(orderDtos, PageRequest.of(page, size), orders.size());
     }
 }

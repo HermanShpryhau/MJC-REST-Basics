@@ -1,9 +1,9 @@
 package com.epam.esm.web.hateoas.processor;
 
 import com.epam.esm.model.dto.UserDto;
-import com.epam.esm.service.pagination.Page;
 import com.epam.esm.web.controller.UsersController;
 import com.epam.esm.web.hateoas.model.UserModel;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
@@ -23,7 +23,7 @@ public class UserModelProcessor implements RepresentationModelProcessor<UserMode
         List<Link> paginationLinks = new ArrayList<>();
 
         if (page.hasPrevious()) {
-            int previousPage = page.getPreviousPageIndex();
+            int previousPage = page.getNumber() - 1;
             Link previousPageLink = linkTo(getAllUsersMethod(previousPage, size))
                     .withRel("prev")
                     .expand();
@@ -31,14 +31,14 @@ public class UserModelProcessor implements RepresentationModelProcessor<UserMode
         }
 
         if (page.hasNext()) {
-            int nextPage = page.getNextPageIndex();
+            int nextPage = page.getNumber() + 1;
             Link nextPageLink = linkTo(getAllUsersMethod(nextPage, size))
                     .withRel("next")
                     .expand();
             paginationLinks.add(nextPageLink);
         }
 
-        Link firstPageLink = linkTo(getAllUsersMethod(Page.FIRST_PAGE, size))
+        Link firstPageLink = linkTo(getAllUsersMethod(0, size))
                 .withRel("first")
                 .expand();
         paginationLinks.add(firstPageLink);

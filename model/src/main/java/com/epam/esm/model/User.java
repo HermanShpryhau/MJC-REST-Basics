@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "User")
-@EntityListeners(UserAuditingListener.class)
+//@EntityListeners(UserAuditingListener.class)
 public class User implements JpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
