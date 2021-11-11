@@ -1,0 +1,19 @@
+package com.epam.esm.persistence.repository;
+
+import com.epam.esm.model.GiftCertificate;
+import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
+import org.springframework.data.domain.Page;
+
+public interface CustomGiftCertificateRepository {
+    /**
+     * Finds gift certificates according to filtering parameters supplied with {@link GiftCertificatesFilterConfig}.
+     *
+     * @param config Filter configuration
+     * @param page   Index of page
+     * @param size   Size of page
+     * @return List of found gift certificates
+     */
+    Page<GiftCertificate> findWithFilters(GiftCertificatesFilterConfig config, int page, int size);
+
+    int countEntitiesWithFilter(GiftCertificatesFilterConfig config);
+}

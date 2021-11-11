@@ -1,10 +1,10 @@
 package com.epam.esm.web.hateoas.processor;
 
 import com.epam.esm.model.dto.GiftCertificateDto;
-import com.epam.esm.service.pagination.Page;
 import com.epam.esm.web.controller.CertificatesController;
 import com.epam.esm.web.controller.TagController;
 import com.epam.esm.web.hateoas.model.GiftCertificateModel;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
@@ -30,7 +30,7 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
     ) {
         List<Link> paginationLinks = new ArrayList<>();
         if (page.hasPrevious()) {
-            int previousPage = page.getPreviousPageIndex();
+            int previousPage = page.getNumber() - 1;
             Link previousPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size,
                     previousPage))
                     .withRel("prev")
@@ -39,7 +39,7 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
         }
 
         if (page.hasNext()) {
-            int nextPage = page.getNextPageIndex();
+            int nextPage = page.getNumber() + 1;
             Link nextPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size, nextPage))
                     .withRel("next")
                     .expand();
@@ -47,7 +47,7 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
         }
 
         Link firstPageLink = linkTo(getCertificatesMethod(tagNames, sortTypes, searchPattern, size,
-                Page.FIRST_PAGE))
+                0))
                 .withRel("first")
                 .expand();
         paginationLinks.add(firstPageLink);
@@ -76,7 +76,7 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
         List<Link> paginationLinks = new ArrayList<>();
 
         if (page.hasPrevious()) {
-            int previousPage = page.getPreviousPageIndex();
+            int previousPage = page.getNumber() - 1;
             Link previousPageLink = linkTo(getAssociatedCertificatesMethod(tagId, previousPage, size))
                     .withRel("prev")
                     .expand();
@@ -84,14 +84,14 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
         }
 
         if (page.hasNext()) {
-            int nextPage = page.getNextPageIndex();
+            int nextPage = page.getNumber() + 1;
             Link nextPageLink = linkTo(getAssociatedCertificatesMethod(tagId, nextPage, size))
                     .withRel("next")
                     .expand();
             paginationLinks.add(nextPageLink);
         }
 
-        Link firstPageLink = linkTo(getAssociatedCertificatesMethod(tagId, Page.FIRST_PAGE, size))
+        Link firstPageLink = linkTo(getAssociatedCertificatesMethod(tagId, 0, size))
                 .withRel("first")
                 .expand();
         paginationLinks.add(firstPageLink);

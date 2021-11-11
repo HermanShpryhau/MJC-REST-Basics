@@ -8,7 +8,10 @@ import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +22,7 @@ import static com.epam.esm.persistence.repository.test.matchers.SameGiftCertific
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-@SpringBootTest
-@Transactional
+@DataJpaTest
 @ActiveProfiles("dev")
 class GiftCertificateRepositoryImplTest {
     private static final List<Tag> IN_DB_TAGS = Arrays.asList(
@@ -59,8 +61,8 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void findAll() {
-        List<GiftCertificate> certificates = repository.findAll(1, 10);
-        assertThat(certificates,
+        Page<GiftCertificate> certificates = repository.findAll(PageRequest.of(0, 10));
+        assertThat(certificates.getContent(),
                 containsInAnyOrder(
                         sameGiftCertificate(IN_DB_CERTIFICATES.get(0)),
                         sameGiftCertificate(IN_DB_CERTIFICATES.get(1))
@@ -70,20 +72,20 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void findById() {
-        GiftCertificate certificate = repository.findById(2L);
+        GiftCertificate certificate = repository.findById(2L).orElse(null);
         assertThat(certificate, sameGiftCertificate(IN_DB_CERTIFICATES.get(1)));
     }
 
     @Test
     void findNonExistingCertificateById() {
-        GiftCertificate certificate = repository.findById(100L);
+        GiftCertificate certificate = repository.findById(100L).orElse(null);
         assertThat(certificate, is(nullValue()));
     }
 
     @Test
     void findWithFilters() {
         GiftCertificatesFilterConfig config = GiftCertificatesFilterConfig.builder().withSearchPattern("2").build();
-        List<GiftCertificate> certificate = repository.findWithFilters(config, 1, 10);
+        List<GiftCertificate> certificate = repository.findWithFilters(config, 0, 10).getContent();
         assertThat(certificate, containsInAnyOrder(sameGiftCertificate(IN_DB_CERTIFICATES.get(1))));
     }
 
@@ -91,33 +93,34 @@ class GiftCertificateRepositoryImplTest {
     void findWithFiltersNoMatchingCertificates() {
         GiftCertificatesFilterConfig config =
                 GiftCertificatesFilterConfig.builder().withTags(Collections.singletonList("Tag 123")).build();
-        List<GiftCertificate> certificates = repository.findWithFilters(config, 1, 10);
+        List<GiftCertificate> certificates = repository.findWithFilters(config, 1, 10).getContent();
         assertThat(certificates, is(empty()));
     }
 
     @Test
     void update() {
         testCertificate.setId(1L);
-        GiftCertificate updatedCertificate = repository.update(testCertificate);
+        GiftCertificate updatedCertificate = repository.save(testCertificate);
         assertThat(updatedCertificate, is(sameGiftCertificate(testCertificate)));
     }
 
     @Test
     void deleteExistingBoundCertificate() {
-        Assertions.assertThrows(RepositoryException.class, () -> repository.delete(1L));
+        GiftCertificate certificate = repository.getById(1L);
+        repository.delete(certificate);
+        assertThat(repository.findById(1L).orElse(null), is(nullValue()));
     }
 
     @Test
     void deleteExistingUnboundCertificate() {
         GiftCertificate saved = repository.save(testCertificate);
-        boolean isDeleted = repository.delete(saved.getId());
-        assertThat(isDeleted, is(true));
-        assertThat(repository.findById(saved.getId()), is(nullValue()));
+        repository.delete(saved);
+        assertThat(repository.findById(saved.getId()).orElse(null), is(nullValue()));
     }
 
     @Test
     void deleteNonExistingCertificate() {
-        boolean isDeleted = repository.delete(123L);
-        assertThat(isDeleted, is(false));
+        repository.delete(testCertificate);
+        assertThat(repository.findById(testCertificate.getId()).orElse(null), is(nullValue()));
     }
 }

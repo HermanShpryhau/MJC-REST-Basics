@@ -21,7 +21,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Gift_certificate")
-@EntityListeners(GiftCertificateAuditingListener.class)
+//@EntityListeners(GiftCertificateAuditingListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
 public class GiftCertificate implements JpaEntity {
