@@ -18,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "Tag")
-@EntityListeners(TagAuditingListener.class)
+//@EntityListeners(TagAuditingListener.class)
 public class Tag implements JpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

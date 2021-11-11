@@ -1,10 +1,10 @@
 package com.epam.esm.web.hateoas.processor;
 
 import com.epam.esm.model.dto.TagDto;
-import com.epam.esm.service.pagination.Page;
 import com.epam.esm.web.controller.CertificatesController;
 import com.epam.esm.web.controller.TagController;
 import com.epam.esm.web.hateoas.model.TagModel;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
@@ -23,7 +23,7 @@ public class TagModelProcessor implements RepresentationModelProcessor<TagModel>
         List<Link> paginationLinks = new ArrayList<>();
 
         if (page.hasPrevious()) {
-            int previousPage = page.getPreviousPageIndex();
+            int previousPage = page.getNumber() - 1;
             Link previousPageLink = linkTo(getAllTagsMethod(previousPage, size))
                     .withRel("prev")
                     .expand();
@@ -31,14 +31,14 @@ public class TagModelProcessor implements RepresentationModelProcessor<TagModel>
         }
 
         if (page.hasNext()) {
-            int nextPage = page.getNextPageIndex();
+            int nextPage = page.getNumber() + 1;
             Link nextPageLink = linkTo(getAllTagsMethod(nextPage, size))
                     .withRel("next")
                     .expand();
             paginationLinks.add(nextPageLink);
         }
 
-        Link firstPageLink = linkTo(getAllTagsMethod(Page.FIRST_PAGE, size))
+        Link firstPageLink = linkTo(getAllTagsMethod(0, size))
                 .withRel("first")
                 .expand();
         paginationLinks.add(firstPageLink);
@@ -61,7 +61,7 @@ public class TagModelProcessor implements RepresentationModelProcessor<TagModel>
         List<Link> paginationLinks = new ArrayList<>();
 
         if (page.hasPrevious()) {
-            int previousPage = page.getPreviousPageIndex();
+            int previousPage = page.getNumber() - 1;
             Link previousPageLink = linkTo(getAssociatedTagsMethod(certificateId, previousPage, size))
                     .withRel("prev")
                     .expand();
@@ -69,14 +69,14 @@ public class TagModelProcessor implements RepresentationModelProcessor<TagModel>
         }
 
         if (page.hasNext()) {
-            int nextPage = page.getNextPageIndex();
+            int nextPage = page.getNumber() + 1;
             Link nextPageLink = linkTo(getAssociatedTagsMethod(certificateId, nextPage, size))
                     .withRel("next")
                     .expand();
             paginationLinks.add(nextPageLink);
         }
 
-        Link firstPageLink = linkTo(getAssociatedTagsMethod(certificateId, Page.FIRST_PAGE, size))
+        Link firstPageLink = linkTo(getAssociatedTagsMethod(certificateId, 0, size))
                 .withRel("first")
                 .expand();
         paginationLinks.add(firstPageLink);
