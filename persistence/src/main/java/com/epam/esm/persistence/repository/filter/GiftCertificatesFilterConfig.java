@@ -79,7 +79,7 @@ public class GiftCertificatesFilterConfig {
     private Predicate buildTagsPredicate(CriteriaBuilder criteriaBuilder, Root<GiftCertificate> root) {
         List<Predicate> predicates = new ArrayList<>();
         tags.forEach(tagName -> {
-            ListJoin<GiftCertificate, Tag> tagsJoin = root.joinList("associatedTags");
+            SetJoin<GiftCertificate, Tag> tagsJoin = root.joinSet("associatedTags");
             predicates.add(criteriaBuilder.equal(tagsJoin.get("name"), tagName));
         });
         return criteriaBuilder.and(toPredicatesArray(predicates));

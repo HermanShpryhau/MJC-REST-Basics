@@ -3,7 +3,6 @@ package com.epam.esm.web.controller;
 import com.epam.esm.model.dto.OrderDto;
 import com.epam.esm.model.dto.UserDto;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.pagination.Page;
 import com.epam.esm.web.hateoas.assembler.OrderModelAssembler;
 import com.epam.esm.web.hateoas.assembler.UserModelAssembler;
 import com.epam.esm.web.hateoas.model.OrderModel;
@@ -11,8 +10,13 @@ import com.epam.esm.web.hateoas.model.UserModel;
 import com.epam.esm.web.hateoas.processor.OrderModelProcessor;
 import com.epam.esm.web.hateoas.processor.UserModelProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller of users resource.

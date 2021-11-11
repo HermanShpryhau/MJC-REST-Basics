@@ -13,15 +13,17 @@ import com.epam.esm.persistence.repository.filter.GiftCertificatesFilterConfig;
 import com.epam.esm.persistence.repository.filter.SortAttribute;
 import com.epam.esm.persistence.repository.filter.SortDirection;
 import com.epam.esm.service.GiftCertificateService;
-import com.epam.esm.service.pagination.Page;
-import com.epam.esm.service.pagination.PaginationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,18 +48,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto addCertificate(GiftCertificateDto dto) {
-        dto.setId(-1L);
         GiftCertificate certificateEntity = dtoSerializer.dtoToEntity(dto);
+        certificateEntity.setId(null);
         certificateEntity.setAssociatedTags(fetchRelatedTagEntities(certificateEntity.getAssociatedTags()));
         GiftCertificate savedCertificate = certificateRepository.save(certificateEntity);
         return dtoSerializer.dtoFromEntity(savedCertificate);
     }
 
-    private List<Tag> fetchRelatedTagEntities(List<Tag> dtoTags) {
+    private Set<Tag> fetchRelatedTagEntities(Set<Tag> dtoTags) {
         return dtoTags.stream()
-                .map(tag -> Optional.ofNullable(tagRepository.findByName(tag.getName()))
+                .map(tag -> tagRepository.findByName(tag.getName())
                         .orElseGet(() -> tagRepository.save(tag)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -71,11 +73,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         addSortsToConfig(sortTypes, filterConfigBuilder);
         searchPattern.ifPresent(filterConfigBuilder::withSearchPattern);
         GiftCertificatesFilterConfig config = filterConfigBuilder.build();
-        int entitiesCount = certificateRepository.countEntitiesWithFilter(config);
-        page = PaginationUtil.correctPageIndex(page, size, () -> entitiesCount);
-        List<GiftCertificateDto> dtos = certificateRepository.findWithFilters(config, page, size).stream()
-                .map(dtoSerializer::dtoFromEntity).collect(Collectors.toList());
-        return new Page<>(page, size, entitiesCount, dtos);
+        return certificateRepository.findWithFilters(config, page, size)
+                .map(dtoSerializer::dtoFromEntity);
     }
 
     /**
@@ -99,33 +98,32 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public GiftCertificateDto fetchCertificateById(Long id) {
-        Optional<GiftCertificate> certificateOptional = Optional.ofNullable(certificateRepository.findById(id));
+        Optional<GiftCertificate> certificateOptional = certificateRepository.findById(id);
         return certificateOptional.map(dtoSerializer::dtoFromEntity)
                 .orElseThrow(() -> new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, id));
     }
 
     @Override
     public Page<TagDto> fetchAssociatedTags(long certificateId, int page, int size) {
-        GiftCertificate certificate = Optional.ofNullable(certificateRepository.findById(certificateId))
+        GiftCertificate certificate = certificateRepository.findById(certificateId)
                 .orElseThrow(() ->  new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, certificateId));
-        List<Tag> associatedTags = certificate.getAssociatedTags();
-        page = PaginationUtil.correctPageIndex(page, size, associatedTags::size);
+        Set<Tag> associatedTags = certificate.getAssociatedTags();
         int entitiesCount = associatedTags.size();
         List<TagDto> tagDtos = associatedTags.stream()
-                .skip((long) (page - 1) * size)
+                .skip((long) (page) * size)
                 .limit(size)
                 .map(tagDtoSerializer::dtoFromEntity)
                 .collect(Collectors.toList());
-        return new Page<>(page, size, entitiesCount, tagDtos);
+        return new PageImpl<>(tagDtos, PageRequest.of(page, size), entitiesCount);
     }
 
     @Override
     @Transactional
     public GiftCertificateDto updateCertificate(GiftCertificateDto dto) {
-        GiftCertificate certificateToUpdate = Optional.ofNullable(certificateRepository.findById(dto.getId()))
+        GiftCertificate certificateToUpdate = certificateRepository.findById(dto.getId())
                 .orElseThrow(() -> new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, dto.getId()));
         updateSpecifiedParameters(dto, certificateToUpdate);
-        GiftCertificate updatedCertificate = certificateRepository.update(certificateToUpdate);
+        GiftCertificate updatedCertificate = certificateRepository.save(certificateToUpdate);
         return dtoSerializer.dtoFromEntity(updatedCertificate);
     }
 
@@ -150,18 +148,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * @param dtoTags List of tag DTOs.
      * @return List of tag entities.
      */
-    private List<Tag> buildTagListFromDtos(List<TagDto> dtoTags) {
+    private Set<Tag> buildTagListFromDtos(List<TagDto> dtoTags) {
         return dtoTags.stream()
-                .map(tagDto -> Optional.ofNullable(tagRepository.findByName(tagDto.getName()))
+                .map(tagDto -> tagRepository.findByName(tagDto.getName())
                         .orElseGet(() -> tagRepository.save(tagDtoSerializer.dtoToEntity(tagDto))))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override
     public void deleteCertificate(long id) {
-        boolean isDeleted = certificateRepository.delete(id);
-        if (!isDeleted) {
-            throw new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, id);
-        }
+        GiftCertificate certificate = certificateRepository.findById(id)
+                .orElseThrow(() -> new ServiceException(ServiceErrorCode.CERTIFICATE_NOT_FOUND, id));
+        certificateRepository.delete(certificate);
     }
 }

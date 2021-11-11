@@ -2,7 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.dto.TagDto;
-import com.epam.esm.service.pagination.Page;
+import org.springframework.data.domain.Page;
 
 /**
  * {@code TagService} is an interface that contains all operations available for tags resource of the API.

@@ -1,32 +1,18 @@
 package com.epam.esm.persistence.repository;
 
-import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface TagRepository extends CrudRepository<Tag> {
-
-    /**
-     * Finds all gift certificates associated with tag
-     *
-     * @param tagId ID of tag
-     * @return List of associated gift certificates
-     */
-    List<GiftCertificate> findAssociatedGiftCertificates(Long tagId);
-
+@Repository
+public interface TagRepository extends JpaRepository<Tag, Long>, CustomTagRepository {
     /**
      * Finds tag by name
      *
      * @param name Name of tag to search
      * @return Found tag or {@code null}
      */
-    Tag findByName(String name);
-
-    /**
-     * Finds most widely used tag(s) of a user with the highest cost of all orders.
-     *
-     * @return List of tags found
-     */
-    List<Tag> findMostPopularTag();
+    Optional<Tag> findByName(String name);
 }

@@ -55,7 +55,7 @@ public class GiftCertificateDtoSerializer implements DtoSerializer<GiftCertifica
         Optional.ofNullable(dto.getCreateDate()).ifPresent(certificate::setCreateDate);
         Optional.ofNullable(dto.getLastUpdateDate()).ifPresent(certificate::setLastUpdateDate);
         certificate.setAssociatedTags(
-                dto.getTags().stream().map(tagDtoSerializer::dtoToEntity).collect(Collectors.toList())
+                dto.getTags().stream().map(tagDtoSerializer::dtoToEntity).collect(Collectors.toSet())
         );
         return certificate;
     }
